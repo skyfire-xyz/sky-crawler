@@ -1,0 +1,5 @@
+# robots.txt for example-website
+
+# Allow all robots access to the entire site except the blog section
+User-agent: *
+Disallow: /blog/

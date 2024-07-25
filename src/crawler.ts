@@ -26,7 +26,7 @@ const crawler = new PuppeteerCrawler({
 });
 
 // Add initial requests
-const startUrls = ['https://crawlee.dev'];
+const startUrls = ['http://127.0.0.1:5500/example-website/'];
 await crawler.addRequests(startUrls);
 
 // Run the crawler

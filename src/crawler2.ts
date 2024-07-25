@@ -81,35 +81,48 @@ async function filterUrlsWithRobotsTxt(urls: BatchAddRequestsResult, url: string
     return filteredUrls;
 }
 
-// Initialize and configure the crawler
 const crawler = new PuppeteerCrawler({
+    preNavigationHooks: [
+        async (crawlingContext, gotoOptions) => {
+            const { request } = crawlingContext;
+            const robotsTxt = await fetchRobotsTxt(request.url);
+            const isAllowed = isAllowedByRobotsTxt(robotsTxt, 'sky-crawler', request.url);
+            if (!isAllowed) {
+                console.log(`Skipping ${request.url} due to robots.txt rules.`);
+                // Ensure gotoOptions is defined before modifying
+                if (gotoOptions) {
+                    console.log("YES GOTOOPTIONS")
+                    gotoOptions.timeout = 0; // Skip navigation
+                    gotoOptions.waitUntil = 'domcontentloaded'; // Make sure navigation ends quickly
+                }
+                throw new Error(`BLOCKED by robots.txt`);
+            }
+        }
+    ],
+    
     async requestHandler({ request, page, enqueueLinks, log }) {
         log.info(`Processing ${request.url}...`);
-
-        // Extract data from the page
         const data = await page.$$eval('body', () => ({
             title: document.title,
             url: location.href,
         }));
-
-        // Log or save the data
         console.log(data);
 
         // Enqueue links for crawling
-        const links = await enqueueLinks({
+        await enqueueLinks({
             selector: 'a',
         });
-
-        // Filter links based on robots.txt rules
-        const filteredLinks = await filterUrlsWithRobotsTxt(links, request.loadedUrl, 'sky-crawler');
-        for (const url of filteredLinks) {
-            await crawler.addRequests([url]);
-        }
     },
+
     failedRequestHandler({ request, log }) {
         log.error(`Request ${request.url} failed too many times.`);
+        // Optionally handle specific failure cases
+        if (request.retryCount > 2) {
+            log.error(`Request ${request.url} failed repeatedly and will not be retried.`);
+        }
     },
 });
+
 
 // Add initial requests
 const startUrls = ['http://127.0.0.1:5500/example-website/'];

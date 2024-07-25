@@ -14,9 +14,11 @@ const crawler = new PuppeteerCrawler({
         console.log(data);
 
         // Enqueue links for crawling
-        await enqueueLinks({
+        const links = await enqueueLinks({
             selector: 'a',
-        });
+        })
+        console.log("LOGGING LINKS")
+        console.log(links)
     },
     failedRequestHandler: ({ request, log }) => {
         log.error(`Request ${request.url} failed too many times.`);
@@ -24,7 +26,7 @@ const crawler = new PuppeteerCrawler({
 });
 
 // Add initial requests
-const startUrls = ['http://127.0.0.1:5500/example-website/'];
+const startUrls = ['https://crawlee.dev'];
 await crawler.addRequests(startUrls);
 
 // Run the crawler

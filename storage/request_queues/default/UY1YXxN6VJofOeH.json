@@ -1,9 +1,0 @@
-{
-	"id": "UY1YXxN6VJofOeH",
-	"json": "{\"id\":\"UY1YXxN6VJofOeH\",\"url\":\"http://127.0.0.1:5500/example-website/index.html\",\"loadedUrl\":\"http://127.0.0.1:5500/example-website/index.html\",\"uniqueKey\":\"http://127.0.0.1:5500/example-website/index.html\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"enqueueStrategy\":\"same-hostname\",\"state\":4}},\"handledAt\":\"2024-07-25T21:56:21.498Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "http://127.0.0.1:5500/example-website/index.html",
-	"url": "http://127.0.0.1:5500/example-website/index.html"
-}

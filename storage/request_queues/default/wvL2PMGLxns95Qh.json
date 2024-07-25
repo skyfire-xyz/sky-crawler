@@ -1,9 +1,0 @@
-{
-	"id": "wvL2PMGLxns95Qh",
-	"json": "{\"id\":\"wvL2PMGLxns95Qh\",\"url\":\"http://127.0.0.1:5500/example-website/contact.html\",\"loadedUrl\":\"http://127.0.0.1:5500/example-website/contact.html\",\"uniqueKey\":\"http://127.0.0.1:5500/example-website/contact.html\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"enqueueStrategy\":\"same-hostname\",\"state\":4}},\"handledAt\":\"2024-07-25T21:56:21.635Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "http://127.0.0.1:5500/example-website/contact.html",
-	"url": "http://127.0.0.1:5500/example-website/contact.html"
-}

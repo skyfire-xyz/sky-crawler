@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "tsx src/crawler2.ts"
+    "start": "tsx src/sky-crawler.ts"
   },
   "dependencies": {
     "@types/node": "^20.14.12",

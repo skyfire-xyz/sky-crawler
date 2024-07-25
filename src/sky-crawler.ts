@@ -25,50 +25,110 @@ async function fetchRobotsTxt(url: string): Promise<string> {
   }
 }
 
-// Parse robots.txt and check if a URL is allowed to be crawled
+// Parse a single line of robots.txt
+function parseRobotsTxtLine(
+  line: string,
+  userAgent: string,
+  relativePath: string,
+  appliesToUserAgent: boolean,
+): {
+  appliesToUserAgent: boolean;
+  isDisallowed: boolean;
+  isPaidContent: boolean;
+} {
+  const trimmedLine = line.trim();
+  let isDisallowed = false;
+  let isPaidContent = false;
+
+  const [directive, value] = trimmedLine.split(":").map((part) => part.trim());
+
+  switch (directive.toLowerCase()) {
+    case "user-agent":
+      appliesToUserAgent = value === "*" || value === userAgent;
+      break;
+    case "disallow":
+      if (
+        appliesToUserAgent &&
+        (value === "" || relativePath.startsWith(value))
+      ) {
+        isDisallowed = true;
+      }
+      break;
+    case "paid-content":
+      if (
+        appliesToUserAgent &&
+        (value === "" || relativePath.startsWith(value))
+      ) {
+        console.log(`PAID CONTENT detected: ${value}`);
+        isPaidContent = true;
+      }
+      break;
+    default:
+      break;
+  }
+
+  return { appliesToUserAgent, isDisallowed, isPaidContent };
+}
+
+// Check if a URL is allowed to be crawled
 function isAllowedByRobotsTxt(
   robotsTxt: string,
   userAgent: string,
   url: string,
-): boolean {
+): { allowed: boolean; isPaidContent: boolean; paidContentPaths: string[] } {
   if (!robotsTxt) {
     console.warn(
       `No robots.txt content, defaulting to allow all for URL: ${url}`,
     );
-    return true; // Defaulting to allow all if robots.txt could not be fetched
+    return { allowed: true, isPaidContent: false, paidContentPaths: [] }; // Defaulting to allow all if robots.txt could not be fetched
   }
 
   const lines = robotsTxt.split("\n");
   let isDisallowed = false;
   let appliesToUserAgent = false;
+  let isPaidContent = false;
+  const paidContentPaths: string[] = [];
 
-  // Extract path from URL
   const parsedUrl = new URL(url);
   const fullPath = parsedUrl.pathname;
-
-  // WHEN FINISHED TESTING, DELETE AND LET relativePath = fullPath
-  const basePath = "/example-website";
+  const basePath = "/example-website"; // WHEN FINISHED TESTING, DELETE AND LET relativePath = fullPath
   const relativePath = fullPath.startsWith(basePath)
     ? fullPath.substring(basePath.length)
     : fullPath;
 
   for (const line of lines) {
-    const trimmedLine = line.trim();
-    if (trimmedLine.startsWith("User-agent:")) {
-      const agent = trimmedLine.split(":")[1].trim();
-      appliesToUserAgent = agent === "*" || agent === userAgent;
-    } else if (appliesToUserAgent && trimmedLine.startsWith("Disallow:")) {
-      const disallowedPath = trimmedLine.split(":")[1].trim();
-      if (disallowedPath === "" || relativePath.startsWith(disallowedPath)) {
-        console.log(
-          `DISALLOWING ${url} due to rule: Disallow: ${disallowedPath}`,
-        );
-        isDisallowed = true;
-        break;
-      }
+    const result = parseRobotsTxtLine(
+      line,
+      userAgent,
+      relativePath,
+      appliesToUserAgent,
+    );
+    appliesToUserAgent = result.appliesToUserAgent;
+    isPaidContent = result.isPaidContent || isPaidContent;
+    if (result.isPaidContent) {
+      paidContentPaths.push(relativePath);
+    }
+    if (result.isDisallowed) {
+      isDisallowed = true;
+      break;
     }
   }
-  return !isDisallowed;
+
+  return { allowed: !isDisallowed, isPaidContent, paidContentPaths };
+}
+
+// Function to simulate payment action
+async function processPayment(contentPath: string, paymentEndpoint: string) {
+  console.log(
+    `Processing payment for access to ${contentPath} at ${paymentEndpoint}`,
+  );
+  // Simulate hitting the payment endpoint
+  // try {
+  //   await axios.post(paymentEndpoint, { contentPath });
+  //   console.log(`Payment processed for ${contentPath}`);
+  // } catch (error) {
+  //   console.error(`Payment failed for ${contentPath}:`, error);
+  // }
 }
 
 const crawler = new PuppeteerCrawler({
@@ -76,18 +136,24 @@ const crawler = new PuppeteerCrawler({
     async (crawlingContext, gotoOptions) => {
       const { request } = crawlingContext;
       const robotsTxt = await fetchRobotsTxt(request.url);
-      const isAllowed = isAllowedByRobotsTxt(
+      const { allowed, isPaidContent, paidContentPaths } = isAllowedByRobotsTxt(
         robotsTxt,
         "sky-crawler",
         request.url,
       );
-      if (!isAllowed) {
+      if (!allowed) {
         console.log(`Skipping ${request.url} due to robots.txt rules.`);
         if (gotoOptions) {
           gotoOptions.timeout = 0; // Skip navigation
           gotoOptions.waitUntil = "domcontentloaded"; // Make sure navigation ends quickly
         }
         throw new Error(`BLOCKED by robots.txt`);
+      }
+      if (isPaidContent) {
+        const paymentEndpoint = "http://www.skyfire.xyz/payment"; // Use the actual payment endpoint
+        for (const path of paidContentPaths) {
+          await processPayment(path, paymentEndpoint);
+        }
       }
     },
   ],
@@ -105,18 +171,32 @@ const crawler = new PuppeteerCrawler({
       anchors.map((anchor) => anchor.href),
     );
     const userAgent = "sky-crawler";
-    const allowedLinks = [];
     const robotsTxt = await fetchRobotsTxt(request.url);
 
-    for (const link of allLinks) {
-      if (isAllowedByRobotsTxt(robotsTxt, userAgent, link)) {
-        allowedLinks.push(link);
-      } else {
-        log.info(`Skipping ${link} due to robots.txt rules.`);
+    const allowedLinks = allLinks.filter((link) => {
+      const { allowed, isPaidContent, paidContentPaths } = isAllowedByRobotsTxt(
+        robotsTxt,
+        userAgent,
+        link,
+      );
+      if (isPaidContent) {
+        const paymentEndpoint = "http://www.skyfire.xyz/payment"; // Use the actual payment endpoint
+        for (const path of paidContentPaths) {
+          processPayment(path, paymentEndpoint);
+        }
       }
-    }
+      return allowed;
+    });
 
-    await enqueueLinks({ urls: allowedLinks });
+    // Log and enqueue the filtered links
+    allowedLinks.forEach((link) =>
+      log.info(`Enqueuing ${link} due to robots.txt rules.`),
+    );
+
+    await enqueueLinks({
+      urls: allowedLinks,
+    });
+
     log.info(`Enqueued ${allowedLinks.length} allowed links.`);
   },
 

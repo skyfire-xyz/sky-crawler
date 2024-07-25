@@ -108,10 +108,30 @@ const crawler = new PuppeteerCrawler({
         }));
         console.log(data);
 
-        // Enqueue links for crawling
+        // Extract all links from the page
+        const allLinks = await page.$$eval('a', anchors => 
+            anchors.map(anchor => anchor.href)
+        );
+        const userAgent = 'sky-crawler';
+        const allowedLinks = [];
+        const robotsTxt = await fetchRobotsTxt(request.url)
+
+        for (const link of allLinks) {
+            if (isAllowedByRobotsTxt(robotsTxt, userAgent, link)) {
+                allowedLinks.push(link);
+            } else {
+                log.info(`Skipping ${link} due to robots.txt rules.`);
+            }
+        }
+
+        // Enqueue the filtered links
         await enqueueLinks({
-            selector: 'a',
+            urls: allowedLinks,
         });
+
+        log.info(`Enqueued ${allowedLinks.length} allowed links.`);
+        
+
     },
 
     failedRequestHandler({ request, log }) {

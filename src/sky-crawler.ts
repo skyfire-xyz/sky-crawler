@@ -28,11 +28,15 @@ const crawler = new PuppeteerCrawler({
     }
 
     const currRelativePath = getRelativePath(request.url);
-    console.log(`CURRENT RELATIVE: ${currRelativePath}`);
+    // console.log(`CURRENT RELATIVE: ${currRelativePath}`);
 
-    for (const path of robotsData.paidContentPaths) {
+    for (const [path, isPaid] of Object.entries(robotsData.paidContentPaths)) {
       if (currRelativePath.startsWith(path)) {
-        await processPayment(path, robotsData.paymentUrl);
+        if (!isPaid) {
+          await processPayment(path, robotsData.paymentUrl, robotsData)
+        } else {
+          console.log(`Already paid for access to ${path}`)
+        }
       }
     }
 
@@ -45,11 +49,12 @@ const crawler = new PuppeteerCrawler({
   },
 });
 
-const startUrls = ["http://127.0.0.1:5500/example-website/"];
-const robotsTxt = await fetchRobotsTxt(startUrls[0]);
-const robotsData = parseRobotsTxt(robotsTxt);
-console.log(robotsData);
+const startUrls = ["http://127.0.0.1:5500/example-website/"]
+const robotsTxt = await fetchRobotsTxt(startUrls[0])
+const robotsData = parseRobotsTxt(robotsTxt)
+console.log(robotsData)
 
-await crawler.addRequests(startUrls);
-await crawler.run();
-console.log("Crawler finished.");
+
+await crawler.addRequests(startUrls)
+await crawler.run()
+console.log("Crawler finished.")

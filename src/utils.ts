@@ -38,7 +38,7 @@ export function parseRobotsTxt(robotsTxt: string): RobotsTxtData {
   const data: RobotsTxtData = {
     paymentUrl: "",
     disallowedPaths: new Set(),
-    paidContentPaths: new Set(),
+    paidContentPaths: {},
   };
 
   const lines = robotsTxt.split("\n");
@@ -62,7 +62,7 @@ export function parseRobotsTxt(robotsTxt: string): RobotsTxtData {
         }
         break;
       case "paid-content":
-        data.paidContentPaths.add(info);
+        data.paidContentPaths[info] = false
         break;
       default:
         break;
@@ -86,17 +86,19 @@ export function isAllowedByRobotsTxt(
 }
 
 export async function processPayment(
-  contentPath: string,
+  path: string,
   paymentEndpoint: string,
+  robotsData: RobotsTxtData
 ) {
   console.log(
-    `Processing payment for access to ${contentPath} at ${paymentEndpoint}`,
-  );
-  // Simulate hitting the payment endpoint
-  // try {
-  //   await axios.post(paymentEndpoint, { contentPath });
-  //   console.log(`Payment processed for ${contentPath}`);
-  // } catch (error) {
-  //   console.error(`Payment failed for ${contentPath}:`, error);
-  // }
+    `Processing payment for access to ${path}. Hitting ${paymentEndpoint}`,
+  )
+  try {
+    // Simulate hitting the payment endpoint
+    // await axios.post(paymentEndpoint, { contentPath });
+    console.log(`Payment processed for ${path}`);
+    robotsData.paidContentPaths[path] = true;
+  } catch (error) {
+    console.error(`Payment failed for ${path}:`, error);
+  }
 }

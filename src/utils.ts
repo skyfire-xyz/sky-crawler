@@ -3,6 +3,16 @@ import { RobotsTxtData, USER_AGENT } from "./types";
 
 const robotsTxtCache: { [domain: string]: string } = {};
 
+export function getRelativePath(url: string): string {
+  const parsedUrl = new URL(url);
+  const fullPath = parsedUrl.pathname;
+  const basePath = "/example-website"; // WHEN FINISHED TESTING, DELETE AND LET relativePath = fullPath
+  const relativePath = fullPath.startsWith(basePath)
+    ? fullPath.substring(basePath.length)
+    : fullPath;
+  return relativePath;
+}
+
 // Fetch and return the content of robots.txt
 export async function fetchRobotsTxt(url: string): Promise<string> {
   // const domain = new URL(url).origin  USE THIS WHEN NOT TESTING
@@ -24,10 +34,9 @@ export async function fetchRobotsTxt(url: string): Promise<string> {
   }
 }
 
-
 export function parseRobotsTxt(robotsTxt: string): RobotsTxtData {
   const data: RobotsTxtData = {
-    paymentUrl: new String,
+    paymentUrl: "",
     disallowedPaths: new Set(),
     paidContentPaths: new Set(),
   };
@@ -37,11 +46,13 @@ export function parseRobotsTxt(robotsTxt: string): RobotsTxtData {
 
   for (const line of lines) {
     const trimmedLine = line.trim();
-    const [directive, info] = trimmedLine.split(/:(.+)/).map(part => part.trim());
+    const [directive, info] = trimmedLine
+      .split(/:(.+)/)
+      .map((part) => part.trim());
 
     switch (directive.toLowerCase()) {
       case "payment-url":
-        data.paymentUrl = info
+        data.paymentUrl = info;
       case "user-agent":
         appliesToUserAgent = info === "*" || info === USER_AGENT;
         break;
@@ -62,22 +73,30 @@ export function parseRobotsTxt(robotsTxt: string): RobotsTxtData {
 
 export function isAllowedByRobotsTxt(
   robotsData: RobotsTxtData,
-  url: string
+  url: string,
 ): boolean {
-  const parsedUrl = new URL(url)
-  const fullPath = parsedUrl.pathname
-  const basePath = "/example-website"; // WHEN FINISHED TESTING, DELETE AND LET relativePath = fullPath
-  const relativePath = fullPath.startsWith(basePath)
-    ? fullPath.substring(basePath.length)
-    : fullPath
-
-  // console.log(`LOGGING PATH: ${relativePath}`)
-
+  const relativePath = getRelativePath(url);
   for (const disallowedPath of robotsData.disallowedPaths) {
     if (relativePath.startsWith(disallowedPath)) {
       return false;
     }
   }
-  
-  return true  // If no specific rules, assume allowed
+
+  return true; // If no specific rules, assume allowed
+}
+
+export async function processPayment(
+  contentPath: string,
+  paymentEndpoint: string,
+) {
+  console.log(
+    `Processing payment for access to ${contentPath} at ${paymentEndpoint}`,
+  );
+  // Simulate hitting the payment endpoint
+  // try {
+  //   await axios.post(paymentEndpoint, { contentPath });
+  //   console.log(`Payment processed for ${contentPath}`);
+  // } catch (error) {
+  //   console.error(`Payment failed for ${contentPath}:`, error);
+  // }
 }

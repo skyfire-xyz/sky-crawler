@@ -1,7 +1,11 @@
-
 import { PuppeteerCrawler } from "crawlee";
-import { fetchRobotsTxt, parseRobotsTxt, isAllowedByRobotsTxt } from "./utils";
-import { USER_AGENT } from "./types"
+import {
+  fetchRobotsTxt,
+  parseRobotsTxt,
+  isAllowedByRobotsTxt,
+  processPayment,
+  getRelativePath,
+} from "./utils";
 
 const crawler = new PuppeteerCrawler({
   async requestHandler({ request, page, enqueueLinks, log }) {
@@ -15,14 +19,20 @@ const crawler = new PuppeteerCrawler({
     const allLinks = await page.$$eval("a", (anchors) =>
       anchors.map((anchor) => anchor.href),
     );
-    const allowedLinks = [];
-    
+    const allowedLinks: string[] = [];
 
     for (const link of allLinks) {
       if (isAllowedByRobotsTxt(robotsData, link)) {
         allowedLinks.push(link);
-      } else {
-        log.info(`Skipping ${link} due to robots.txt rules.`);
+      }
+    }
+
+    const currRelativePath = getRelativePath(request.url);
+    console.log(`CURRENT RELATIVE: ${currRelativePath}`);
+
+    for (const path of robotsData.paidContentPaths) {
+      if (currRelativePath.startsWith(path)) {
+        await processPayment(path, robotsData.paymentUrl);
       }
     }
 
@@ -35,10 +45,10 @@ const crawler = new PuppeteerCrawler({
   },
 });
 
-const startUrls = ["http://127.0.0.1:5500/example-website/"]
-const robotsTxt = await fetchRobotsTxt(startUrls[0])
-const robotsData = parseRobotsTxt(robotsTxt)
-console.log(robotsData)
+const startUrls = ["http://127.0.0.1:5500/example-website/"];
+const robotsTxt = await fetchRobotsTxt(startUrls[0]);
+const robotsData = parseRobotsTxt(robotsTxt);
+console.log(robotsData);
 
 await crawler.addRequests(startUrls);
 await crawler.run();

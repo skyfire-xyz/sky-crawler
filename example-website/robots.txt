@@ -2,6 +2,6 @@
 
 # Allow all robots access to the entire site except the blog section
 User-agent: *
-Paid-content: /blog/
-Paid-content: /products/
+Disallow: /blog/
+Disallow: /products/
 Payment: www.skyfire.xyz

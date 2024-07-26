@@ -1,7 +1,10 @@
 # robots.txt for example-website
 
-# Allow all robots access to the entire site except the blog section
+# Metadata for webcrawler
+Payment-url: http://sky-services.xyz/receivers/crawler-paid-content/
+
+# Directives for AI crawlers
 User-agent: *
 Disallow: /blog/
-Disallow: /products/
+Paid-content: /products/
 Payment: www.skyfire.xyz

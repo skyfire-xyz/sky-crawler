@@ -1,7 +1,7 @@
 # robots.txt for example-website
 
 # Metadata for webcrawler
-Payment-url: http://sky-services.xyz/receivers/crawler-paid-content/
+Payment-url: http://localhost:3000/v1/crawler/uuid
 
 # Directives for AI crawlers
 User-agent: *

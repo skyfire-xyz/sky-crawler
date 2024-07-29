@@ -3,20 +3,14 @@ import { RobotsTxtData, USER_AGENT } from "./types"
 
 const robotsTxtCache: { [domain: string]: string } = {}
 
-export function getRelativePath(url: string): string {
-  const parsedUrl = new URL(url)
-  const fullPath = parsedUrl.pathname
-  const basePath = "/example-website" // WHEN FINISHED TESTING, DELETE AND LET relativePath = fullPath
-  const relativePath = fullPath.startsWith(basePath)
-    ? fullPath.substring(basePath.length)
-    : fullPath
-  return relativePath
+export function getRelativePath(path: string): string {
+  const parsedPath = new URL(path)
+  return parsedPath.pathname
 }
 
 // Fetch and return the content of robots.txt
-export async function fetchRobotsTxt(url: string): Promise<string> {
-  // const domain = new URL(url).origin  USE THIS WHEN NOT TESTING
-  const domain = "http://127.0.0.1:5500/example-website/"
+export async function fetchRobotsTxt(path: string): Promise<string> {
+  const domain = new URL(path).origin
   if (robotsTxtCache[domain]) {
     return robotsTxtCache[domain]
   }
@@ -45,24 +39,23 @@ export function parseRobotsTxt(robotsTxt: string): RobotsTxtData {
   let appliesToUserAgent = false
 
   for (const line of lines) {
-    const trimmedLine = line.trim()
-    const [directive, info] = trimmedLine
+    const [directive, path] = line.trim()
       .split(/:(.+)/)
       .map((part) => part.trim())
 
     switch (directive.toLowerCase()) {
       case "payment-url":
-        data.paymentUrl = info
+        data.paymentUrl = path
       case "user-agent":
-        appliesToUserAgent = info === "*" || info === USER_AGENT
+        appliesToUserAgent = path === "*" || path === USER_AGENT
         break
       case "disallow":
         if (appliesToUserAgent) {
-          data.disallowedPaths.add(info)
+          data.disallowedPaths.add(normalizePath(path))
         }
         break
       case "paid-content":
-        data.paidContentPaths[info] = ""
+        data.paidContentPaths[normalizePath(path)] = ""
         break
       default:
         break
@@ -73,15 +66,14 @@ export function parseRobotsTxt(robotsTxt: string): RobotsTxtData {
 
 export function isAllowedByRobotsTxt(
   robotsData: RobotsTxtData,
-  url: string,
+  path: string,
 ): boolean {
-  const relativePath = getRelativePath(url)
+  const relativePath = normalizePath(getRelativePath(path))
   for (const disallowedPath of robotsData.disallowedPaths) {
-    if (relativePath.startsWith(disallowedPath)) {
+    if (relativePath.startsWith(normalizePath(disallowedPath))) {
       return false
     }
   }
-
   return true // If no specific rules, assume allowed
 }
 
@@ -107,4 +99,8 @@ export async function processPayment(
 
 export function isEmptyString(str: string): boolean {
   return str.trim().length === 0
+}
+
+export function normalizePath(path: string): string {
+  return path.endsWith('/') ? path : `${path}/`
 }

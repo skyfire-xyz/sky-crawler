@@ -1,5 +1,10 @@
 import axios from "axios";
+import dotenv from 'dotenv';
+
 import { RobotsTxtData, USER_AGENT } from "./types";
+
+dotenv.config();
+const apiKey = process.env.CRAWLER_API_KEY!;
 
 const robotsTxtCache: { [domain: string]: string } = {};
 
@@ -31,6 +36,7 @@ export async function fetchRobotsTxt(path: string): Promise<string> {
 export function parseRobotsTxt(robotsTxt: string): RobotsTxtData {
   const data: RobotsTxtData = {
     paymentUrl: "",
+    siteUsername: "",
     disallowedPaths: new Set(),
     paidContentPaths: {},
   };
@@ -39,24 +45,33 @@ export function parseRobotsTxt(robotsTxt: string): RobotsTxtData {
   let appliesToUserAgent = false;
 
   for (const line of lines) {
-    const [directive, path] = line
+    const [directive, info] = line
       .trim()
       .split(/:(.+)/)
       .map((part) => part.trim());
 
     switch (directive.toLowerCase()) {
       case "payment-url":
-        data.paymentUrl = path;
+        data.paymentUrl = info;
+        break;
+      case "site-username":
+        data.siteUsername = info;
+        break;
       case "user-agent":
-        appliesToUserAgent = path === "*" || path === USER_AGENT;
+        appliesToUserAgent = info === "*" || info === USER_AGENT;
         break;
       case "disallow":
         if (appliesToUserAgent) {
-          data.disallowedPaths.add(normalizePath(path));
+          data.disallowedPaths.add(normalizePath(info));
         }
         break;
       case "paid-content":
-        data.paidContentPaths[normalizePath(path)] = "";
+        const [path, price] = info.split(",").map((part) => part.trim());
+        data.paidContentPaths[normalizePath(path)] = {
+          claimId: "",
+          price: price,
+        };
+
         break;
       default:
         break;
@@ -80,14 +95,21 @@ export function isAllowedByRobotsTxt(
 
 export async function processPayment(
   path: string,
-  paymentEndpoint: string,
   robotsData: RobotsTxtData,
 ) {
   try {
-    // Simulate hitting the payment endpoint
-    const response = await axios.get(paymentEndpoint);
+    const requestBody = {
+      receiverUsername: robotsData.siteUsername,
+      amount: parseInt(robotsData.paidContentPaths[path].price, 10),
+    };
+    const response = await axios.post(robotsData.paymentUrl, requestBody, {
+      headers: {
+        'skyfire-api-key': apiKey,
+        'content-type': 'application/json'
+      }
+    });
     const claimId = response.data;
-    robotsData.paidContentPaths[path] = claimId;
+    robotsData.paidContentPaths[path].claimId = claimId;
   } catch (error) {
     console.error(`Payment failed for ${path}:`, error);
   }

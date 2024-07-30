@@ -15,7 +15,9 @@ const crawler = new PuppeteerCrawler({
     let isPaidContent = false;
     let paidContentPath = "";
 
-    for (const [path, claimId] of Object.entries(robotsData.paidContentPaths)) {
+    for (const [path, { claimId, price }] of Object.entries(
+      robotsData.paidContentPaths,
+    )) {
       const normalizedPath = normalizePath(path);
       if (currRelativePath.startsWith(normalizedPath)) {
         isPaidContent = true;
@@ -23,7 +25,6 @@ const crawler = new PuppeteerCrawler({
         if (isEmptyString(claimId)) {
           await processPayment(
             normalizedPath,
-            robotsData.paymentUrl,
             robotsData,
           );
         } else {
@@ -39,7 +40,7 @@ const crawler = new PuppeteerCrawler({
       log.info(`Processing ${request.url}`);
       if (isPaidContent) {
         log.info(
-          `Crawling ${paidContentPath} with claimId: ${robotsData.paidContentPaths[paidContentPath]}`,
+          `Crawling ${paidContentPath} with claimId: ${robotsData.paidContentPaths[paidContentPath].claimId}`,
         );
       }
       const data = await page.$$eval("body", () => ({

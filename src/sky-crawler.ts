@@ -1,82 +1,61 @@
-import { PuppeteerCrawler } from "crawlee";
+import { PuppeteerCrawler } from "crawlee"
 import {
   fetchRobotsTxt,
   parseRobotsTxt,
-  isAllowedByRobotsTxt,
+  filterAllowedLinks,
   processPayment,
   getRelativePath,
-  isEmptyString,
   normalizePath,
-} from "./utils";
+  verifyClaimReceived,
+} from "./utils"
 
 const crawler = new PuppeteerCrawler({
   async requestHandler({ request, page, enqueueLinks, log }) {
-    const currRelativePath = normalizePath(getRelativePath(request.url));
-    let isPaidContent = false;
-    let paidContentPath = "";
+    const currPath = normalizePath(getRelativePath(request.url))
+    const paidContent = Object.entries(robotsData.paidContentPaths).find(
+      ([path]) => {
+        return currPath.startsWith(normalizePath(path))
+      },
+    )
 
-    for (const [path, { claimId, price }] of Object.entries(
-      robotsData.paidContentPaths,
-    )) {
-      const normalizedPath = normalizePath(path);
-      if (currRelativePath.startsWith(normalizedPath)) {
-        isPaidContent = true;
-        paidContentPath = normalizedPath;
-        if (isEmptyString(claimId)) {
-          await processPayment(
-            normalizedPath,
-            robotsData,
-          );
-        } else {
-          log.info(`Already paid for access to ${normalizedPath}`);
-        }
+    if (paidContent) {
+      const [path, { claimId }] = paidContent
+      if (!claimId) {
+        log.info(`Access to ${path} requires payment.`)
+        await processPayment(path, robotsData)
+        verifyClaimReceived(path, request.url, robotsData)
+      } else {
+        log.info(`Already paid for access to ${path}`)
       }
     }
 
-    if (
-      (isPaidContent && robotsData.paidContentPaths[paidContentPath]) ||
-      isAllowedByRobotsTxt(robotsData, request.url)
-    ) {
-      log.info(`Processing ${request.url}`);
-      if (isPaidContent) {
-        log.info(
-          `Crawling ${paidContentPath} with claimId: ${robotsData.paidContentPaths[paidContentPath].claimId}`,
-        );
-      }
-      const data = await page.$$eval("body", () => ({
-        title: document.title,
-        url: location.href,
-      }));
-      console.log(data);
+    log.info(`Crawling ${request.url}`)
+    const data = await page.$$eval("body", () => ({
+      title: document.title,
+      url: location.href,
+    }))
+    console.log(data)
 
-      const allLinks = await page.$$eval("a", (anchors) =>
-        anchors.map((anchor) => anchor.href),
-      );
+    const allLinks = await page.$$eval("a", (anchors) =>
+      anchors.map((anchor) => anchor.href),
+    )
 
-      const allowedLinks: string[] = [];
-      for (const link of allLinks) {
-        if (isAllowedByRobotsTxt(robotsData, link)) {
-          allowedLinks.push(link);
-        }
-      }
-
-      await enqueueLinks({ urls: allowedLinks });
-      // log.info(`Enqueued ${allowedLinks.length} allowed links.`)
-    }
+    const allowedLinks = filterAllowedLinks(allLinks, robotsData)
+    await enqueueLinks({ urls: allowedLinks })
   },
 
   failedRequestHandler({ request, log }) {
-    log.error(`Request ${request.url} failed too many times.`);
+    log.error(`Request ${request.url} failed too many times.`)
   },
-});
+})
 
-const startUrls = ["http://localhost:3001"];
-const robotsTxt = await fetchRobotsTxt(startUrls[0]);
-const robotsData = parseRobotsTxt(robotsTxt);
-console.log(robotsData);
+const startUrls = ["http://127.0.0.1:5500/example-website/"]
+const robotsTxt = await fetchRobotsTxt(startUrls[0])
+const robotsData = parseRobotsTxt(robotsTxt)
+console.log(robotsData)
+await crawler.addRequests(startUrls)
 
-await crawler.addRequests(startUrls);
-await crawler.run();
-console.log(robotsData);
+await crawler.run()
 
-console.log("Crawler finished.");
+console.log(robotsData)
+console.log("Crawler finished.")

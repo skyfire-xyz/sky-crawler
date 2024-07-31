@@ -1,9 +1,10 @@
 # robots.txt for example-website
 
 # Metadata for webcrawler
-Payment-url: http://localhost:3000/v1/crawler/uuid
+Payment-url: http://localhost:3000/v1/crawler/paid-content
+Site-username: www.skyfire.xyz
 
 # Directives for AI crawlers
 User-agent: *
-Paid-content: /blog/
-Paid-content: /products/
+Paid-content: /blog/, 2002
+Paid-content: /products/, 3003

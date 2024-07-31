@@ -1,8 +1,8 @@
 export const USER_AGENT = "sky-crawler"
 
-export interface PaidContent {
-  claimId: string 
-  price: string 
+export interface PaidContentData {
+  claimId: string
+  price: number
 }
 
 export interface RobotsTxtData {
@@ -10,6 +10,6 @@ export interface RobotsTxtData {
   siteUsername: string
   disallowedPaths: Set<string>
   paidContentPaths: {
-      [path: string]: PaidContent
+    [path: string]: PaidContentData
   }
 }

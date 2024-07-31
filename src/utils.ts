@@ -1,10 +1,11 @@
 import axios from "axios"
 import dotenv from "dotenv"
-
+import fs from "fs/promises"
+import path from "path"
 import { RobotsTxtData, USER_AGENT } from "./types"
 
 dotenv.config()
-const apiKey = process.env.CRAWLER_API_KEY!
+const apiKey = process.env.SKYFIRE_API_KEY!
 
 const robotsTxtCache: { [domain: string]: string } = {}
 
@@ -141,4 +142,11 @@ export function verifyClaimReceived(
 
 export function normalizePath(path: string): string {
   return path.endsWith("/") ? path : `${path}/`
+}
+
+export const saveHtmlToFile = async (html: string, url: string) => {
+  const filename = url.replace(/[^a-z0-9]/gi, "_").toLowerCase() + ".html"
+  const filepath = path.join("storage/datasets/downloaded_html", filename)
+  await fs.mkdir(path.dirname(filepath), { recursive: true })
+  await fs.writeFile(filepath, html, "utf-8")
 }

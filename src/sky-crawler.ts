@@ -7,6 +7,7 @@ import {
   getRelativePath,
   normalizePath,
   verifyClaimReceived,
+  saveHtmlToFile,
 } from "./utils"
 
 const crawler = new PuppeteerCrawler({
@@ -39,11 +40,13 @@ const crawler = new PuppeteerCrawler({
 
     const data = {
       title: title,
-      href: request.url,
+      url: request.url,
     }
 
     console.log(data)
     await Dataset.pushData(data)
+    const html = await page.content()
+    await saveHtmlToFile(html, request.url)
 
     const allLinks = await page.$$eval("a", (anchors) =>
       anchors.map((anchor) => anchor.href),
@@ -67,4 +70,5 @@ await crawler.addRequests(startUrls)
 await crawler.run()
 
 console.log(robotsData)
+await Dataset.exportToCSV("output")
 console.log("Crawler finished.")

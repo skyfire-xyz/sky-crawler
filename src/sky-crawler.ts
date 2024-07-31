@@ -1,4 +1,4 @@
-import { PuppeteerCrawler } from "crawlee"
+import { PuppeteerCrawler, Dataset } from "crawlee"
 import {
   fetchRobotsTxt,
   parseRobotsTxt,
@@ -10,6 +10,7 @@ import {
 } from "./utils"
 
 const crawler = new PuppeteerCrawler({
+  maxRequestsPerCrawl: 20,
   async requestHandler({ request, page, enqueueLinks, log }) {
     const currPath = normalizePath(getRelativePath(request.url))
     const paidContent = Object.entries(robotsData.paidContentPaths).find(
@@ -30,11 +31,19 @@ const crawler = new PuppeteerCrawler({
     }
 
     log.info(`Crawling ${request.url}`)
-    const data = await page.$$eval("body", () => ({
-      title: document.title,
-      url: location.href,
-    }))
+
+    const title = await page.$eval(
+      ".text-40.font-bold.leading-98.lg\\:text-80",
+      (h1) => h1?.textContent?.trim() || "No title found",
+    )
+
+    const data = {
+      title: title,
+      href: request.url,
+    }
+
     console.log(data)
+    await Dataset.pushData(data)
 
     const allLinks = await page.$$eval("a", (anchors) =>
       anchors.map((anchor) => anchor.href),
@@ -49,7 +58,7 @@ const crawler = new PuppeteerCrawler({
   },
 })
 
-const startUrls = ["http://127.0.0.1:5500/example-website/"]
+const startUrls = ["http://localhost:3001/"]
 const robotsTxt = await fetchRobotsTxt(startUrls[0])
 const robotsData = parseRobotsTxt(robotsTxt)
 console.log(robotsData)

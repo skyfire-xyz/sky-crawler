@@ -10,19 +10,11 @@ const robotsTxtCache: { [domain: string]: string } = {}
 
 export function getRelativePath(path: string): string {
   const parsedPath = new URL(path)
-  const fullPath = parsedPath.pathname
-  const basePath = "/example-website" // WHEN FINISHED TESTING, DELETE AND LET relativePath = fullPath
-  const relativePath = fullPath.startsWith(basePath)
-    ? fullPath.substring(basePath.length)
-    : fullPath
-  return relativePath
-  // return parsedPath.pathname
+  return parsedPath.pathname
 }
 
-// Fetch and return the content of robots.txt
 export async function fetchRobotsTxt(path: string): Promise<string> {
-  // const domain = new URL(path).origin
-  const domain = "http://127.0.0.1:5500/example-website/"
+  const domain = new URL(path).origin
   if (robotsTxtCache[domain]) {
     return robotsTxtCache[domain]
   }

@@ -41,7 +41,7 @@ const App: React.FC = () => {
         }
       } else {
         setCurrentSite(message);
-        setLog((prevLog) => [{ title: message, fullMessage: message }, ...prevLog]);
+        // setLog((prevLog) => [{ title: message, fullMessage: message }, ...prevLog]);
       }
     };
 
@@ -62,7 +62,7 @@ const App: React.FC = () => {
         <h1 className="header">Web Crawler Dashboard</h1>
         <div className="section">
           <h2>Currently Crawling:</h2>
-          <p> {currentSite} </p> {  }
+          <p> {currentSite} </p>
         </div>
         <div className="section">
           <h2>Log:</h2>

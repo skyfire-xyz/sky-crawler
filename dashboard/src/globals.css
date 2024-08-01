@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --black-default: #000;
+  --black-900: #1c1c1c;
+  --black-500: #747474;
+  --black-100: #f9f9f9;
+  --black-800: #090909;
+  --black-700: #424242;
+  --black-600: #3a3a3a;
+  --black-300: #d4d4d4;
+  --black-200: #f3f3f3;
+  --placeholder: #a1a5b0;
+  --border: #E0E0E0;
+}

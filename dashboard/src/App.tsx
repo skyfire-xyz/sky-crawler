@@ -2,22 +2,19 @@ import React, { useEffect, useState } from 'react';
 import Collapsible from './utils/collapsible';
 import './App.css';
 
-
-function isJSON(message: string): boolean {
-  try{
-    JSON.parse(message)
-    return true
+const isJSON = (message: string): boolean => {
+  try {
+    JSON.parse(message);
+    return true;
+  } catch {
+    return false;
   }
-  catch(e){
-    return false
-  }
-}
+};
 
 const App: React.FC = () => {
   const [currentSite, setCurrentSite] = useState<string>('');
-  const [log, setLog] = useState<string[]>([]);
+  const [log, setLog] = useState<{ title: string; fullMessage: string }[]>([]);
   const [payments, setPayments] = useState<string[]>([]);
-
 
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8080');
@@ -27,22 +24,25 @@ const App: React.FC = () => {
     };
 
     ws.onmessage = (event) => {
-
       const message = event.data.toString();
-      console.log("received message: ", message)
-      
+      console.log("Received message: ", message);
+
       if (message.startsWith("Paid") || message.startsWith("Payment")) {
         setPayments((prevPayments) => [message, ...prevPayments]);
-      } else {
-        if (isJSON(message)) {
-          setLog((prevLog) => [message, ...prevLog]);
-        } else {
-          setCurrentSite(message);
-          setLog((prevLog) => [message, ...prevLog]);
+      } else if (isJSON(message)) {
+        try {
+          const parsedMessage = JSON.parse(message);
+          const { title, text, url } = parsedMessage;
+          if (title && text && url) {
+            setLog((prevLog) => [{ title, fullMessage: message }, ...prevLog]);
+          }
+        } catch (e) {
+          console.error("Error parsing JSON:", e);
         }
+      } else {
+        setCurrentSite(message);
+        setLog((prevLog) => [{ title: message, fullMessage: message }, ...prevLog]);
       }
-      
-      
     };
 
     ws.onclose = () => {
@@ -53,6 +53,8 @@ const App: React.FC = () => {
       ws.close();
     };
   }, []);
+  
+
 
   return (
     <div className="container">
@@ -60,23 +62,23 @@ const App: React.FC = () => {
         <h1 className="header">Web Crawler Dashboard</h1>
         <div className="section">
           <h2>Currently Crawling:</h2>
-          <Collapsible text={currentSite} maxLength={200} />
+          <p> {currentSite} </p> {  }
         </div>
         <div className="section">
           <h2>Log:</h2>
           <ul>
-            {log.map((site, index) => (
-              <li key={index}>
-                <Collapsible text={site} maxLength={200} />
-              </li>
-            ))}
+          {log.map((entry, index) => (
+            <li key={index}>
+              <Collapsible title={entry.title} fullMessage={entry.fullMessage} />
+            </li>
+          ))}
           </ul>
         </div>
       </div>
       <div className="sidebar">
         <h2 className="header">Payment Protocol Logs</h2>
         <ul>
-          {payments.map((payment, index) => (
+        {payments.map((payment, index) => (
             <li key={index}>{payment}</li>
           ))}
         </ul>

@@ -1,32 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface CollapsibleProps {
-  text: string;
-  maxLength: number;
+  title: string;
+  fullMessage: string;
 }
 
-const Collapsible: React.FC<CollapsibleProps> = ({ text, maxLength }) => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
-
-  const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
-  const renderText = () => {
-    if (isCollapsed) {
-      return text.length > 180 ? text.substring(0, 180) + '...' : text;
+const Collapsible: React.FC<CollapsibleProps> = ({ title, fullMessage }) => {
+  const openInNewTab = () => {
+    const newWindow = window.open();
+    if (newWindow) {
+      newWindow.document.write(`
+        <html>
+          <head><title>Full Message</title></head>
+          <body>
+            <pre>${fullMessage}</pre>
+          </body>
+        </html>
+      `);
+      newWindow.document.close();
     }
-    return text;
   };
 
   return (
     <div>
-      <p>{renderText()}</p>
-      {text.length > maxLength && (
-        <button onClick={toggleCollapse}>
-          {isCollapsed ? 'Show More' : 'Show Less'}
-        </button>
-      )}
+      <p>{title}</p>
+      <button onClick={openInNewTab}>View Full Message</button>
     </div>
   );
 };

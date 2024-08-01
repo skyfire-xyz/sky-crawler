@@ -42,7 +42,7 @@ const crawler = new PuppeteerCrawler({
     }
 
     log.info(`Crawling ${request.url}`)
-    ws.send(`Crawling ${request.url}`)
+    // ws.send(`Crawling ${request.url}`)
 
     const title = await page.$eval(
       ".text-40.font-bold.leading-98.lg\\:text-80",

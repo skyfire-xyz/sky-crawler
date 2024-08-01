@@ -3,17 +3,20 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "tsx src/sky-crawler.ts"
+    "start": "tsx src/sky-crawler.ts",
+    "start:server": "tsx src/server.ts"
   },
   "dependencies": {
     "@types/node": "^20.14.12",
     "axios": "^1.7.2",
     "crawlee": "^3.11.1",
     "dotenv": "^16.4.5",
-    "puppeteer": "^22.13.1"
+    "puppeteer": "^22.13.1",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
+    "@types/ws": "^8.5.12",
     "ts-node": "^10.9.2",
     "tsx": "^4.16.2",
     "typescript": "^5.5.4"

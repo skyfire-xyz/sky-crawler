@@ -10,6 +10,11 @@ import {
   saveHtmlToFile,
 } from "./utils"
 
+import WebSocket, { WebSocketServer } from 'ws'
+
+const ws = new WebSocket('ws://localhost:8080');
+
+
 const crawler = new PuppeteerCrawler({
   maxRequestsPerCrawl: 20,
   async requestHandler({ request, page, enqueueLinks, log }) {
@@ -32,6 +37,7 @@ const crawler = new PuppeteerCrawler({
     }
 
     log.info(`Crawling ${request.url}`)
+    ws.send(`Crawling ${request.url}`)
 
     const title = await page.$eval(
       ".text-40.font-bold.leading-98.lg\\:text-80",
@@ -72,3 +78,4 @@ await crawler.run()
 console.log(robotsData)
 await Dataset.exportToCSV("output")
 console.log("Crawler finished.")
+ws.close()

@@ -26,12 +26,16 @@ const crawler = new PuppeteerCrawler({
     )
 
     if (paidContent) {
-      const [path, { claimId }] = paidContent
+      const [path, { claimId, price }] = paidContent
       if (!claimId) {
         log.info(`Access to ${path} requires payment.`)
         await processPayment(path, robotsData)
-        verifyClaimReceived(path, request.url, robotsData)
-        ws.send(`paid for access to ${path} with claimId = ${robotsData.paidContentPaths[path].claimId}`)
+        const isReceived = verifyClaimReceived(path, request.url, robotsData)
+        if (!isReceived) {
+          ws.send(`Payment for access to ${path} failed. Skipping ${request.url}`)
+          return
+        }
+        ws.send(`Paid ${price} USDC for access to ${path} with claimId = ${robotsData.paidContentPaths[path].claimId}`)
       } else {
         log.info(`Already paid for access to ${path}`)
       }
@@ -52,7 +56,7 @@ const crawler = new PuppeteerCrawler({
       url: request.url,
     }
 
-    console.log(data)
+    // console.log(data)
     ws.send(JSON.stringify(data, null, 2))
     await Dataset.pushData(data)
     const html = await page.content()

@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Collapsible from './utils/collapsible';
 
+function isJSON(message: string): boolean {
+  try{
+    JSON.parse(message)
+    return true
+  }
+  catch(e){
+    return false
+  }
+}
+
 const App: React.FC = () => {
   const [currentSite, setCurrentSite] = useState<string>('');
   const [log, setLog] = useState<string[]>([]);
@@ -17,8 +27,14 @@ const App: React.FC = () => {
       const message = event.data.toString();
       console.log("received message: ", message)
       
-      setCurrentSite(message);
-      setLog(prevLog => [message, ...prevLog]);
+      if(isJSON(message)){
+        setLog(prevLog => [message, ...prevLog]);
+      }
+      else{
+        setCurrentSite(message);
+        setLog(prevLog => [message, ...prevLog]);
+      }
+      
       
     };
 

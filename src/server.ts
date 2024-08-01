@@ -18,23 +18,14 @@ wss.on('connection', (ws: WebSocket) => {
 
   ws.on('message', (message) => {
     if (Buffer.isBuffer(message)) {
-      console.log("Received binary message");
-      console.log(message.toString())
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(message.toString());
-        }
-      })
-    } else {
-      console.log("Received text message:", message);
-      wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(message);
-      }
-    });
+      console.log(`Received binary message:  ${message.toString()}`)
+      console.log(message)
+      broadcast(message.toString())
     }
-
-    
+    else{
+      console.log("Invalid Message Received")
+    }
+     
   });
 
   ws.on('close', () => {

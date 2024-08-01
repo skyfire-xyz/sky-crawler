@@ -129,14 +129,15 @@ export function verifyClaimReceived(
   path: string,
   fullPath: string,
   robotsData: RobotsTxtData,
-) {
+): boolean {
   if (robotsData.paidContentPaths[path].claimId) {
     console.info(
       `Payment processed for access to ${path} with claimId: ${robotsData.paidContentPaths[path].claimId}`,
     )
+    return true
   } else {
     console.warn(`Payment for access to ${path} failed. Skipping ${fullPath}`)
-    return
+    return false
   }
 }
 

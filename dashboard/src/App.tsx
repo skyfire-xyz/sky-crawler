@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Collapsible from './utils/collapsible';
 
 const App: React.FC = () => {
   const [currentSite, setCurrentSite] = useState<string>('');
@@ -12,10 +13,12 @@ const App: React.FC = () => {
     };
 
     ws.onmessage = (event) => {
-      const message = event.data;
-      console.log("received message: ", message.toString())
-      setCurrentSite(message.toString());
-      setLog(prevLog => [message.toString(), ...prevLog]);
+
+      const message = event.data.toString();
+      console.log("received message: ", message)
+      
+      setCurrentSite(message);
+      setLog(prevLog => [message, ...prevLog]);
       
     };
 
@@ -33,13 +36,15 @@ const App: React.FC = () => {
       <h1>Web Crawler Dashboard</h1>
       <div>
         <h2>Currently Crawling:</h2>
-        <p>{currentSite}</p>
+        {<Collapsible text={currentSite} maxLength={200} />}
       </div>
       <div>
         <h2>Log:</h2>
         <ul>
           {log.map((site, index) => (
-            <li key={index}>{site}</li>
+            <li key={index}>
+              <Collapsible text={site} maxLength={200} />
+            </li>
           ))}
         </ul>
       </div>

@@ -31,6 +31,7 @@ const crawler = new PuppeteerCrawler({
         log.info(`Access to ${path} requires payment.`)
         await processPayment(path, robotsData)
         verifyClaimReceived(path, request.url, robotsData)
+        ws.send(`paid for access to ${path} with claimId = ${robotsData.paidContentPaths[path].claimId}`)
       } else {
         log.info(`Already paid for access to ${path}`)
       }
@@ -43,13 +44,16 @@ const crawler = new PuppeteerCrawler({
       ".text-40.font-bold.leading-98.lg\\:text-80",
       (h1) => h1?.textContent?.trim() || "No title found",
     )
+    const textContent = await page.$eval('body', (element) => element.innerText);
 
     const data = {
       title: title,
+      text: textContent,
       url: request.url,
     }
 
     console.log(data)
+    ws.send(JSON.stringify(data, null, 2))
     await Dataset.pushData(data)
     const html = await page.content()
     await saveHtmlToFile(html, request.url)

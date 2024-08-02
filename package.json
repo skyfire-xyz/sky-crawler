@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start -p ${PORT:-3001}",
     "lint": "next lint",
+    "test": "jest --passWithNoTests",
     "format": "prettier --check --write src/",
     "format-check": "prettier --check src/"
   },

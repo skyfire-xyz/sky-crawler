@@ -17,7 +17,7 @@ function isJSON(message: string): boolean {
 
 export default function App() {
   const [currentSite, setCurrentSite] = useState<string>("");
-  const [log, setLog] = useState<{ title: string; fullMessage: string }[]>([]);
+  const [log, setLog] = useState<{ url: string; fullMessage: string }[]>([]);
   const [payments, setPayments] = useState<string[]>([]);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function App() {
           const parsedMessage = JSON.parse(message);
           const { title, text, url } = parsedMessage;
           if (title && text && url) {
-            setLog((prevLog) => [{ title, fullMessage: message }, ...prevLog]);
+            setLog((prevLog) => [{ url, fullMessage: message }, ...prevLog]);
           }
         } catch (e) {
           console.error("Error parsing JSON:", e);
@@ -69,24 +69,20 @@ export default function App() {
         <SearchBar />
       </div>
       <div className="flex-grow p-4">
-        <div className="bg-gray-50 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 p-4 mb-4">
-          <h2 className="text-xl font-bold mb-2 dark:text-white">Currently Crawling:</h2>
-          <p className="dark:text-white">{currentSite}</p>
-        </div>
         <div className="flex space-x-4">
           <div className="flex-grow p-4 bg-gray-50 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
-            <h2 className="text-xl font-bold mb-2 dark:text-white">Log:</h2>
+            <h2 className="text-xl font-bold mb-2 dark:text-white">Crawled Data</h2>
             <ul>
               {log.map((entry, index) => (
                 <li key={index} className="flex items-center justify-between mb-2">
-                  <span className="dark:text-white">{entry.title}</span>
+                  <span className="dark:text-white">{entry.url}</span>
                   <ShowTextButton text={entry.fullMessage} />
                 </li>
               ))}
             </ul>
           </div>
-          <div className="w-1/3 p-4 bg-gray-50 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
-            <h2 className="text-xl font-bold mb-2 dark:text-white">Payment Protocol Logs</h2>
+          <div className="w-1/3 p-4 bg-gray-900 text-white border border-blue-800 rounded-lg dark:bg-white dark:text-gray-900 dark:border-gray-300">
+            <h2 className="text-xl font-bold mb-2">Payment Protocol Logs</h2>
             <ul>
               {payments.map((payment, index) => (
                 <li key={index} className="dark:text-white">{payment}</li>

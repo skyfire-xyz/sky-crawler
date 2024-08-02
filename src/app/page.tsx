@@ -7,19 +7,16 @@ import "./App.css";
 import SearchBar from "./components/SearchBar";
 import ShowTextButton from "./components/ShowTextButton";
 
-
 const LogList = ({ log }: { log: MessageData[] }) => (
-  <div className="flex-grow p-4 bg-gray-50 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
-    <h2 className="text-xl font-bold mb-2 dark:text-white">Crawled Data</h2>
+  <div className="flex-grow rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
+    <h2 className="mb-2 text-xl font-bold dark:text-white">Crawled Data</h2>
     <ul>
       {log.map((entry, index) => (
-        <li key={index} className="flex items-center justify-between mb-2">
-          <span className="text-custom-teal mr-2" style={{ color: '#0D7490' }}>
+        <li key={index} className="mb-2 flex items-center justify-between">
+          <span className="text-custom-teal mr-2" style={{ color: "#0D7490" }}>
             {entry.time}ms
           </span>
-          <span className="flex-1 dark:text-white">
-            {entry.url}
-          </span>
+          <span className="flex-1 dark:text-white">{entry.url}</span>
           <ShowTextButton text={entry.text} />
         </li>
       ))}
@@ -27,17 +24,17 @@ const LogList = ({ log }: { log: MessageData[] }) => (
   </div>
 );
 
-
 const PaymentLog = ({ payments }: { payments: MessageData[] }) => (
-  <div className="w-1/3 p-4 bg-gray-900 text-white border border-blue-800 rounded-lg dark:bg-white dark:text-gray-900 dark:border-gray-300">
-    <h2 className="text-xl font-bold mb-2">Payment Protocol Logs</h2>
+  <div className="w-1/3 rounded-lg border border-blue-800 bg-gray-900 p-4 text-white dark:border-gray-300 dark:bg-white dark:text-gray-900">
+    <h2 className="mb-2 text-xl font-bold">Payment Protocol Logs</h2>
     <ul>
       {payments.map((payment, index) => (
-        <li key={index} className="dark:text-white">{payment.text}</li>
+        <li key={index} className="dark:text-white">
+          {payment.text}
+        </li>
       ))}
     </ul>
   </div>
-
 );
 
 interface MessageData {
@@ -63,13 +60,12 @@ export default function App() {
         if (data.message.type === "page") {
           setCurrentSite(data.message);
           setLog((prevLog) => [data.message, ...prevLog]);
-      } else {
+        } else {
           setPayments((prevPayments) => [data.message, ...prevPayments]);
+        }
       }
-    }
-
     });
-        return () => {
+    return () => {
       pusher.unsubscribe("my-channel");
     };
   }, []);
@@ -77,10 +73,12 @@ export default function App() {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="p-4">
-        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
           SkyCrawler
         </h1>
-        <h4 className="text-2xl font-bold dark:text-white">Powered by Skyfire Payments</h4>
+        <h4 className="text-2xl font-bold dark:text-white">
+          Powered by Skyfire Payments
+        </h4>
       </div>
       <div className="p-4">
         <SearchBar />
@@ -93,4 +91,4 @@ export default function App() {
       </div>
     </div>
   );
-};
+}

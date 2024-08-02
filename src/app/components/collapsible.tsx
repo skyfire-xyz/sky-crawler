@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface CollapsibleProps {
   text: string;
@@ -14,7 +14,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({ text, maxLength }) => {
 
   const renderText = () => {
     if (isCollapsed) {
-      return text.length > 180 ? text.substring(0, 180) + '...' : text;
+      return text.length > 180 ? text.substring(0, 180) + "..." : text;
     }
     return text;
   };
@@ -24,7 +24,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({ text, maxLength }) => {
       <p>{renderText()}</p>
       {text.length > maxLength && (
         <button onClick={toggleCollapse}>
-          {isCollapsed ? 'Show More' : 'Show Less'}
+          {isCollapsed ? "Show More" : "Show Less"}
         </button>
       )}
     </div>

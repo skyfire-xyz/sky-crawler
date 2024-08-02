@@ -70,7 +70,7 @@ jobs:
       - uses: skyfire-xyz/github-actions/deploy@main
         with:
           api-key: ${{ secrets.RENDER_API_KEY }}
-          service-name: sky-dashboard-${{ inputs.environment }}
+          service-name: sky-crawler-${{ inputs.environment }}
           ref: ${{ inputs.ref }}
           wait-time: ${{ inputs.polling-interval }}
           image-tag: null

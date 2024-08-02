@@ -8,11 +8,11 @@ import Collapsible from "./components/collapsible";
 import SearchBar from "./components/SearchBar";
 import ShowTextButton from "./components/ShowTextButton";
 
-const CrawlingStatus = ({ currentSite }: { currentSite: MessageData }) => (
-          <div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
-          <h2 className="mb-2 text-xl font-bold dark:text-white">Currently Crawling:</h2>
-          <p className="dark:text-white">{currentSite?.url}</p>
-        </div>
+const CrawlingStatus = ({ currentSite }: { currentSite: MessageData | undefined }) => (
+  <div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
+    <h2 className="mb-2 text-xl font-bold dark:text-white">Currently Crawling:</h2>
+    <p className="dark:text-white">{currentSite?.url}</p>
+  </div>
 );
 
 const LogList = ({ log }: { log: MessageData[] }) => (

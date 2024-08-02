@@ -12,11 +12,25 @@ const LogList = ({ log }: { log: MessageData[] }) => (
     <h2 className="mb-2 text-xl font-bold dark:text-white">Crawled Data</h2>
     <ul>
       {log.map((entry, index) => (
-        <li key={index} className="mb-2 flex items-center justify-between">
-          <span className="text-custom-teal mr-2" style={{ color: "#0D7490" }}>
-            {entry.time}ms
-          </span>
-          <span className="flex-1 dark:text-white">{entry.url}</span>
+        <li key={index} className="mb-1.5 flex items-start justify-between">
+          <div className="flex-1">
+            <div className="flex flex-col">
+              <span className="text-gray-800 dark:text-gray-400">
+                {entry.url}
+              </span>
+              <div className="flex items-center">
+              <span className="text-xs text-[#0D7490] mr-3">
+                  [{entry.paid}]
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-300 mr-3">
+                  Characters: {entry.char}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-300">
+                  ({entry.time}ms)
+                </span>
+              </div>
+            </div>
+          </div>
           <ShowTextButton text={entry.text} />
         </li>
       ))}
@@ -24,13 +38,25 @@ const LogList = ({ log }: { log: MessageData[] }) => (
   </div>
 );
 
+
 const PaymentLog = ({ payments }: { payments: MessageData[] }) => (
   <div className="w-1/3 rounded-lg border border-blue-800 bg-gray-900 p-4 text-white dark:border-gray-300 dark:bg-white dark:text-gray-900">
     <h2 className="mb-2 text-xl font-bold">Payment Protocol Logs</h2>
     <ul>
       {payments.map((payment, index) => (
-        <li key={index} className="dark:text-white">
-          {payment.text}
+        <li key={index} className="mb-1.5 flex items-start justify-between">
+          <div className="flex-1">
+            <div className="flex flex-col">
+              <span className="text-gray-200 dark:text-gray-400">
+                {payment.amount} USD paid to {payment.receiverUsername}
+              </span>
+              <div className="flex items-center">
+                <span className="text-xs text-[#0eb8c4] mr-3">
+                  Access granted to {payment.path}
+                </span>
+              </div>
+            </div>
+          </div>
         </li>
       ))}
     </ul>
@@ -42,7 +68,13 @@ interface MessageData {
   title: string;
   url: string;
   text: string;
+  paid: string;
+  char: string;
   time: string;
+
+  amount: string;
+  receiverUsername: string;
+  path: string;
 }
 
 export default function App() {

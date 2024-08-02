@@ -1,64 +1,80 @@
 "use client";
 
 import "@/src/globals.css";
-import React, { useEffect, useState } from "react";
-import ShowTextButton from './components/ShowTextButton'
-import SearchBar from "./components/SearchBar";
+import Pusher from "pusher-js";
+import { useEffect, useState } from "react";
 import "./App.css";
+import Collapsible from "./components/collapsible";
+import SearchBar from "./components/SearchBar";
+import ShowTextButton from "./components/ShowTextButton";
 
-function isJSON(message: string): boolean {
-  try {
-    JSON.parse(message);
-    return true;
-  } catch (e) {
-    return false;
-  }
+const CrawlingStatus = ({ currentSite }: { currentSite: MessageData }) => (
+          <div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
+          <h2 className="mb-2 text-xl font-bold dark:text-white">Currently Crawling:</h2>
+          <p className="dark:text-white">{currentSite?.url}</p>
+        </div>
+);
+
+const LogList = ({ log }: { log: MessageData[] }) => (
+  <div className="grow rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
+    <h2 className="mb-2 text-xl font-bold dark:text-white">Log:</h2>
+    <ul>
+      {log.map((entry, index) => (
+        <li key={index} className="mb-2 flex items-center justify-between">
+          <span className="dark:text-white">{entry.title}</span>
+          <ShowTextButton text={entry.text} />
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+const PaymentLog = ({ payments }: { payments: MessageData[] }) => (
+  <div className="w-1/3 rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
+    <h2 className="mb-2 text-xl font-bold dark:text-white">Payment Protocol Logs</h2>
+    <ul>
+      {payments.map((payment, index) => (
+        <li key={index} className="dark:text-white">{payment.text}</li>
+      ))}
+    </ul>
+  </div>
+);
+
+interface MessageData {
+  type: string;
+  title: string;
+  url: string;
+  text: string;
 }
 
 export default function App() {
-  const [currentSite, setCurrentSite] = useState<string>("");
-  const [log, setLog] = useState<{ title: string; fullMessage: string }[]>([]);
-  const [payments, setPayments] = useState<string[]>([]);
+  const [currentSite, setCurrentSite] = useState<MessageData>();
+  const [log, setLog] = useState<MessageData[]>([]);
+  const [payments, setPayments] = useState<MessageData[]>([]);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8080");
-
-    ws.onopen = () => {
-      console.log("Connected to WebSocket server");
-    };
-
-    ws.onmessage = (event) => {
-      const message = event.data.toString();
-      console.log("Received message: ", message);
-
-      if (message.startsWith("Paid") || message.startsWith("Payment")) {
-        setPayments((prevPayments) => [message, ...prevPayments]);
-      } else if (isJSON(message)) {
-        try {
-          const parsedMessage = JSON.parse(message);
-          const { title, text, url } = parsedMessage;
-          if (title && text && url) {
-            setLog((prevLog) => [{ title, fullMessage: message }, ...prevLog]);
-          }
-        } catch (e) {
-          console.error("Error parsing JSON:", e);
-        }
+    const pusher = new Pusher("6d4dae6cbd4c63819fb9", {
+      cluster: "us3",
+    });
+    const channel = pusher.subscribe("my-channel");
+    channel.bind("my-event", (data: { message: MessageData }) => {
+      if (data.message !== undefined) {
+        if (data.message.type === "page") {
+          setCurrentSite(data.message);
+          setLog((prevLog) => [data.message, ...prevLog]);
       } else {
-        setCurrentSite(message);
+          setPayments((prevPayments) => [data.message, ...prevPayments]);
       }
-    };
+    }
 
-    ws.onclose = () => {
-      console.log("Disconnected from WebSocket server");
-    };
-
-    return () => {
-      ws.close();
+    });
+        return () => {
+      pusher.unsubscribe("my-channel");
     };
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col">
       <div className="p-4">
         <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
           SkyCrawler
@@ -68,31 +84,11 @@ export default function App() {
       <div className="p-4">
         <SearchBar />
       </div>
-      <div className="flex-grow p-4">
-        <div className="bg-gray-50 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 p-4 mb-4">
-          <h2 className="text-xl font-bold mb-2 dark:text-white">Currently Crawling:</h2>
-          <p className="dark:text-white">{currentSite}</p>
-        </div>
+      <div className="grow p-4">
+        <CrawlingStatus currentSite={currentSite} />
         <div className="flex space-x-4">
-          <div className="flex-grow p-4 bg-gray-50 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
-            <h2 className="text-xl font-bold mb-2 dark:text-white">Log:</h2>
-            <ul>
-              {log.map((entry, index) => (
-                <li key={index} className="flex items-center justify-between mb-2">
-                  <span className="dark:text-white">{entry.title}</span>
-                  <ShowTextButton text={entry.fullMessage} />
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="w-1/3 p-4 bg-gray-50 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
-            <h2 className="text-xl font-bold mb-2 dark:text-white">Payment Protocol Logs</h2>
-            <ul>
-              {payments.map((payment, index) => (
-                <li key={index} className="dark:text-white">{payment}</li>
-              ))}
-            </ul>
-          </div>
+          <LogList log={log} />
+          <PaymentLog payments={payments} />
         </div>
       </div>
     </div>

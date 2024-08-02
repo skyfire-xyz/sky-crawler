@@ -21,7 +21,7 @@ const ShowTextButton: React.FC<ShowTextButtonProps> = ({ text }) => {
     }
   };
 
-  return <Button onClick={handleClick}>Show Text</Button>;
+  return <Button onClick={handleClick} size="xs">Show Data</Button>;
 };
 
 export default ShowTextButton;

@@ -16,7 +16,7 @@ const ws = new WebSocket('ws://localhost:8080');
 
 
 const crawler = new PuppeteerCrawler({
-  maxRequestsPerCrawl: 20,
+  maxRequestsPerCrawl: 100,
   async requestHandler({ request, page, enqueueLinks, log }) {
     const currPath = normalizePath(getRelativePath(request.url))
     const paidContent = Object.entries(robotsData.paidContentPaths).find(
@@ -44,10 +44,16 @@ const crawler = new PuppeteerCrawler({
     log.info(`Crawling ${request.url}`)
     ws.send(`Crawling ${request.url}`)
 
-    const title = await page.$eval(
-      ".text-40.font-bold.leading-98.lg\\:text-80",
-      (h1) => h1?.textContent?.trim() || "No title found",
-    )
+    let title
+    try {
+      title = await page.$eval(
+        ".text-40.font-bold.leading-98.lg\\:text-80",
+        (h1) => h1?.textContent?.trim()
+      )
+    } catch (e) {
+      title = "No title found"
+    }
+   
     const textContent = await page.$eval('body', (element) => element.innerText);
 
     const data = {
@@ -75,7 +81,7 @@ const crawler = new PuppeteerCrawler({
   },
 })
 
-const startUrls = ["http://localhost:3001/"]
+const startUrls = ["http://localhost:3002/"]
 const robotsTxt = await fetchRobotsTxt(startUrls[0])
 const robotsData = parseRobotsTxt(robotsTxt)
 console.log(robotsData)

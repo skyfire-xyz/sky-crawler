@@ -19,10 +19,10 @@ const LogList = ({ log }: { log: MessageData[] }) => (
                 {entry.url}
               </span>
               <div className="flex items-center">
-              <span className="text-xs text-[#0D7490] mr-3">
+                <span className="mr-3 text-xs text-[#0D7490]">
                   [{entry.paid}]
                 </span>
-                <span className="text-xs text-gray-500 dark:text-gray-300 mr-3">
+                <span className="mr-3 text-xs text-gray-500 dark:text-gray-300">
                   Characters: {entry.char}
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-300">
@@ -38,7 +38,6 @@ const LogList = ({ log }: { log: MessageData[] }) => (
   </div>
 );
 
-
 const PaymentLog = ({ payments }: { payments: MessageData[] }) => (
   <div className="w-1/3 rounded-lg border border-blue-800 bg-gray-900 p-4 text-white dark:border-gray-300 dark:bg-white dark:text-gray-900">
     <h2 className="mb-2 text-xl font-bold">Payment Protocol Logs</h2>
@@ -51,7 +50,7 @@ const PaymentLog = ({ payments }: { payments: MessageData[] }) => (
                 {payment.amount} USD paid to {payment.receiverUsername}
               </span>
               <div className="flex items-center">
-                <span className="text-xs text-[#0eb8c4] mr-3">
+                <span className="mr-3 text-xs text-[#0eb8c4]">
                   Access granted to {payment.path}
                 </span>
               </div>

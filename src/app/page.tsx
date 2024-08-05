@@ -9,7 +9,9 @@ import ShowTextButton from "./components/ShowTextButton";
 
 const LogList = ({ log }: { log: MessageData[] }) => (
   <div className="grow rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
-    <h2 className="mb-2 text-xl font-bold dark:text-white">Crawled Data</h2>
+    <h2 className="mb-2 text-xl font-bold dark:text-white">
+      Crawled Data Logs
+    </h2>
     <ul>
       {log.map((entry, index) => (
         <li key={index} className="mb-1.5 flex items-start justify-between">
@@ -38,21 +40,34 @@ const LogList = ({ log }: { log: MessageData[] }) => (
   </div>
 );
 
-const PaymentLog = ({ logs }: { logs: MessageData[] }) => (
+const PaymentLog = ({
+  payments,
+  receipts,
+}: {
+  payments: MessageData[];
+  receipts: MessageData[];
+}) => (
   <div className="w-1/3 rounded-lg border border-blue-800 bg-gray-900 p-4 text-white dark:border-gray-300 dark:bg-white dark:text-gray-900">
     <h2 className="mb-2 text-xl font-bold">Payment Protocol Logs</h2>
     <ul>
-      {logs.map((log, index) => (
+      {payments.concat(receipts).map((log, index) => (
         <li key={index} className="mb-1.5 flex items-start justify-between">
           <div className="flex-1">
             <div className="flex flex-col">
-              <span className="text-gray-200 dark:text-gray-400">
-                {log.senderUsername} paid {log.amount} USD to{" "}
-                {log.receiverUsername}
-              </span>
-              {log.type === "receipt" ? null : (
+              {log.type === "payment" ? (
+                <span className="text-cyan-500 dark:text-blue-300">
+                  {log.senderUsername} paid {log.amount} USD to{" "}
+                  {log.receiverUsername}
+                </span>
+              ) : (
+                <span className="text-lime-500 dark:text-green-400">
+                  {log.senderUsername} paid {log.amount} USD to{" "}
+                  {log.receiverUsername}
+                </span>
+              )}
+              {log.type === "payment" && (
                 <div className="flex items-center">
-                  <span className="mr-3 text-xs text-[#0eb8c4]">
+                  <span className="mr-3 text-xs text-gray-300">
                     Access granted to {log.path}
                   </span>
                 </div>
@@ -136,7 +151,7 @@ export default function App() {
       <div className="grow p-4">
         <div className="flex space-x-4">
           <LogList log={log} />
-          <PaymentLog logs={combinedLogs} />
+          <PaymentLog payments={payments} receipts={receipts} />
         </div>
       </div>
     </div>

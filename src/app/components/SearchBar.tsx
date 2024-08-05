@@ -1,6 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+
+const apiKey = process.env.NEXT_PUBLIC_SKYFIRE_API_KEY;
 
 const SearchBar: React.FC = () => {
+  const [inputValue, setInputValue] = useState("");
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleButtonClick = async (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    const crawlerEndpoint = "http://localhost:3000/v1/crawler/start-crawl";
+    event.preventDefault();
+    console.log(`Input Value: ${inputValue}`);
+    try {
+      const requestBody = {
+        startUrl: inputValue,
+      };
+      const response = await axios.post(crawlerEndpoint, requestBody, {
+        headers: {
+          "skyfire-api-key": apiKey,
+          "content-type": "application/json",
+        },
+      });
+      console.log("here:", response.data);
+    } catch (error) {
+      console.error("Error processing payment:", error);
+    }
+  };
+
   return (
     <form className="flex w-full items-center">
       <label htmlFor="simple-search" className="sr-only">
@@ -30,11 +61,14 @@ const SearchBar: React.FC = () => {
           className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
           placeholder="Input website to crawl..."
           required
+          value={inputValue}
+          onChange={handleInputChange}
         />
       </div>
       <button
         type="submit"
         className="ms-2 rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        onClick={handleButtonClick}
       >
         <svg
           className="h-4 w-4"

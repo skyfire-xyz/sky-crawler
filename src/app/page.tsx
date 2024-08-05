@@ -8,7 +8,7 @@ import SearchBar from "./components/SearchBar";
 import ShowTextButton from "./components/ShowTextButton";
 
 const LogList = ({ log }: { log: MessageData[] }) => (
-  <div className="flex-grow rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
+  <div className="grow rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
     <h2 className="mb-2 text-xl font-bold dark:text-white">Crawled Data</h2>
     <ul>
       {log.map((entry, index) => (
@@ -81,6 +81,11 @@ export default function App() {
   const [log, setLog] = useState<MessageData[]>([]);
   const [payments, setPayments] = useState<MessageData[]>([]);
 
+  const handleSearch = () => {
+    setLog([]);
+    setPayments([]);
+  };
+
   useEffect(() => {
     const pusher = new Pusher("6d4dae6cbd4c63819fb9", {
       cluster: "us3",
@@ -112,7 +117,7 @@ export default function App() {
         </h4>
       </div>
       <div className="p-4">
-        <SearchBar />
+        <SearchBar onSearch={handleSearch} />
       </div>
       <div className="grow p-4">
         <div className="flex space-x-4">

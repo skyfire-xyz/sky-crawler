@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
+// import { v4 as uuidv4 } from "uuid";
 
 const apiKey = process.env.NEXT_PUBLIC_SKYFIRE_API_KEY;
 
-const SearchBar: React.FC = () => {
+interface SearchBarProps {
+  onSearch: () => void;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -14,11 +19,14 @@ const SearchBar: React.FC = () => {
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     const crawlerEndpoint = "http://localhost:3000/v1/crawler/start-crawl";
+    // const eventId: string = uuidv4();
     event.preventDefault();
+    onSearch();
     console.log(`Input Value: ${inputValue}`);
     try {
       const requestBody = {
         startUrl: inputValue,
+        // eventId: eventId,
       };
       const response = await axios.post(crawlerEndpoint, requestBody, {
         headers: {
@@ -40,7 +48,7 @@ const SearchBar: React.FC = () => {
       <div className="relative w-full">
         <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
           <svg
-            className="h-4 w-4 text-gray-500 dark:text-gray-400"
+            className="size-4 text-gray-500 dark:text-gray-400"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -58,7 +66,7 @@ const SearchBar: React.FC = () => {
         <input
           type="text"
           id="simple-search"
-          className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+          className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
           placeholder="Input website to crawl..."
           required
           value={inputValue}
@@ -71,7 +79,7 @@ const SearchBar: React.FC = () => {
         onClick={handleButtonClick}
       >
         <svg
-          className="h-4 w-4"
+          className="size-4"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

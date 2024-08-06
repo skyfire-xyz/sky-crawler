@@ -139,7 +139,7 @@ export default function App() {
     <div className="flex min-h-screen flex-col">
       <div className="p-4">
         <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
-          SkyCrawler
+          CrawlerBot
         </h1>
         <h4 className="text-2xl font-bold dark:text-white">
           Powered by Skyfire Payments

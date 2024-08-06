@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import SearchBar from "./components/SearchBar";
 import ShowTextButton from "./components/ShowTextButton";
+import { v4 as uuidv4 } from "uuid";
+
+const channelId = uuidv4().toString();
 
 const LogList = ({ log }: { log: MessageData[] }) => (
   <div className="grow rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
@@ -96,6 +99,7 @@ interface MessageData {
 }
 
 export default function App() {
+  console.log("channelId: " + channelId);
   const [currentSite, setCurrentSite] = useState<MessageData>();
   const [log, setLog] = useState<MessageData[]>([]);
   const [payments, setPayments] = useState<MessageData[]>([]);
@@ -111,7 +115,7 @@ export default function App() {
     const pusher = new Pusher("6d4dae6cbd4c63819fb9", {
       cluster: "us3",
     });
-    const channel = pusher.subscribe("my-channel");
+    const channel = pusher.subscribe(channelId);
     channel.bind("my-event", (data: { message: MessageData }) => {
       if (data.message !== undefined) {
         switch (data.message.type) {
@@ -129,7 +133,7 @@ export default function App() {
       }
     });
     return () => {
-      pusher.unsubscribe("my-channel");
+      pusher.unsubscribe(channelId);
     };
   }, []);
 
@@ -146,7 +150,7 @@ export default function App() {
         </h4>
       </div>
       <div className="p-4">
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} channelId={channelId} />
       </div>
       <div className="grow p-4">
         <div className="flex space-x-4">

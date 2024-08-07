@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
-// import { v4 as uuidv4 } from "uuid";
 
 const apiKey = process.env.NEXT_PUBLIC_SKYFIRE_API_KEY;
 
 interface SearchBarProps {
   onSearch: () => void;
+  channelId: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch, channelId }) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,22 +19,20 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     const crawlerEndpoint = "http://localhost:3000/v1/crawler/start-crawl";
-    // const eventId: string = uuidv4();
     event.preventDefault();
     onSearch();
     console.log(`Input Value: ${inputValue}`);
     try {
       const requestBody = {
         startUrl: inputValue,
-        // eventId: eventId,
+        channelId: channelId,
       };
-      const response = await axios.post(crawlerEndpoint, requestBody, {
+      await axios.post(crawlerEndpoint, requestBody, {
         headers: {
           "skyfire-api-key": apiKey,
           "content-type": "application/json",
         },
       });
-      console.log("here:", response.data);
     } catch (error) {
       console.error("Error processing payment:", error);
     }

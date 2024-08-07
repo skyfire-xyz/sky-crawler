@@ -9,16 +9,11 @@ const ApiInput: React.FC<ApiInputProps> = ({ onApiKeyChange }) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    onApiKeyChange(inputValue);
-    console.log("Submitted API key:", inputValue);
+    onApiKeyChange(event.target.value);
   };
 
   return (
-    <form className="w-1/3" onSubmit={handleSubmit}>
+    <form className="w-1/3">
       <label
         htmlFor="api-key"
         className="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -35,12 +30,6 @@ const ApiInput: React.FC<ApiInputProps> = ({ onApiKeyChange }) => {
           placeholder="Input Skyfire API key..."
           required
         />
-        <button
-          type="submit"
-          className="hovers:bg-blue-800 absolute bottom-1.5 right-2.5 rounded-lg bg-blue-700 px-3 py-1 text-sm font-medium text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Submit
-        </button>
       </div>
     </form>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Alert from "./Alert";
 
 const apiKey = process.env.NEXT_PUBLIC_SKYFIRE_API_KEY;
 
@@ -14,7 +15,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
   channelId,
   apiKey,
 }) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputUrl, setInputValue] = useState("");
+  const [alert, setAlert] = useState<{
+    type: "missing" | "invalid";
+    message: string;
+  } | null>(null);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -23,13 +28,29 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const handleButtonClick = async (
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
-    const crawlerEndpoint = "http://localhost:3000/v1/crawler/start-crawl";
     event.preventDefault();
+    if (!apiKey) {
+      setAlert({
+        type: "missing",
+        message: "Please fill out the API key field.",
+      });
+      return;
+    }
+    if (!inputUrl) {
+      setAlert({
+        type: "missing",
+        message: "Please input a website to crawl.",
+      });
+      return;
+    }
+
+    setAlert(null);
     onSearch();
-    console.log(`Input Value: ${inputValue}`);
+    console.log(`Input Value: ${inputUrl}`);
+    const crawlerEndpoint = "http://localhost:3000/v1/crawler/start-crawl";
     try {
       const requestBody = {
-        startUrl: inputValue,
+        startUrl: inputUrl,
         channelId: channelId,
       };
       await axios.post(crawlerEndpoint, requestBody, {
@@ -38,8 +59,18 @@ const SearchBar: React.FC<SearchBarProps> = ({
           "content-type": "application/json",
         },
       });
-    } catch (error) {
-      console.error("Error processing payment:", error);
+      // setAlert(null);
+      // onSearch();
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        // Handle specific Axios errors if needed
+        setAlert({
+          type: "invalid",
+          message:
+            "Error processing request. Please check your API key and try again.",
+        });
+      }
+      console.error("Error processing payment:", err);
     }
   };
 
@@ -72,7 +103,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
           placeholder="Input website to crawl..."
           required
-          value={inputValue}
+          value={inputUrl}
           onChange={handleInputChange}
         />
       </div>
@@ -98,6 +129,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
         </svg>
         <span className="sr-only">Search</span>
       </button>
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
     </form>
   );
 };

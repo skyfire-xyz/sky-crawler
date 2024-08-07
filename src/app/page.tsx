@@ -10,16 +10,22 @@ import SearchBar from "./components/SearchBar";
 import CrawlLog from "./components/CrawlLog";
 import PaymentLog from "./components/PaymentLog";
 import ApiInput from "./components/ApiInput";
+import Alert from "./components/Alert";
 
 const channelId = uuidv4().toString();
 
 export default function App() {
-  console.log("channelId: " + channelId);
   const [currentSite, setCurrentSite] = useState<MessageData>();
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [log, setLog] = useState<MessageData[]>([]);
   const [payments, setPayments] = useState<MessageData[]>([]);
   const [receipts, setReceipts] = useState<MessageData[]>([]);
+  const [alerts, setAlerts] = useState<
+    {
+      type: "missing" | "invalid";
+      message: string;
+    }[]
+  >([]); // Ensure alerts state is defined here
 
   const handleApiKeyChange = (newApiKey: string) => {
     setApiKey(newApiKey);
@@ -48,6 +54,15 @@ export default function App() {
             break;
           case "receipt":
             setReceipts((prevReceipts) => [data.message, ...prevReceipts]);
+            break;
+          case "error":
+            setAlerts((prevAlerts) => [
+              ...prevAlerts,
+              {
+                type: "invalid",
+                message: data.message.text,
+              },
+            ]);
             break;
         }
       }
@@ -82,6 +97,20 @@ export default function App() {
           <CrawlLog log={log} />
           <PaymentLog payments={payments} receipts={receipts} />
         </div>
+      </div>
+      <div>
+        {alerts.map((alert, index) => (
+          <Alert
+            key={index}
+            type={alert.type}
+            message={alert.message}
+            onClose={() =>
+              setAlerts((prevAlerts) =>
+                prevAlerts.filter((_, i) => i !== index),
+              )
+            }
+          />
+        ))}
       </div>
     </div>
   );

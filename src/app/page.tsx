@@ -16,9 +16,14 @@ const channelId = uuidv4().toString();
 export default function App() {
   console.log("channelId: " + channelId);
   const [currentSite, setCurrentSite] = useState<MessageData>();
+  const [apiKey, setApiKey] = useState<string | null>(null);
   const [log, setLog] = useState<MessageData[]>([]);
   const [payments, setPayments] = useState<MessageData[]>([]);
   const [receipts, setReceipts] = useState<MessageData[]>([]);
+
+  const handleApiKeyChange = (newApiKey: string) => {
+    setApiKey(newApiKey);
+  };
 
   const handleSearch = () => {
     setLog([]);
@@ -64,8 +69,12 @@ export default function App() {
       </div>
       <div className="p-4">
         <div className="flex space-x-4">
-          <SearchBar onSearch={handleSearch} channelId={channelId} />
-          <ApiInput />
+          <SearchBar
+            onSearch={handleSearch}
+            channelId={channelId}
+            apiKey={apiKey}
+          />
+          <ApiInput onApiKeyChange={handleApiKeyChange} />
         </div>
       </div>
       <div className="grow p-4">

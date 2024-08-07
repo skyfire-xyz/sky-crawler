@@ -6,9 +6,14 @@ const apiKey = process.env.NEXT_PUBLIC_SKYFIRE_API_KEY;
 interface SearchBarProps {
   onSearch: () => void;
   channelId: string;
+  apiKey: string | null;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, channelId }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+  onSearch,
+  channelId,
+  apiKey,
+}) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +34,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, channelId }) => {
       };
       await axios.post(crawlerEndpoint, requestBody, {
         headers: {
-          "skyfire-api-key": apiKey,
+          "skyfire-api-key": apiKey ?? "",
           "content-type": "application/json",
         },
       });
@@ -39,7 +44,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, channelId }) => {
   };
 
   return (
-    <form className="flex w-full items-center">
+    <form className="flex w-2/3 items-center">
       <label htmlFor="simple-search" className="sr-only">
         Search
       </label>

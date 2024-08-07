@@ -137,8 +137,6 @@ export default function App() {
     };
   }, []);
 
-  const combinedLogs = [...payments, ...receipts];
-
   return (
     <div className="flex min-h-screen flex-col">
       <div className="p-4">

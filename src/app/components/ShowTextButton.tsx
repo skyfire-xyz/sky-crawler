@@ -10,13 +10,24 @@ const ShowTextButton: React.FC<ShowTextButtonProps> = ({ text }) => {
     const newWindow = window.open();
     if (newWindow) {
       newWindow.document.write(`
-            <html>
-              <head><title>Full Message</title></head>
-              <body>
-                <pre>${text}</pre>
-              </body>
-            </html>
-          `);
+        <html>
+          <head>
+            <title>Full Message</title>
+            <style>
+              pre {
+                white-space: pre-wrap;       /* CSS3 */
+                white-space: -moz-pre-wrap;  /* Firefox */
+                white-space: -pre-wrap;      /* Opera <7 */
+                white-space: -o-pre-wrap;    /* Opera 7 */
+                word-wrap: break-word;       /* IE */
+              }
+            </style>
+          </head>
+          <body>
+            <pre>${text}</pre>
+          </body>
+        </html>
+      `);
       newWindow.document.close();
     }
   };

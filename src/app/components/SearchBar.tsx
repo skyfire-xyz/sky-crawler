@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { GSP_NO_RETURNED_VALUE } from "next/dist/lib/constants";
 // import { v4 as uuidv4 } from "uuid";
 
 const apiKey = process.env.NEXT_PUBLIC_SKYFIRE_API_KEY;
@@ -15,7 +14,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, channelId }) => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
-    GSP_NO_RETURNED_VALUE;
   };
 
   const handleButtonClick = async (

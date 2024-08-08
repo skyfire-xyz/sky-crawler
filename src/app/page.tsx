@@ -10,15 +10,17 @@ import SearchBar from "./components/SearchBar";
 import CrawlLog from "./components/CrawlLog";
 import PaymentLog from "./components/PaymentLog";
 import ApiInput from "./components/ApiInput";
+import CostInput from "./components/CostInput";
 import Alert from "./components/Alert";
-import RequestInput from "./components/RequestInput";
+import DepthInput from "./components/DepthInput";
 
 const channelId = uuidv4().toString();
 
 export default function App() {
   const [currentSite, setCurrentSite] = useState<MessageData>();
   const [apiKey, setApiKey] = useState<string | null>(null);
-  const [requestNum, setRequestNum] = useState<string | null>(null);
+  const [depth, setDepth] = useState<string | null>(null);
+  const [cost, setCost] = useState<string | null>(null);
   const [log, setLog] = useState<MessageData[]>([]);
   const [payments, setPayments] = useState<MessageData[]>([]);
   const [receipts, setReceipts] = useState<MessageData[]>([]);
@@ -29,8 +31,12 @@ export default function App() {
     }[]
   >([]);
 
-  const handleRequestChange = (newRequestNum: string) => {
-    setRequestNum(newRequestNum);
+  const handleDepthChange = (newDepth: string) => {
+    setDepth(newDepth);
+  };
+
+  const handleCostChange = (newCost: string) => {
+    setCost(newCost);
   };
 
   const handleApiKeyChange = (newApiKey: string) => {
@@ -95,9 +101,11 @@ export default function App() {
             onSearch={handleSearch}
             channelId={channelId}
             apiKey={apiKey}
-            maxRequests={requestNum}
+            inputDepth={depth}
+            inputCost={cost}
           />
-          <RequestInput onRequestChange={handleRequestChange} />
+          <DepthInput onDepthChange={handleDepthChange} />
+          <CostInput onCostChange={handleCostChange} />
           <ApiInput onApiKeyChange={handleApiKeyChange} />
         </div>
       </div>

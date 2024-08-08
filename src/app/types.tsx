@@ -25,5 +25,6 @@ export enum AlertMessage {
   MISSING_URL = "Please input a valid URL and try again.",
   INVALID_API = "Error processing request. Please check your API key and try again.",
   BACKEND_DOWN = "Unable to reach the server. Please check your connection and try again",
-  DEFAULT_REQUEST = "No maximum request specified. Defaulting to 10 requests.",
+  DEFAULT_DEPTH = "No maximum depth specified. Defaulting to depth 3.",
+  DEFAULT_COST = "No maximum cost specified. Defaulting to 0.01 USD.",
 }

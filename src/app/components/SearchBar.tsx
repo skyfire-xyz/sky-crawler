@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Alert from "./Alert";
+import { AlertMessages as AlertMessage } from "../types";
 
 const backendURL =
   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
@@ -19,7 +20,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [inputUrl, setInputValue] = useState("");
   const [alert, setAlert] = useState<{
     type: "missing" | "invalid";
-    message: string;
+    message: AlertMessage;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -34,14 +35,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
     if (!apiKey) {
       setAlert({
         type: "missing",
-        message: "Please fill out the API key field.",
+        message: AlertMessage.INVALID_API,
       });
       return;
     }
     if (!inputUrl) {
       setAlert({
         type: "missing",
-        message: "Please input a website to crawl.",
+        message: AlertMessage.MISSING_URL,
       });
       return;
     }
@@ -66,8 +67,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       if (axios.isAxiosError(err)) {
         setAlert({
           type: "invalid",
-          message:
-            "Error processing request. Please check your API key and try again.",
+          message: AlertMessage.INVALID_API,
         });
       }
       console.error("Error processing payment:", err);

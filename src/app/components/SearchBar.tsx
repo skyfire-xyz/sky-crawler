@@ -20,6 +20,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     type: "missing" | "invalid";
     message: string;
   } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -45,6 +46,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }
 
     setAlert(null);
+    setIsLoading(true);
     onSearch();
     console.log(`Input Value: ${inputUrl}`);
     const crawlerEndpoint = "http://localhost:3000/v1/crawler/start-crawl";
@@ -59,11 +61,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
           "content-type": "application/json",
         },
       });
-      // setAlert(null);
-      // onSearch();
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        // Handle specific Axios errors if needed
         setAlert({
           type: "invalid",
           message:
@@ -71,6 +70,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
         });
       }
       console.error("Error processing payment:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -111,22 +112,47 @@ const SearchBar: React.FC<SearchBarProps> = ({
         type="submit"
         className="ms-2 rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         onClick={handleButtonClick}
+        disabled={isLoading}
       >
-        <svg
-          className="size-4"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 20 20"
-        >
-          <path
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-          />
-        </svg>
+        {isLoading ? (
+          <svg
+            className="size-4 animate-spin"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v8H4z"
+            ></path>
+          </svg>
+        ) : (
+          <svg
+            className="size-4"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 20"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+            />
+          </svg>
+        )}
         <span className="sr-only">Search</span>
       </button>
       {alert && (

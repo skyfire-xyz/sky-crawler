@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Alert from "./Alert";
-import { AlertMessages as AlertMessage } from "../types";
+import { AlertType, AlertMessage } from "../types";
 
 const backendURL =
   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
@@ -34,14 +34,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
     event.preventDefault();
     if (!apiKey) {
       setAlert({
-        type: "missing",
+        type: AlertType.MISSING,
         message: AlertMessage.INVALID_API,
       });
       return;
     }
     if (!inputUrl) {
       setAlert({
-        type: "missing",
+        type: AlertType.MISSING,
         message: AlertMessage.MISSING_URL,
       });
       return;
@@ -66,7 +66,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setAlert({
-          type: "invalid",
+          type: AlertType.INVALID,
           message: AlertMessage.INVALID_API,
         });
       }

@@ -5,7 +5,7 @@ import Pusher from "pusher-js";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "./App.css";
-import { MessageData } from "./types";
+import { MessageData, AlertType } from "./types";
 import SearchBar from "./components/SearchBar";
 import CrawlLog from "./components/CrawlLog";
 import PaymentLog from "./components/PaymentLog";
@@ -59,7 +59,7 @@ export default function App() {
             setAlerts((prevAlerts) => [
               ...prevAlerts,
               {
-                type: "invalid",
+                type: AlertType.INVALID,
                 message: data.message.text,
               },
             ]);

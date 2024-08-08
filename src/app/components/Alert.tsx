@@ -1,7 +1,8 @@
 import React from "react";
+import { AlertType } from "../types";
 
 interface AlertProps {
-  type: "missing" | "invalid" | "info" | "network";
+  type: AlertType;
   message: string;
   onClose: () => void;
 }
@@ -9,13 +10,14 @@ interface AlertProps {
 const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
   let alertColor;
   switch (type) {
-    case "missing":
+    case AlertType.MISSING:
       alertColor = "yellow";
       break;
-    case "invalid":
+    case AlertType.INVALID:
+    case AlertType.NETWORK:
       alertColor = "red";
       break;
-    case "info":
+    case AlertType.INFO:
       alertColor = "blue";
     default:
       alertColor = "gray";

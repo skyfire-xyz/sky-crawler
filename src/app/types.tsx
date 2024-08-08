@@ -17,12 +17,13 @@ export enum AlertType {
   MISSING = "missing",
   INVALID = "invalid",
   INFO = "info",
+  NETWORK = "network",
 }
 
 export enum AlertMessage {
-  MISSING_API = "Please fill out the API key field.",
-  MISSING_URL = "Please input a website to crawl.",
+  MISSING_API = "Please enter an API key and try again.",
+  MISSING_URL = "Please input a valid URL and try again.",
   INVALID_API = "Error processing request. Please check your API key and try again.",
-  BACKEND_DOWN = "Cannot access backend. Check backend and network status",
+  BACKEND_DOWN = "Unable to reach the server. Please check your connection and try again",
   DEFAULT_REQUEST = "No maximum request specified. Defaulting to 10 requests.",
 }

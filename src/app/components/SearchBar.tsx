@@ -22,7 +22,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [inputUrl, setInputValue] = useState("");
   const [alert, setAlert] = useState<{
     type: AlertType;
-    message: AlertMessage;
+    message: string;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -74,17 +74,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 401) {
           setAlert({
-            type: "invalid",
+            type: AlertType.INVALID,
             message: AlertMessage.INVALID_API,
           });
         } else if (err.message === "Network Error") {
           setAlert({
-            type: "network",
+            type: AlertType.NETWORK,
             message: AlertMessage.BACKEND_DOWN,
           });
         } else {
           setAlert({
-            type: "invalid",
+            type: AlertType.INVALID,
             message: err.message,
           });
         }

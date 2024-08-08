@@ -1,7 +1,7 @@
 import React from "react";
 
 interface AlertProps {
-  type: "missing" | "invalid";
+  type: "missing" | "invalid" | "network";
   message: string;
   onClose: () => void;
 }

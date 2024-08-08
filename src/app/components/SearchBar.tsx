@@ -19,8 +19,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   const [inputUrl, setInputValue] = useState("");
   const [alert, setAlert] = useState<{
-    type: "missing" | "invalid";
-    message: AlertMessage;
+    type: "missing" | "invalid" | "network";
+    message: AlertMessage | string;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -65,10 +65,22 @@ const SearchBar: React.FC<SearchBarProps> = ({
       });
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        setAlert({
-          type: AlertType.INVALID,
-          message: AlertMessage.INVALID_API,
-        });
+        if (err.response?.status === 401) {
+          setAlert({
+            type: "invalid",
+            message: AlertMessage.INVALID_API,
+          });
+        } else if (err.message === "Network Error") {
+          setAlert({
+            type: "network",
+            message: AlertMessage.BACKEND_DOWN,
+          });
+        } else {
+          setAlert({
+            type: "invalid",
+            message: err.message,
+          });
+        }
       }
       console.error("Error processing payment:", err);
     } finally {

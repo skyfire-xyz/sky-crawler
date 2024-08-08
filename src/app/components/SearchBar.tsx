@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import Alert from "./Alert";
 
-const apiKey = process.env.NEXT_PUBLIC_SKYFIRE_API_KEY;
+const backendURL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
 
 interface SearchBarProps {
   onSearch: () => void;
@@ -49,7 +50,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     setIsLoading(true);
     onSearch();
     console.log(`Input Value: ${inputUrl}`);
-    const crawlerEndpoint = "http://localhost:3000/v1/crawler/start-crawl";
+    const crawlerEndpoint = backendURL;
     try {
       const requestBody = {
         startUrl: inputUrl,
@@ -57,7 +58,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       };
       await axios.post(crawlerEndpoint, requestBody, {
         headers: {
-          "skyfire-api-key": apiKey ?? "",
+          "skyfire-api-key": apiKey,
           "content-type": "application/json",
         },
       });

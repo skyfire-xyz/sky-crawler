@@ -12,11 +12,11 @@
 2. **Install Dependencies:**
 
    ```bash
-   npm install crawlee puppeteer
-   npm install typescript ts-node @types/node
+   yarn install
    ```
 
 3. **Start the Development Server:**
    ```bash
-   npm start
+   yarn build
+   yarn dev
    ```

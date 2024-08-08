@@ -34,6 +34,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault();
+    setAlert(null);
     if (!apiKey) {
       setAlert({
         type: AlertType.MISSING,
@@ -71,22 +72,26 @@ const SearchBar: React.FC<SearchBarProps> = ({
         },
       });
     } catch (err) {
+      setAlert(null);
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 401) {
           setAlert({
             type: AlertType.INVALID,
             message: AlertMessage.INVALID_API,
           });
+          return;
         } else if (err.message === "Network Error") {
           setAlert({
             type: AlertType.NETWORK,
             message: AlertMessage.BACKEND_DOWN,
           });
+          return;
         } else {
           setAlert({
             type: AlertType.INVALID,
             message: err.message,
           });
+          return;
         }
       }
       console.error("Error processing payment:", err);

@@ -41,6 +41,7 @@ export default function App() {
     setLog([]);
     setPayments([]);
     setReceipts([]);
+    setAlerts([]);
   };
 
   useEffect(() => {

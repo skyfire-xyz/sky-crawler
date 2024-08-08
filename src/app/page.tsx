@@ -11,21 +11,27 @@ import CrawlLog from "./components/CrawlLog";
 import PaymentLog from "./components/PaymentLog";
 import ApiInput from "./components/ApiInput";
 import Alert from "./components/Alert";
+import RequestInput from "./components/RequestInput";
 
 const channelId = uuidv4().toString();
 
 export default function App() {
   const [currentSite, setCurrentSite] = useState<MessageData>();
   const [apiKey, setApiKey] = useState<string | null>(null);
+  const [requestNum, setRequestNum] = useState<string | null>(null);
   const [log, setLog] = useState<MessageData[]>([]);
   const [payments, setPayments] = useState<MessageData[]>([]);
   const [receipts, setReceipts] = useState<MessageData[]>([]);
   const [alerts, setAlerts] = useState<
     {
-      type: "missing" | "invalid";
+      type: AlertType;
       message: string;
     }[]
-  >([]); // Ensure alerts state is defined here
+  >([]);
+
+  const handleRequestChange = (newRequestNum: string) => {
+    setRequestNum(newRequestNum);
+  };
 
   const handleApiKeyChange = (newApiKey: string) => {
     setApiKey(newApiKey);
@@ -74,7 +80,7 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <div className="p-4">
+      <div className="p-5">
         <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
           CrawlerBot
         </h1>
@@ -82,17 +88,19 @@ export default function App() {
           Powered by Skyfire Payments
         </h4>
       </div>
-      <div className="p-4">
+      <div className="p-5">
         <div className="flex space-x-4">
           <SearchBar
             onSearch={handleSearch}
             channelId={channelId}
             apiKey={apiKey}
+            maxRequests={requestNum}
           />
+          <RequestInput onRequestChange={handleRequestChange} />
           <ApiInput onApiKeyChange={handleApiKeyChange} />
         </div>
       </div>
-      <div className="grow p-4">
+      <div className="grow p-5">
         <div className="flex space-x-4">
           <CrawlLog log={log} />
           <PaymentLog payments={payments} receipts={receipts} />

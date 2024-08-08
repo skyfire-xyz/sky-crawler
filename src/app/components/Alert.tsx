@@ -1,7 +1,7 @@
 import React from "react";
 
 interface AlertProps {
-  type: "missing" | "invalid" | "network";
+  type: "missing" | "invalid" | "info" | "network";
   message: string;
   onClose: () => void;
 }
@@ -15,6 +15,8 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
     case "invalid":
       alertColor = "red";
       break;
+    case "info":
+      alertColor = "blue";
     default:
       alertColor = "gray";
   }

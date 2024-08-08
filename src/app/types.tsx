@@ -16,6 +16,7 @@ export interface MessageData {
 export enum AlertType {
   MISSING = "missing",
   INVALID = "invalid",
+  INFO = "info",
 }
 
 export enum AlertMessage {
@@ -23,4 +24,5 @@ export enum AlertMessage {
   MISSING_URL = "Please input a website to crawl.",
   INVALID_API = "Error processing request. Please check your API key and try again.",
   BACKEND_DOWN = "Cannot access backend. Check backend and network status",
+  DEFAULT_REQUEST = "No maximum request specified. Defaulting to 10 requests.",
 }

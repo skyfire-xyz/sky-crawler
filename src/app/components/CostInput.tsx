@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { DEFAULT_COST } from "../types";
 
 interface CostInputProps {
   onCostChange: (inputCost: string) => void;
@@ -10,7 +11,6 @@ const CostInput: React.FC<CostInputProps> = ({ onCostChange }) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.trim();
-    console.log("HERE");
     if (value === "" || value === null || isNaN(Number(value))) {
       setInputValue("");
       onCostChange("");
@@ -26,7 +26,7 @@ const CostInput: React.FC<CostInputProps> = ({ onCostChange }) => {
         htmlFor="max-cost"
         className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
       >
-        Cost per Directory
+        Max Payment per Directory
       </label>
       <div className="relative">
         <input
@@ -37,7 +37,7 @@ const CostInput: React.FC<CostInputProps> = ({ onCostChange }) => {
           className={`block w-full rounded-lg border p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
             error ? "border-red-500" : "border-gray-300"
           }`}
-          placeholder="Max cost per directory"
+          placeholder={`Default: ${DEFAULT_COST} USD`}
           required
         />
         {error && (

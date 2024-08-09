@@ -110,7 +110,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <form className="flex w-1/2 flex-col">
+    <form className="flex w-5/12 flex-col">
       <div className="mb-5">
         <label
           htmlFor="simple-search"

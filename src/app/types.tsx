@@ -1,3 +1,6 @@
+export const DEFAULT_DEPTH = "2";
+export const DEFAULT_COST = "0.01";
+
 export interface MessageData {
   type: string;
   title: string;

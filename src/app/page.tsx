@@ -106,9 +106,9 @@ export default function App() {
             inputDepth={depth}
             inputCost={cost}
           />
+          <ApiInput onApiKeyChange={handleApiKeyChange} />
           <DepthInput onDepthChange={handleDepthChange} />
           <CostInput onCostChange={handleCostChange} />
-          <ApiInput onApiKeyChange={handleApiKeyChange} />
         </div>
       </div>
       <div className="grow p-5">

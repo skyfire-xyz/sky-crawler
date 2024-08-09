@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { DEFAULT_DEPTH } from "../types";
 
 interface DepthInputProps {
   onDepthChange: (inputDepth: string) => void;
@@ -34,7 +35,7 @@ const DepthInput: React.FC<DepthInputProps> = ({ onDepthChange }) => {
         htmlFor="max-depth"
         className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
       >
-        Depth per Crawl
+        Max Depth per Crawl
       </label>
       <div className="relative">
         <input
@@ -45,7 +46,7 @@ const DepthInput: React.FC<DepthInputProps> = ({ onDepthChange }) => {
           className={`block w-full rounded-lg border p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
             error ? "border-red-500" : "border-gray-300"
           }`}
-          placeholder="Max depth per crawl"
+          placeholder={`Default: ${DEFAULT_DEPTH} USD`}
           required
         />
         {error && (

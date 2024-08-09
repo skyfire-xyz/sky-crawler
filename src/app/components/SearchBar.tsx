@@ -49,21 +49,18 @@ const SearchBar: React.FC<SearchBarProps> = ({
         message: AlertMessage.MISSING_URL,
       });
       return;
-    } else if (!inputDepth) {
-      setAlert({
-        type: AlertType.INFO,
-        message: AlertMessage.DEFAULT_DEPTH,
-      });
-    } else if (!inputCost) {
-      setAlert({
-        type: AlertType.INFO,
-        message: AlertMessage.DEFAULT_COST,
-      });
     } else {
       setAlert(null);
     }
     setIsLoading(true);
     onSearch();
+    setAlert({
+      type: AlertType.INFO,
+      message: AlertMessage.START_CRAWL,
+    });
+    setTimeout(() => {
+      setAlert(null);
+    }, 2000);
     console.log(`Input Value: ${inputUrl}`);
     const crawlerEndpoint = backendURL + "/v1/crawler/start-crawl";
     try {
@@ -80,6 +77,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           "content-type": "application/json",
         },
       });
+      setAlert(null);
     } catch (err) {
       setAlert(null);
       if (axios.isAxiosError(err)) {

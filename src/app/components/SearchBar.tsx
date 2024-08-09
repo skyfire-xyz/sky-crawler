@@ -4,7 +4,7 @@ import Alert from "./Alert";
 import { AlertType, AlertMessage } from "../types";
 
 const backendURL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
+  process.env.NEXT_PUBLIC_BACKEND_API_URL || "http://localhost:3000";
 
 interface SearchBarProps {
   onSearch: () => void;

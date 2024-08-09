@@ -50,10 +50,11 @@ export default function App() {
     setAlerts([]);
   };
 
+  const pusherApiKey = process.env.NEXT_PUBLIC_PUSHER_KEY || "";
   useEffect(() => {
     setDepth("");
     setCost("");
-    const pusher = new Pusher("6d4dae6cbd4c63819fb9", {
+    const pusher = new Pusher(pusherApiKey, {
       cluster: "us3",
     });
     const channel = pusher.subscribe(channelId);

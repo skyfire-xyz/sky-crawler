@@ -57,7 +57,7 @@ export default function App() {
       cluster: "us3",
     });
     const channel = pusher.subscribe(channelId);
-    channel.bind("my-event", (data: { message: MessageData }) => {
+    channel.bind("crawler-event", (data: { message: MessageData }) => {
       if (data.message !== undefined) {
         switch (data.message.type) {
           case "page":

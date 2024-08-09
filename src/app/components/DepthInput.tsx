@@ -46,7 +46,7 @@ const DepthInput: React.FC<DepthInputProps> = ({ onDepthChange }) => {
           className={`block w-full rounded-lg border p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
             error ? "border-red-500" : "border-gray-300"
           }`}
-          placeholder={`Default: ${DEFAULT_DEPTH} USD`}
+          placeholder={`Default: ${DEFAULT_DEPTH}`}
           required
         />
         {error && (

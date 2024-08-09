@@ -51,6 +51,8 @@ export default function App() {
   };
 
   useEffect(() => {
+    setDepth("");
+    setCost("");
     const pusher = new Pusher("6d4dae6cbd4c63819fb9", {
       cluster: "us3",
     });

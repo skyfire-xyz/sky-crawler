@@ -3,7 +3,7 @@ import axios from "axios";
 import Alert from "./Alert";
 import { AlertType, AlertMessage } from "../types";
 
-const backendURL = "https://api-qa.skyfire.xyz/";
+const backendURL = "https://api-qa.skyfire.xyz";
 
 interface SearchBarProps {
   onSearch: () => void;

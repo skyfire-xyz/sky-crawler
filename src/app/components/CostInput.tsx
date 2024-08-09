@@ -11,7 +11,8 @@ const CostInput: React.FC<CostInputProps> = ({ onCostChange }) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.trim();
-    if (value === "" || value === null || isNaN(Number(value))) {
+    const validNumberRegex = /^[0-9]*\.?[0-9]*$/;
+    if (value === "" || value === null || !validNumberRegex.test(value)) {
       setInputValue("");
       onCostChange("");
     } else {

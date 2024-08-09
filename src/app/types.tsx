@@ -30,8 +30,7 @@ export const AlertMessage = {
     "Error processing request. Please check your API key and try again.",
   BACKEND_DOWN:
     "Unable to reach the server. Please check your connection and try again",
-  DEFAULT_DEPTH: `No maximum depth specified. Defaulting to depth ${DEFAULT_DEPTH}.`,
-  DEFAULT_COST: `No maximum cost specified. Defaulting to ${DEFAULT_COST} USD.`,
+  START_CRAWL: "Hang on tight! Crawl starting...",
 } as const;
 
 export type AlertMessageType = keyof typeof AlertMessage;

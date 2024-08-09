@@ -10,6 +10,9 @@ interface AlertProps {
 const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
   let alertColor;
   switch (type) {
+    case AlertType.INFO:
+      alertColor = "blue";
+      break;
     case AlertType.MISSING:
       alertColor = "yellow";
       break;
@@ -17,8 +20,6 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
     case AlertType.NETWORK:
       alertColor = "red";
       break;
-    case AlertType.INFO:
-      alertColor = "blue";
     default:
       alertColor = "gray";
   }

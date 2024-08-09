@@ -20,7 +20,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   inputDepth,
   inputCost,
 }) => {
-  const [inputUrl, setInputValue] = useState("");
+  const [inputUrl, setInputUrl] = useState("https://v2.skyfire-xyz.pages.dev/");
   const [alert, setAlert] = useState<{
     type: AlertType;
     message: string;
@@ -28,7 +28,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
+    setInputUrl(event.target.value);
   };
 
   const handleButtonClick = async (
@@ -48,21 +48,18 @@ const SearchBar: React.FC<SearchBarProps> = ({
         message: AlertMessage.MISSING_URL,
       });
       return;
-    } else if (!inputDepth) {
-      setAlert({
-        type: AlertType.INFO,
-        message: AlertMessage.DEFAULT_DEPTH,
-      });
-    } else if (!inputCost) {
-      setAlert({
-        type: AlertType.INFO,
-        message: AlertMessage.DEFAULT_COST,
-      });
     } else {
       setAlert(null);
     }
     setIsLoading(true);
     onSearch();
+    setAlert({
+      type: AlertType.INFO,
+      message: AlertMessage.START_CRAWL,
+    });
+    setTimeout(() => {
+      setAlert(null);
+    }, 2000);
     console.log(`Input Value: ${inputUrl}`);
     const crawlerEndpoint = backendURL + "/v1/crawler/start-crawl";
     try {
@@ -79,6 +76,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           "content-type": "application/json",
         },
       });
+      setAlert(null);
     } catch (err) {
       setAlert(null);
       if (axios.isAxiosError(err)) {

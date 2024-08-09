@@ -7,7 +7,7 @@ import { ToastContainer } from "react-toastify";
 import { Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
 
 export const metadata: Metadata = {
-  title: "CrawlStreamer",
+  title: "LearnerBot Dashboard",
   description: "",
 };
 

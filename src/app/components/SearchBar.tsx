@@ -21,7 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   inputDepth,
   inputCost,
 }) => {
-  const [inputUrl, setInputValue] = useState("");
+  const [inputUrl, setInputUrl] = useState("https://v2.skyfire-xyz.pages.dev/");
   const [alert, setAlert] = useState<{
     type: AlertType;
     message: string;
@@ -29,7 +29,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
+    setInputUrl(event.target.value);
   };
 
   const handleButtonClick = async (

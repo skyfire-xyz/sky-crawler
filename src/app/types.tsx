@@ -1,3 +1,6 @@
+export const DEFAULT_DEPTH = "2";
+export const DEFAULT_COST = "0.01";
+
 export interface MessageData {
   type: string;
   title: string;
@@ -20,10 +23,15 @@ export enum AlertType {
   NETWORK = "network",
 }
 
-export enum AlertMessage {
-  MISSING_API = "Please enter an API key and try again.",
-  MISSING_URL = "Please input a valid URL and try again.",
-  INVALID_API = "Error processing request. Please check your API key and try again.",
-  BACKEND_DOWN = "Unable to reach the server. Please check your connection and try again",
-  DEFAULT_REQUEST = "No maximum request specified. Defaulting to 10 requests.",
-}
+export const AlertMessage = {
+  MISSING_API: "Please enter an API key and try again.",
+  MISSING_URL: "Please input a valid URL and try again.",
+  INVALID_API:
+    "Error processing request. Please check your API key and try again.",
+  BACKEND_DOWN:
+    "Unable to reach the server. Please check your connection and try again",
+  DEFAULT_DEPTH: `No maximum depth specified. Defaulting to depth ${DEFAULT_DEPTH}.`,
+  DEFAULT_COST: `No maximum cost specified. Defaulting to ${DEFAULT_COST} USD.`,
+} as const;
+
+export type AlertMessageType = keyof typeof AlertMessage;

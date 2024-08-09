@@ -1,47 +1,43 @@
 import React, { useState } from "react";
+import { DEFAULT_COST } from "../types";
 
-interface RequestInputProps {
-  onRequestChange: (maxRequest: string) => void;
+interface CostInputProps {
+  onCostChange: (inputCost: string) => void;
 }
 
-const ApiInput: React.FC<RequestInputProps> = ({ onRequestChange }) => {
+const CostInput: React.FC<CostInputProps> = ({ onCostChange }) => {
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-
-    // Check if value is a valid whole number
-    if (!/^\d*$/.test(value)) {
-      setError("Please enter a valid whole number.");
-    } else if (parseInt(value, 10) > 50) {
-      setError("Maximum allowed requests is 50.");
+    const value = event.target.value.trim();
+    if (value === "" || value === null || isNaN(Number(value))) {
+      setInputValue("");
+      onCostChange("");
     } else {
-      setError(null);
+      setInputValue(value);
+      onCostChange(value);
     }
-
-    setInputValue(value);
-    onRequestChange(value);
   };
 
   return (
     <form className="w-1/6">
       <label
-        htmlFor="max-requests"
+        htmlFor="max-cost"
         className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
       >
-        Requests per Crawl
+        Max Payment per Directory
       </label>
       <div className="relative">
         <input
           type="text"
-          id="max-requests"
+          id="max-cost"
           value={inputValue}
           onChange={handleChange}
           className={`block w-full rounded-lg border p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
             error ? "border-red-500" : "border-gray-300"
           }`}
-          placeholder="Max number of requests"
+          placeholder={`Default: ${DEFAULT_COST} USD`}
           required
         />
         {error && (
@@ -52,4 +48,4 @@ const ApiInput: React.FC<RequestInputProps> = ({ onRequestChange }) => {
   );
 };
 
-export default ApiInput;
+export default CostInput;

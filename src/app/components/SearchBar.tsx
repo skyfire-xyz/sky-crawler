@@ -10,14 +10,16 @@ interface SearchBarProps {
   onSearch: () => void;
   channelId: string;
   apiKey: string | null;
-  maxRequests: string | null;
+  inputDepth: string | null;
+  inputCost: string | null;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
   channelId,
   apiKey,
-  maxRequests,
+  inputDepth,
+  inputCost,
 }) => {
   const [inputUrl, setInputValue] = useState("");
   const [alert, setAlert] = useState<{
@@ -47,10 +49,15 @@ const SearchBar: React.FC<SearchBarProps> = ({
         message: AlertMessage.MISSING_URL,
       });
       return;
-    } else if (!maxRequests) {
+    } else if (!inputDepth) {
       setAlert({
         type: AlertType.INFO,
-        message: AlertMessage.DEFAULT_REQUEST,
+        message: AlertMessage.DEFAULT_DEPTH,
+      });
+    } else if (!inputCost) {
+      setAlert({
+        type: AlertType.INFO,
+        message: AlertMessage.DEFAULT_COST,
       });
     } else {
       setAlert(null);
@@ -63,8 +70,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
       const requestBody = {
         startUrl: inputUrl,
         channelId: channelId,
-        ...(maxRequests != null && { maxRequests: Number(maxRequests) }),
+        ...(inputCost !== "" && { inputCost: Number(inputCost) }),
+        ...(inputDepth !== "" && { inputDepth: Number(inputDepth) }),
       };
+      console.log(requestBody);
       await axios.post(crawlerEndpoint, requestBody, {
         headers: {
           "skyfire-api-key": apiKey,
@@ -101,7 +110,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <form className="flex w-1/2 flex-col">
+    <form className="flex w-5/12 flex-col">
       <div className="mb-5">
         <label
           htmlFor="simple-search"

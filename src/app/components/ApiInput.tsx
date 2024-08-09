@@ -13,7 +13,7 @@ const ApiInput: React.FC<ApiInputProps> = ({ onApiKeyChange }) => {
   };
 
   return (
-    <form className="w-1/3">
+    <form className="w-1/4">
       <label
         htmlFor="api-key"
         className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"

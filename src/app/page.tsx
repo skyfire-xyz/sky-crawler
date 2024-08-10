@@ -3,7 +3,6 @@
 import "@/src/globals.css";
 import Pusher from "pusher-js";
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import "./App.css";
 import { MessageData, AlertType } from "./types";
 import SearchBar from "./components/SearchBar";
@@ -14,7 +13,7 @@ import CostInput from "./components/CostInput";
 import Alert from "./components/Alert";
 import DepthInput from "./components/DepthInput";
 
-const channelId = uuidv4().toString();
+const channelId = "crawler-channel";
 
 export default function App() {
   const [currentSite, setCurrentSite] = useState<MessageData>();

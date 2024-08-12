@@ -27,6 +27,13 @@ const CostInput: React.FC<CostInputProps> = ({ onCostChange }) => {
         htmlFor="max-cost"
         className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
       >
+        <span className="group relative ml-1 mr-2 cursor-pointer text-blue-500">
+          ℹ️
+          <span className="absolute bottom-full left-1/2 mb-2 hidden w-48 -translate-x-1/2 transform rounded-lg bg-gray-700 p-2 text-xs text-white shadow-md group-hover:block">
+            Max Payment determines the max price the crawler will pay for access
+            to a single directory.
+          </span>
+        </span>
         Max Payment per Directory
       </label>
       <div className="relative">

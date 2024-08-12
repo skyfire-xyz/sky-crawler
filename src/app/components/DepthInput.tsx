@@ -35,8 +35,7 @@ const DepthInput: React.FC<DepthInputProps> = ({ onDepthChange }) => {
         htmlFor="max-depth"
         className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
       >
-        Max Depth per Crawl
-        <span className="group relative ml-1 cursor-pointer text-blue-500">
+        <span className="group relative ml-1 mr-2 cursor-pointer text-blue-500">
           ℹ️
           <span className="absolute bottom-full left-1/2 mb-2 hidden w-48 -translate-x-1/2 transform rounded-lg bg-gray-700 p-2 text-xs text-white shadow-md group-hover:block">
             The depth determines how many levels of links the crawler will
@@ -44,6 +43,7 @@ const DepthInput: React.FC<DepthInputProps> = ({ onDepthChange }) => {
             direct links from the start URL will be followed.
           </span>
         </span>
+        Max Depth per Crawl
       </label>
       <div className="relative">
         <input

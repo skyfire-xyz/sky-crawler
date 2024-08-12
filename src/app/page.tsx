@@ -12,8 +12,9 @@ import ApiInput from "./components/ApiInput";
 import CostInput from "./components/CostInput";
 import Alert from "./components/Alert";
 import DepthInput from "./components/DepthInput";
+import { v4 as uuidv4 } from "uuid";
 
-const channelId = "crawler-channel";
+const channelId = uuidv4();
 
 export default function App() {
   const [currentSite, setCurrentSite] = useState<MessageData>();

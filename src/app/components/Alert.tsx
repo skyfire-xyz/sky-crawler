@@ -22,6 +22,7 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
       break;
     default:
       alertColor = "gray";
+      break;
   }
 
   return (

@@ -15,19 +15,33 @@ const PaymentLog = ({
           <div className="flex-1">
             <div className="flex flex-col">
               {log.type === "payment" ? (
-                <span className="text-cyan-500 dark:text-blue-300">
-                  {log.senderUsername} paid {log.amount} USD to{" "}
-                  {log.receiverUsername}
+                <span>
+                  <span className="text-yellow-300 dark:text-yellow-300">
+                    {log.senderUsername}
+                  </span>{" "}
+                  <span className="text-cyan-500 dark:text-cyan-300">
+                    paid {log.amount} USD to{" "}
+                  </span>
+                  <span className="text-pink-500 dark:text-pink-300">
+                    {log.receiverUsername}
+                  </span>
                 </span>
               ) : (
-                <span className="text-lime-500 dark:text-green-400">
-                  {log.senderUsername} paid {log.amount} USD to{" "}
-                  {log.receiverUsername}
+                <span>
+                  <span className="text-lime-500 dark:text-green-300">
+                    {log.senderUsername}
+                  </span>{" "}
+                  <span className="text-cyan-500 dark:text-cyan-300">
+                    paid {log.amount} USD to{" "}
+                  </span>
+                  <span className="text-yellow-300 dark:text-yellow-300">
+                    {log.receiverUsername}
+                  </span>
                 </span>
               )}
               {log.type === "payment" && (
                 <div className="flex items-center">
-                  <span className="mr-3 text-xs text-gray-300">
+                  <span className="mr-3 text-xs text-cyan-500">
                     Access granted to {log.path}
                   </span>
                 </div>

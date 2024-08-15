@@ -71,15 +71,15 @@ export default function App() {
           case "receipt":
             setReceipts((prevReceipts) => [data.message, ...prevReceipts]);
             break;
-          case "error":
-            setAlerts((prevAlerts) => [
-              ...prevAlerts,
-              {
-                type: AlertType.INVALID,
-                message: data.message.text,
-              },
-            ]);
-            break;
+          // case "error":
+          //   setAlerts((prevAlerts) => [
+          //     ...prevAlerts,
+          //     {
+          //       type: AlertType.INVALID,
+          //       message: data.message.text,
+          //     },
+          //   ]);
+          //   break;
         }
       }
     });

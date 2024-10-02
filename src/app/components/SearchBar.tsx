@@ -21,7 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   inputDepth,
   inputCost,
 }) => {
-  const [inputUrl, setInputUrl] = useState("https://v2.skyfire-xyz.pages.dev/");
+  const [inputUrl, setInputUrl] = useState("https://skyfire-xyz.pages.dev/");
   const [alert, setAlert] = useState<{
     type: AlertType;
     message: string;

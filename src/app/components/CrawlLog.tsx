@@ -27,7 +27,10 @@ const CrawlLog = ({ log }: { log: MessageData[] }) => (
               </div>
             </div>
           </div>
-          <ShowTextButton text={entry.text} />
+          <ShowTextButton
+            text={entry.text}
+            filePath={entry.url.replace(/^https?:\/\//, "")}
+          />
         </li>
       ))}
     </ul>

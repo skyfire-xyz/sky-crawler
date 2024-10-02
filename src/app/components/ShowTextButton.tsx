@@ -3,16 +3,17 @@ import { Button } from "flowbite-react";
 
 interface ShowTextButtonProps {
   text: string;
+  filePath: string;
 }
 
-const ShowTextButton: React.FC<ShowTextButtonProps> = ({ text }) => {
+const ShowTextButton: React.FC<ShowTextButtonProps> = ({ text, filePath }) => {
   const handleClick = () => {
     const newWindow = window.open();
     if (newWindow) {
       newWindow.document.write(`
         <html>
           <head>
-            <title>Full Message</title>
+            <title>${filePath}</title>
             <style>
               pre {
                 white-space: pre-wrap;       /* CSS3 */

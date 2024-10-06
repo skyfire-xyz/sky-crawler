@@ -98,17 +98,19 @@ export default function App() {
           Pay a crawling AI agent to access payment-restricted web pages.
         </h4>
         <div className="h-10" />
-        <SearchBar
-          onSearch={handleSearch}
-          channelId={channelId}
-          apiKey={apiKey}
-          inputDepth={depth}
-          inputCost={cost}
-        />
+        <div className="flex w-full space-x-4">
+          <SearchBar
+            onSearch={handleSearch}
+            channelId={channelId}
+            apiKey={apiKey}
+            inputDepth={depth}
+            inputCost={cost}
+          />
+          <ApiInput onApiKeyChange={handleApiKeyChange} />
+        </div>
       </div>
       <div className="p-5">
         <div className="flex space-x-4">
-          <ApiInput onApiKeyChange={handleApiKeyChange} />
           <DepthInput onDepthChange={handleDepthChange} />
           <CostInput onCostChange={handleCostChange} />
         </div>

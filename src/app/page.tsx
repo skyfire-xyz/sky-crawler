@@ -13,6 +13,7 @@ import CostInput from "./components/CostInput";
 import Alert from "./components/Alert";
 import DepthInput from "./components/DepthInput";
 import { v4 as uuidv4 } from "uuid";
+import SettingsBar from "./components/SettingsBar";
 
 const channelId = uuidv4();
 
@@ -98,7 +99,7 @@ export default function App() {
           Pay a crawling AI agent to access payment-restricted web pages.
         </h4>
         <div className="h-10" />
-        <div className="flex w-full space-x-4">
+        <div className="flex w-full justify-center space-x-4">
           <SearchBar
             onSearch={handleSearch}
             channelId={channelId}
@@ -107,6 +108,7 @@ export default function App() {
             inputCost={cost}
           />
           <ApiInput onApiKeyChange={handleApiKeyChange} />
+          <SettingsBar />
         </div>
       </div>
       <div className="p-5">

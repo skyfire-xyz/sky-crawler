@@ -118,6 +118,11 @@ const SettingsBar = () => {
         </button>
         {isDepthDropdownOpen && (
           <ul className="space-y-2 py-2">
+            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+              This defines how many levels of links the crawler will follow from
+              the start URL. For example, a depth of 1 means only the direct
+              links from the start URL will be followed.
+            </p>
             <DepthInput onDepthChange={handleDepthChange} />
           </ul>
         )}

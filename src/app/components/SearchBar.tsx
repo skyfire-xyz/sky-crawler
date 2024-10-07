@@ -11,7 +11,7 @@ interface SearchBarProps {
   channelId: string;
   apiKey: string | null;
   inputDepth: string | null;
-  inputCost: string | null;
+  inputPayment: string | null;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -19,7 +19,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   channelId,
   apiKey,
   inputDepth,
-  inputCost,
+  inputPayment: inputCost,
 }) => {
   const [inputUrl, setInputUrl] = useState("https://skyfire.xyz/");
   const [alert, setAlert] = useState<{

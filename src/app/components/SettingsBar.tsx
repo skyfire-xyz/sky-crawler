@@ -1,21 +1,42 @@
 import React, { useState } from "react";
 import DepthInput from "./DepthInput";
+import PaymentInput from "./PaymentInput";
 
-const SettingsBar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface SettingsBarProps {
+  onDepthChange: (newDepth: string) => void;
+  onPaymentChange: (newPayment: string) => void;
+}
+
+export default function SettingsBar({
+  onDepthChange,
+  onPaymentChange,
+}: SettingsBarProps) {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [depth, setDepth] = useState<string | null>(null);
+  const [payment, setPayment] = useState("");
   const [isDepthDropdownOpen, setIsDepthDropdownOpen] = useState(false);
+  const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
 
   const toggleDrawer = () => {
-    setIsOpen(!isOpen);
+    setIsDrawerOpen(!isDrawerOpen);
   };
 
-  const toggleDropdown = () => {
+  const toggleDepthDropdown = () => {
     setIsDepthDropdownOpen(!isDepthDropdownOpen);
+  };
+
+  const togglePaymentDropdown = () => {
+    setIsPaymentDropdownOpen(!isPaymentDropdownOpen);
   };
 
   const handleDepthChange = (newDepth: string) => {
     setDepth(newDepth);
+    onDepthChange(newDepth);
+  };
+
+  const handlePaymentChange = (newPayment: string) => {
+    setPayment(newPayment);
+    onPaymentChange(newPayment);
   };
 
   return (
@@ -31,7 +52,7 @@ const SettingsBar = () => {
       </div>
 
       {/* Backdrop */}
-      {isOpen && (
+      {isDrawerOpen && (
         <div
           className="fixed inset-0 z-30 bg-black opacity-50"
           onClick={toggleDrawer}
@@ -41,7 +62,7 @@ const SettingsBar = () => {
       {/* Drawer Component */}
       <div
         className={`fixed right-0 top-0 z-40 h-screen transform overflow-y-auto p-4 transition-transform ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+          isDrawerOpen ? "translate-x-0" : "translate-x-full"
         } w-80 bg-white dark:bg-gray-800`}
         aria-labelledby="drawer-right-label"
       >
@@ -92,44 +113,81 @@ const SettingsBar = () => {
         <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
           Customize your settings here.
         </p>
-        <button
-          type="button"
-          className="group flex w-full items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-          onClick={toggleDropdown}
-        >
-          <span className="flex-1 whitespace-nowrap text-left rtl:text-right">
-            Maximum Depth
-          </span>
-          <svg
-            className={`h-3 w-3 transition-transform ${isDepthDropdownOpen ? "rotate-180" : "rotate-0"}`} // Rotate icon based on dropdown state
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 10 6"
+        <div>
+          <button
+            type="button"
+            className="group flex w-full items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+            onClick={toggleDepthDropdown}
           >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="m1 1 4 4 4-4"
-            />
-          </svg>
-        </button>
-        {isDepthDropdownOpen && (
-          <ul className="space-y-2 py-2">
-            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-              This defines how many levels of links the crawler will follow from
-              the start URL. For example, a depth of 1 means only the direct
-              links from the start URL will be followed.
-            </p>
-            <DepthInput onDepthChange={handleDepthChange} />
-          </ul>
-        )}
+            <span className="flex-1 whitespace-nowrap text-left rtl:text-right">
+              Maximum Depth
+            </span>
+            <svg
+              className={`h-3 w-3 transition-transform ${isDepthDropdownOpen ? "rotate-180" : "rotate-0"}`} // Rotate icon based on dropdown state
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="m1 1 4 4 4-4"
+              />
+            </svg>
+          </button>
+          {isDepthDropdownOpen && (
+            <ul className="space-y-2 py-2">
+              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                This defines how many levels of links the crawler will follow
+                from the start URL. For example, a depth of 1 means only the
+                direct links from the start URL will be followed.
+              </p>
+              <DepthInput value={depth} onChange={handleDepthChange} />
+            </ul>
+          )}
+        </div>
+        <div>
+          <button
+            type="button"
+            className="group flex w-full items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+            onClick={togglePaymentDropdown}
+          >
+            <span className="flex-1 whitespace-nowrap text-left rtl:text-right">
+              Maximum Payment
+            </span>
+            <svg
+              className={`h-3 w-3 transition-transform ${isPaymentDropdownOpen ? "rotate-180" : "rotate-0"}`} // Rotate icon based on dropdown state
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="m1 1 4 4 4-4"
+              />
+            </svg>
+          </button>
+
+          {isPaymentDropdownOpen && (
+            <ul className="space-y-2 py-2">
+              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                This is the maximum amount the crawler will pay to access a
+                specific folder or section of a website. It ensures the crawler
+                doesn’t spend more than this limit when gathering information.
+              </p>
+              <PaymentInput value={payment} onChange={handlePaymentChange} />
+            </ul>
+          )}
+        </div>
         <div className="grid grid-cols-2 gap-4"></div>
       </div>
     </div>
   );
-};
-
-export default SettingsBar;
+}

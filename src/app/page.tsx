@@ -9,9 +9,7 @@ import SearchBar from "./components/SearchBar";
 import CrawlLog from "./components/CrawlLog";
 import PaymentLog from "./components/PaymentLog";
 import ApiInput from "./components/ApiInput";
-import CostInput from "./components/CostInput";
 import Alert from "./components/Alert";
-import DepthInput from "./components/DepthInput";
 import { v4 as uuidv4 } from "uuid";
 import SettingsBar from "./components/SettingsBar";
 
@@ -21,7 +19,7 @@ export default function App() {
   const [currentSite, setCurrentSite] = useState<MessageData>();
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [depth, setDepth] = useState<string | null>(null);
-  const [cost, setCost] = useState<string | null>(null);
+  const [payment, setPayment] = useState<string | null>(null);
   const [log, setLog] = useState<MessageData[]>([]);
   const [payments, setPayments] = useState<MessageData[]>([]);
   const [receipts, setReceipts] = useState<MessageData[]>([]);
@@ -36,8 +34,8 @@ export default function App() {
     setDepth(newDepth);
   };
 
-  const handleCostChange = (newCost: string) => {
-    setCost(newCost);
+  const handlePaymentChange = (newPayment: string) => {
+    setPayment(newPayment);
   };
 
   const handleApiKeyChange = (newApiKey: string) => {
@@ -54,7 +52,7 @@ export default function App() {
   const pusherApiKey = process.env.NEXT_PUBLIC_PUSHER_KEY || "";
   useEffect(() => {
     setDepth("");
-    setCost("");
+    setPayment("");
     const pusher = new Pusher(pusherApiKey, {
       cluster: "us3",
     });
@@ -105,10 +103,13 @@ export default function App() {
             channelId={channelId}
             apiKey={apiKey}
             inputDepth={depth}
-            inputCost={cost}
+            inputPayment={payment}
           />
           <ApiInput onApiKeyChange={handleApiKeyChange} />
-          <SettingsBar />
+          <SettingsBar
+            onDepthChange={handleDepthChange}
+            onPaymentChange={handlePaymentChange}
+          />
         </div>
       </div>
       <div className="grow p-5">

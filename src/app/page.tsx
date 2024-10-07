@@ -111,12 +111,6 @@ export default function App() {
           <SettingsBar />
         </div>
       </div>
-      <div className="p-5">
-        <div className="flex space-x-4">
-          <DepthInput onDepthChange={handleDepthChange} />
-          <CostInput onCostChange={handleCostChange} />
-        </div>
-      </div>
       <div className="grow p-5">
         <div className="flex space-x-4">
           <CrawlLog log={log} />

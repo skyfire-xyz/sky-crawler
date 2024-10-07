@@ -1,87 +1,129 @@
 import React, { useState } from "react";
+import DepthInput from "./DepthInput";
 
 const SettingsBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [depth, setDepth] = useState<string | null>(null);
+  const [isDepthDropdownOpen, setIsDepthDropdownOpen] = useState(false);
 
-  const toggleSettingsBar = () => {
+  const toggleDrawer = () => {
     setIsOpen(!isOpen);
-    // if (!isOpen) {
-    //   document.body.style.overflow = "hidden";
-    // } else {
-    //   document.body.style.overflow = "auto";
-    // }
+  };
+
+  const toggleDropdown = () => {
+    setIsDepthDropdownOpen(!isDepthDropdownOpen);
+  };
+
+  const handleDepthChange = (newDepth: string) => {
+    setDepth(newDepth);
   };
 
   return (
-    <>
-      {/* Button to show the settings bar */}
+    <div className="relative">
       <div className="text-center">
         <button
-          className="mb-2 rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           type="button"
-          onClick={toggleSettingsBar}
+          className="mb-2 me-2 rounded-lg border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+          onClick={toggleDrawer}
         >
-          Toggle Settings
+          Settings
         </button>
       </div>
 
-      {/* Settings Bar */}
+      {/* Backdrop */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black opacity-50"
+          onClick={toggleDrawer}
+        />
+      )}
+
+      {/* Drawer Component */}
       <div
-        id="settings-bar"
-        className={`fixed right-0 top-0 z-40 h-screen w-64 transform bg-white p-4 shadow-lg transition-transform dark:bg-gray-800 ${isOpen ? "translate-x-0" : "translate-x-full"}`}
-        aria-labelledby="settings-bar-label"
-        style={{ transition: "transform 0.3s ease-in-out" }} // Smooth transition
+        className={`fixed right-0 top-0 z-40 h-screen transform overflow-y-auto p-4 transition-transform ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        } w-80 bg-white dark:bg-gray-800`}
+        aria-labelledby="drawer-right-label"
       >
         <h5
-          id="settings-bar-label"
-          className="text-base font-semibold uppercase text-gray-500 dark:text-gray-400"
+          id="drawer-right-label"
+          className="mb-4 inline-flex items-center text-base font-semibold text-gray-500 dark:text-gray-400"
         >
-          Settings
+          <svg
+            className="h-6 w-6 text-gray-500 dark:text-gray-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeWidth="2"
+              d="M20 6H10m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4m16 6h-2m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4m16 6H10m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4"
+            />
+          </svg>
+          Crawl Settings
         </h5>
         <button
           type="button"
-          className="absolute right-2.5 top-3 inline-flex items-center rounded-lg p-1.5 text-sm text-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:hover:bg-gray-700 dark:hover:text-white"
-          onClick={toggleSettingsBar}
+          onClick={toggleDrawer}
+          className="absolute right-2.5 top-2.5 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
         >
-          <span className="sr-only">Close settings</span>
-          {/* Close icon (You can use an icon or just "X") */}X
+          <svg
+            className="h-3 w-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
+          <span className="sr-only">Close menu</span>
         </button>
-        <ul className="mt-6 space-y-2">
-          <li>
-            <a
-              href="#"
-              className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
-            >
-              Setting 1
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
-            >
-              Setting 2
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
-            >
-              Setting 3
-            </a>
-          </li>
-        </ul>
+        <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
+          Customize your settings here.
+        </p>
+        <button
+          type="button"
+          className="group flex w-full items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+          onClick={toggleDropdown}
+        >
+          <span className="flex-1 whitespace-nowrap text-left rtl:text-right">
+            Maximum Depth
+          </span>
+          <svg
+            className={`h-3 w-3 transition-transform ${isDepthDropdownOpen ? "rotate-180" : "rotate-0"}`} // Rotate icon based on dropdown state
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="m1 1 4 4 4-4"
+            />
+          </svg>
+        </button>
+        {isDepthDropdownOpen && (
+          <ul className="space-y-2 py-2">
+            <DepthInput onDepthChange={handleDepthChange} />
+          </ul>
+        )}
+        <div className="grid grid-cols-2 gap-4"></div>
       </div>
-
-      {/* Backdrop for dimming effect */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-30 bg-black bg-opacity-50"
-          onClick={toggleSettingsBar} // Close settings on clicking backdrop
-        />
-      )}
-    </>
+    </div>
   );
 };
 

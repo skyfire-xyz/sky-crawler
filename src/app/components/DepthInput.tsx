@@ -30,7 +30,7 @@ const DepthInput: React.FC<DepthInputProps> = ({ onDepthChange }) => {
   };
 
   return (
-    <form className="w-1/6">
+    <form className="w-7/8">
       <label
         htmlFor="max-depth"
         className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"

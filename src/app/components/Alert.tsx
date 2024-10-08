@@ -8,26 +8,54 @@ interface AlertProps {
 }
 
 const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
-  let alertColor;
+  let alertStyles;
   switch (type) {
     case AlertType.INFO:
-      alertColor = "blue";
+      alertStyles = {
+        bgColor: "bg-blue-50",
+        textColor: "text-blue-800",
+        borderColor: "border-blue-300",
+        darkBgColor: "dark:bg-gray-800",
+        darkTextColor: "dark:text-blue-400",
+        darkBorderColor: "dark:border-blue-800",
+      };
       break;
     case AlertType.MISSING:
-      alertColor = "yellow";
+      alertStyles = {
+        bgColor: "bg-yellow-50",
+        textColor: "text-yellow-800",
+        borderColor: "border-yellow-300",
+        darkBgColor: "dark:bg-gray-800",
+        darkTextColor: "dark:text-yellow-400",
+        darkBorderColor: "dark:border-yellow-800",
+      };
       break;
     case AlertType.INVALID:
     case AlertType.NETWORK:
-      alertColor = "red";
+      alertStyles = {
+        bgColor: "bg-red-50",
+        textColor: "text-red-800",
+        borderColor: "border-red-300",
+        darkBgColor: "dark:bg-gray-800",
+        darkTextColor: "dark:text-red-400",
+        darkBorderColor: "dark:border-red-800",
+      };
       break;
     default:
-      alertColor = "gray";
+      alertStyles = {
+        bgColor: "bg-gray-50",
+        textColor: "text-gray-800",
+        borderColor: "border-gray-300",
+        darkBgColor: "dark:bg-gray-800",
+        darkTextColor: "dark:text-gray-400",
+        darkBorderColor: "dark:border-gray-800",
+      };
       break;
   }
 
   return (
     <div
-      className={`fixed right-4 top-4 mb-4 flex items-center p-4 text-sm text-${alertColor}-800 border border-${alertColor}-300 rounded-lg bg-${alertColor}-50 dark:bg-gray-800 dark:text-${alertColor}-400 dark:border-${alertColor}-800`}
+      className={`fixed right-2 top-20 mb-4 flex items-center p-4 text-sm ${alertStyles.textColor} ${alertStyles.borderColor} rounded-lg ${alertStyles.bgColor} ${alertStyles.darkBgColor} ${alertStyles.darkTextColor} ${alertStyles.darkBorderColor}`}
       role="alert"
     >
       <svg
@@ -44,7 +72,10 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
       </div>
       <button
         type="button"
-        className={`-mx-1.5 -my-1.5 ml-auto inline-flex h-8 w-8 rounded-lg bg-${alertColor}-50 p-1.5 text-${alertColor}-800 hover:bg-${alertColor}-200 focus:ring-2 focus:ring-${alertColor}-400 dark:bg-gray-800 dark:text-${alertColor}-400 dark:hover:bg-gray-700`}
+        className={`-mx-1.5 -my-1.5 ml-auto inline-flex h-8 w-8 rounded-lg ${alertStyles.bgColor} p-1.5 ${alertStyles.textColor} hover:bg-${alertStyles.bgColor.replace(
+          "50",
+          "200",
+        )} focus:ring-2 focus:ring-${alertStyles.textColor} ${alertStyles.darkBgColor} ${alertStyles.darkTextColor} dark:hover:bg-gray-700`}
         aria-label="Close"
         onClick={onClose}
       >

@@ -68,10 +68,10 @@ export default function SettingsBar({
       >
         <h5
           id="drawer-right-label"
-          className="mb-4 inline-flex items-center text-base font-semibold text-gray-500 dark:text-gray-400"
+          className="mb-4 inline-flex items-center text-base font-semibold text-gray-700 dark:text-gray-400"
         >
           <svg
-            className="h-6 w-6 text-gray-500 dark:text-gray-400"
+            className="h-6 w-6 text-gray-700 dark:text-gray-400"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -91,7 +91,7 @@ export default function SettingsBar({
         <button
           type="button"
           onClick={toggleDrawer}
-          className="absolute right-2.5 top-2.5 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
+          className="absolute right-2.5 top-2.5 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-700 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
         >
           <svg
             className="h-3 w-3"
@@ -110,13 +110,13 @@ export default function SettingsBar({
           </svg>
           <span className="sr-only">Close menu</span>
         </button>
-        <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
-          Customize your settings here.
+        <p className="mb-6 text-sm text-gray-700 dark:text-gray-400">
+          Customize your crawl here.
         </p>
         <div>
           <button
             type="button"
-            className="group flex w-full items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+            className="group flex w-full items-center rounded-lg p-2 text-base text-gray-700 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
             onClick={toggleDepthDropdown}
           >
             <span className="flex-1 whitespace-nowrap text-left rtl:text-right">
@@ -152,7 +152,7 @@ export default function SettingsBar({
         <div>
           <button
             type="button"
-            className="group flex w-full items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+            className="group flex w-full items-center rounded-lg p-2 text-base text-gray-700 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
             onClick={togglePaymentDropdown}
           >
             <span className="flex-1 whitespace-nowrap text-left rtl:text-right">

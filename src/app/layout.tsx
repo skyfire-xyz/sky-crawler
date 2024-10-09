@@ -8,7 +8,7 @@ import { Instrument_Sans } from "next/font/google";
 import TopBar from "./components/TopBar"; // Import the TopBar component
 
 export const metadata: Metadata = {
-  title: "LearnerBot Dashboard",
+  title: "LearnerBot: Payment-Powered Website Crawling",
   description: "",
 };
 
@@ -29,6 +29,7 @@ export default function RootLayout({
     <html lang="en" className="bg-html">
       <head>
         <ThemeModeScript />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body className={`${instrument.variable} bg-body font-instrument`}>
         <Flowbite theme={{ theme }}>

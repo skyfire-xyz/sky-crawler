@@ -4,7 +4,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { Flowbite, ThemeModeScript } from "flowbite-react";
 import theme from "@/src/flowbite-theme";
 import { ToastContainer } from "react-toastify";
-import { Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Instrument_Sans } from "next/font/google";
+import TopBar from "./components/TopBar"; // Import the TopBar component
 
 export const metadata: Metadata = {
   title: "LearnerBot Dashboard",
@@ -31,6 +32,7 @@ export default function RootLayout({
       </head>
       <body className={`${instrument.variable} bg-body font-instrument`}>
         <Flowbite theme={{ theme }}>
+          <TopBar />
           {children}
           <ToastContainer position="bottom-right" autoClose={6000} />
         </Flowbite>

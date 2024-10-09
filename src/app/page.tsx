@@ -9,10 +9,9 @@ import SearchBar from "./components/SearchBar";
 import CrawlLog from "./components/CrawlLog";
 import PaymentLog from "./components/PaymentLog";
 import ApiInput from "./components/ApiInput";
-import CostInput from "./components/CostInput";
 import Alert from "./components/Alert";
-import DepthInput from "./components/DepthInput";
 import { v4 as uuidv4 } from "uuid";
+import SettingsBar from "./components/SettingsBar";
 
 const channelId = uuidv4();
 
@@ -20,7 +19,7 @@ export default function App() {
   const [currentSite, setCurrentSite] = useState<MessageData>();
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [depth, setDepth] = useState<string | null>(null);
-  const [cost, setCost] = useState<string | null>(null);
+  const [payment, setPayment] = useState<string | null>(null);
   const [log, setLog] = useState<MessageData[]>([]);
   const [payments, setPayments] = useState<MessageData[]>([]);
   const [receipts, setReceipts] = useState<MessageData[]>([]);
@@ -35,8 +34,8 @@ export default function App() {
     setDepth(newDepth);
   };
 
-  const handleCostChange = (newCost: string) => {
-    setCost(newCost);
+  const handlePaymentChange = (newPayment: string) => {
+    setPayment(newPayment);
   };
 
   const handleApiKeyChange = (newApiKey: string) => {
@@ -53,7 +52,7 @@ export default function App() {
   const pusherApiKey = process.env.NEXT_PUBLIC_PUSHER_KEY || "";
   useEffect(() => {
     setDepth("");
-    setCost("");
+    setPayment("");
     const pusher = new Pusher(pusherApiKey, {
       cluster: "us3",
     });
@@ -90,26 +89,27 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <div className="p-5">
+      <div className="mt-20 flex flex-col items-center p-5">
         <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
-          LearnerBot
+          Payment-Powered Website Crawling
         </h1>
-        <h4 className="text-2xl font-bold dark:text-white">
-          Powered by Skyfire Payments
+        <h4 className="text-2xl font-normal dark:text-white">
+          Pay a crawling AI agent to access payment-restricted web pages.
         </h4>
-      </div>
-      <div className="p-5">
-        <div className="flex space-x-4">
+        <div className="h-10" />
+        <div className="flex w-full justify-center space-x-4">
           <SearchBar
             onSearch={handleSearch}
             channelId={channelId}
             apiKey={apiKey}
             inputDepth={depth}
-            inputCost={cost}
+            inputPayment={payment}
           />
           <ApiInput onApiKeyChange={handleApiKeyChange} />
-          <DepthInput onDepthChange={handleDepthChange} />
-          <CostInput onCostChange={handleCostChange} />
+          <SettingsBar
+            onDepthChange={handleDepthChange}
+            onPaymentChange={handlePaymentChange}
+          />
         </div>
       </div>
       <div className="grow p-5">

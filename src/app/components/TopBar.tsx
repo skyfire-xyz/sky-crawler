@@ -1,11 +1,10 @@
-"use client"; // Marks the component as a Client Component
-
-import DarkModeToggle from "./DarkModeToggle";
+"use client";
 
 export default function TopBar() {
   return (
     <div className="flex w-full items-center justify-between bg-black p-4 text-white dark:bg-gray-200 dark:text-black">
-      <h1 className="text-2xl font-bold text-gray-300 dark:text-gray-600">
+      <img src="/favicon.svg" alt="LearnerBot Logo" className="h-10 w-10" />
+      <h1 className="ml-2 text-2xl font-bold text-gray-300 dark:text-gray-600">
         LearnerBot
       </h1>
 

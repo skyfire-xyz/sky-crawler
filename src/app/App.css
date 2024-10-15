@@ -33,6 +33,10 @@
   display: flex;
 }
 
+.font-teko {
+  font-family: "Teko", sans-serif;
+}
+
 /* Main content styling */
 .main-content {
   flex: 1;

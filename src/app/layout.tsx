@@ -30,6 +30,18 @@ export default function RootLayout({
       <head>
         <ThemeModeScript />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <head>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap"
+            rel="stylesheet"
+          />
+        </head>
       </head>
       <body className={`${instrument.variable} bg-body font-instrument`}>
         <Flowbite theme={{ theme }}>

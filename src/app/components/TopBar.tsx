@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function TopBar() {
   return (
-    <div className="flex w-full items-center justify-between bg-black p-4 text-white dark:bg-gray-200 dark:text-black">
+    <div className="flex w-full items-center justify-between bg-black p-2 text-white dark:bg-gray-200 dark:text-black">
       <img
         src="/favicon.svg"
         alt="LearnerBot Logo"

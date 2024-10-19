@@ -71,7 +71,7 @@ export default function SettingsBar({
           className="mb-4 inline-flex items-center text-base font-semibold text-gray-700 dark:text-gray-400"
         >
           <svg
-            className="h-6 w-6 text-gray-700 dark:text-gray-400"
+            className="size-6 text-gray-700 dark:text-gray-400"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -91,10 +91,10 @@ export default function SettingsBar({
         <button
           type="button"
           onClick={toggleDrawer}
-          className="absolute right-2.5 top-2.5 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-700 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
+          className="absolute right-2.5 top-2.5 inline-flex size-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-700 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
         >
           <svg
-            className="h-3 w-3"
+            className="size-3"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -123,7 +123,7 @@ export default function SettingsBar({
               Maximum Depth
             </span>
             <svg
-              className={`h-3 w-3 transition-transform ${isDepthDropdownOpen ? "rotate-180" : "rotate-0"}`} // Rotate icon based on dropdown state
+              className={`size-3 transition-transform ${isDepthDropdownOpen ? "rotate-180" : "rotate-0"}`} // Rotate icon based on dropdown state
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -159,7 +159,7 @@ export default function SettingsBar({
               Maximum Payment
             </span>
             <svg
-              className={`h-3 w-3 transition-transform ${isPaymentDropdownOpen ? "rotate-180" : "rotate-0"}`} // Rotate icon based on dropdown state
+              className={`size-3 transition-transform ${isPaymentDropdownOpen ? "rotate-180" : "rotate-0"}`} // Rotate icon based on dropdown state
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

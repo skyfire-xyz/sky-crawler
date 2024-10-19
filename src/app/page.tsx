@@ -84,7 +84,7 @@ export default function App() {
         <img
           src="/crawler-image-banner.svg"
           alt="Crawler Banner"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 size-full object-cover"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center p-5 text-center">
           <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-white dark:text-white md:text-5xl lg:text-6xl">

@@ -136,7 +136,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       >
         {isLoading ? (
           <svg
-            className="h-5 w-5 animate-spin"
+            className="size-5 animate-spin"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -158,7 +158,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           </svg>
         ) : (
           <svg
-            className="h-5 w-5"
+            className="size-5"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

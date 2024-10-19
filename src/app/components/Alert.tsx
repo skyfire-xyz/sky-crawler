@@ -59,7 +59,7 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
       role="alert"
     >
       <svg
-        className="mr-3 inline h-4 w-4 flex-shrink-0"
+        className="mr-3 inline size-4 shrink-0"
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         fill="currentColor"
@@ -72,7 +72,7 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
       </div>
       <button
         type="button"
-        className={`-mx-1.5 -my-1.5 ml-auto inline-flex h-8 w-8 rounded-lg ${alertStyles.bgColor} p-1.5 ${alertStyles.textColor} hover:bg-${alertStyles.bgColor.replace(
+        className={`-m-1.5 ml-auto inline-flex size-8 rounded-lg ${alertStyles.bgColor} p-1.5 ${alertStyles.textColor} hover:bg-${alertStyles.bgColor.replace(
           "50",
           "200",
         )} focus:ring-2 focus:ring-${alertStyles.textColor} ${alertStyles.darkBgColor} ${alertStyles.darkTextColor} dark:hover:bg-gray-700`}
@@ -80,7 +80,7 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
         onClick={onClose}
       >
         <span className="sr-only">Close</span>
-        <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+        <svg className="size-3" fill="currentColor" viewBox="0 0 20 20">
           <path
             fillRule="evenodd"
             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"

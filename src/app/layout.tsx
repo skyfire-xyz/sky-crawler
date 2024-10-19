@@ -5,7 +5,7 @@ import { Flowbite, ThemeModeScript } from "flowbite-react";
 import theme from "@/src/flowbite-theme";
 import { ToastContainer } from "react-toastify";
 import { Instrument_Sans } from "next/font/google";
-import TopBar from "./components/TopBar"; // Import the TopBar component
+import TopBar from "./components/TopBar";
 
 export const metadata: Metadata = {
   title: "LearnerBot: Payment-Powered Website Crawling",

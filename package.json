@@ -15,7 +15,7 @@
     "@reduxjs/toolkit": "^2.2.3",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
-    "axios": "^1.6.8",
+    "axios": "^1.7.9",
     "axios-retry": "^4.1.0",
     "event-source-polyfill": "^1.0.31",
     "flowbite-react": "^0.8.0",

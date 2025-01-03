@@ -12,12 +12,16 @@ import ApiInput from "./components/ApiInput";
 import Alert from "./components/Alert";
 import { v4 as uuidv4 } from "uuid";
 import SettingsBar from "./components/SettingsBar";
+import UAInput from "./components/UserAgentInput";
 
 const channelId = uuidv4();
 
 export default function App() {
   const [currentSite, setCurrentSite] = useState<MessageData>();
   const [apiKey, setApiKey] = useState<string | null>(null);
+  const [ua, setUAKey] = useState<string | null>(
+    "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)",
+  );
   const [depth, setDepth] = useState<string | null>(null);
   const [payment, setPayment] = useState<string | null>(null);
   const [log, setLog] = useState<MessageData[]>([]);
@@ -40,6 +44,10 @@ export default function App() {
 
   const handleApiKeyChange = (newApiKey: string) => {
     setApiKey(newApiKey);
+  };
+
+  const handleUAChange = (newUA: string) => {
+    setUAKey(newUA);
   };
 
   const handleSearch = () => {
@@ -96,19 +104,29 @@ export default function App() {
         </div>
       </div>
       <div className="h-6 w-full bg-blue-800"></div> <div className="h-5" />
-      <div className="flex w-full justify-center space-x-4">
-        <SearchBar
-          onSearch={handleSearch}
-          channelId={channelId}
-          apiKey={apiKey}
-          inputDepth={depth}
-          inputPayment={payment}
-        />
-        <ApiInput onApiKeyChange={handleApiKeyChange} />
-        <SettingsBar
-          onDepthChange={handleDepthChange}
-          onPaymentChange={handlePaymentChange}
-        />
+      <div className="flex flex-col items-center space-y-4 p-5">
+        <div className="flex w-full justify-center space-x-4">
+          <SearchBar
+            onSearch={handleSearch}
+            channelId={channelId}
+            apiKey={apiKey}
+            inputDepth={depth}
+            inputPayment={payment}
+            ua={ua}
+          />
+        </div>
+        <div className="flex w-full justify-center space-x-4">
+          <ApiInput onApiKeyChange={handleApiKeyChange} />
+        </div>
+        <div className="flex w-full justify-center space-x-4">
+          <UAInput onUAChange={handleUAChange} />
+        </div>
+        <div className="flex w-full justify-center space-x-4">
+          <SettingsBar
+            onDepthChange={handleDepthChange}
+            onPaymentChange={handlePaymentChange}
+          />
+        </div>
       </div>
       <div className="grow p-5">
         <div className="flex space-x-4">

@@ -12,6 +12,7 @@ interface SearchBarProps {
   apiKey: string | null;
   inputDepth: string | null;
   inputPayment: string | null;
+  ua: string | null;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -20,6 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   apiKey,
   inputDepth,
   inputPayment: inputCost,
+  ua,
 }) => {
   const [inputUrl, setInputUrl] = useState("https://skyfire.xyz/");
   const [alert, setAlert] = useState<{
@@ -66,6 +68,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     try {
       const requestBody = {
         startUrl: inputUrl,
+        ua: ua,
         channelId: channelId,
         ...(inputCost !== "" && { inputCost: Number(inputCost) }),
         ...(inputDepth !== "" && { inputDepth: Number(inputDepth) }),
@@ -123,7 +126,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         />
         <label
           htmlFor="floating_outlined"
-          className="absolute start-1 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform bg-white px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600 dark:bg-gray-900 dark:text-gray-400 peer-focus:dark:text-blue-500 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4"
+          className="absolute start-1 top-2 z-10 origin-[0] -translate-y-4 scale-75 bg-white px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600 dark:bg-gray-900 dark:text-gray-400 peer-focus:dark:text-blue-500 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4"
         >
           Website to crawl
         </label>

@@ -66,8 +66,10 @@ export default function App() {
     });
     const channel = pusher.subscribe(channelId);
     channel.bind("crawler-event", (data: { message: MessageData }) => {
+      console.log(data);
       if (data.message !== undefined) {
         switch (data.message.type) {
+          case "error":
           case "page":
             setCurrentSite(data.message);
             setLog((prevLog) => [data.message, ...prevLog]);

@@ -4,7 +4,7 @@ import "@/src/globals.css";
 import Pusher from "pusher-js";
 import { useEffect, useState } from "react";
 import "./App.css";
-import { MessageData, AlertType } from "./types";
+import { MessageData, AlertType, DEFAULT_USER_AGENT } from "./types";
 import SearchBar from "./components/SearchBar";
 import CrawlLog from "./components/CrawlLog";
 import PaymentLog from "./components/PaymentLog";
@@ -19,9 +19,7 @@ const channelId = uuidv4();
 export default function App() {
   const [currentSite, setCurrentSite] = useState<MessageData>();
   const [apiKey, setApiKey] = useState<string | null>(null);
-  const [ua, setUAKey] = useState<string | null>(
-    "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)",
-  );
+  const [userAgent, setUserAgent] = useState(DEFAULT_USER_AGENT);
   const [depth, setDepth] = useState<string | null>(null);
   const [payment, setPayment] = useState<string | null>(null);
   const [log, setLog] = useState<MessageData[]>([]);
@@ -47,7 +45,7 @@ export default function App() {
   };
 
   const handleUAChange = (newUA: string) => {
-    setUAKey(newUA);
+    setUserAgent(newUA);
   };
 
   const handleSearch = () => {
@@ -61,6 +59,7 @@ export default function App() {
   useEffect(() => {
     setDepth("");
     setPayment("");
+    setUserAgent(DEFAULT_USER_AGENT);
     const pusher = new Pusher(pusherApiKey, {
       cluster: "us3",
     });
@@ -114,19 +113,13 @@ export default function App() {
             apiKey={apiKey}
             inputDepth={depth}
             inputPayment={payment}
-            ua={ua}
+            ua={userAgent}
           />
-        </div>
-        <div className="flex w-full justify-center space-x-4">
           <ApiInput onApiKeyChange={handleApiKeyChange} />
-        </div>
-        <div className="flex w-full justify-center space-x-4">
-          <UAInput onUAChange={handleUAChange} />
-        </div>
-        <div className="flex w-full justify-center space-x-4">
           <SettingsBar
             onDepthChange={handleDepthChange}
             onPaymentChange={handlePaymentChange}
+            onUAChange={handleUAChange}
           />
         </div>
       </div>

@@ -1,21 +1,27 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import DepthInput from "./DepthInput";
 import PaymentInput from "./PaymentInput";
+import UserAgentSettingsInput from "./UserAgentSettingsInput";
+import { FaCog, FaPlus } from "react-icons/fa";
 
 interface SettingsBarProps {
   onDepthChange: (newDepth: string) => void;
   onPaymentChange: (newPayment: string) => void;
+  onUAChange: (newUA: string) => void;
 }
 
 export default function SettingsBar({
   onDepthChange,
   onPaymentChange,
+  onUAChange,
 }: SettingsBarProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [depth, setDepth] = useState<string | null>(null);
   const [payment, setPayment] = useState("");
+  const [userAgent, setUserAgent] = useState("");
   const [isDepthDropdownOpen, setIsDepthDropdownOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
+  const [isUserAgentDropdownOpen, setIsUserAgentDropdownOpen] = useState(false);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -29,6 +35,10 @@ export default function SettingsBar({
     setIsPaymentDropdownOpen(!isPaymentDropdownOpen);
   };
 
+  const toggleUserAgentDropdown = () => {
+    setIsUserAgentDropdownOpen(!isUserAgentDropdownOpen);
+  };
+
   const handleDepthChange = (newDepth: string) => {
     setDepth(newDepth);
     onDepthChange(newDepth);
@@ -39,16 +49,19 @@ export default function SettingsBar({
     onPaymentChange(newPayment);
   };
 
+  const handleUserAgentChange = (newUA: string) => {
+    setUserAgent(newUA);
+    onUAChange(newUA);
+  };
+
   return (
     <div className="relative">
       <div className="text-center">
-        <button
-          type="button"
-          className="mb-2 me-2 rounded-lg border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+        <FaCog
+          size={40}
+          className="text-gray-600 hover:text-gray-800"
           onClick={toggleDrawer}
-        >
-          Settings
-        </button>
+        />
       </div>
 
       {/* Backdrop */}
@@ -61,7 +74,7 @@ export default function SettingsBar({
 
       {/* Drawer Component */}
       <div
-        className={`fixed right-0 top-0 z-40 h-screen transform overflow-y-auto p-4 transition-transform ${
+        className={`fixed right-0 top-0 z-40 h-screen overflow-y-auto p-4 transition-transform ${
           isDrawerOpen ? "translate-x-0" : "translate-x-full"
         } w-80 bg-white dark:bg-gray-800`}
         aria-labelledby="drawer-right-label"
@@ -113,6 +126,43 @@ export default function SettingsBar({
         <p className="mb-6 text-sm text-gray-700 dark:text-gray-400">
           Customize your crawl here.
         </p>
+        <div>
+          <button
+            type="button"
+            className="group flex w-full items-center rounded-lg p-2 text-base text-gray-700 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+            onClick={toggleUserAgentDropdown}
+          >
+            <span className="flex-1 whitespace-nowrap text-left rtl:text-right">
+              Custom User Agent
+            </span>
+            <svg
+              className={`size-3 transition-transform ${isUserAgentDropdownOpen ? "rotate-180" : "rotate-0"}`} // Rotate icon based on dropdown state
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="m1 1 4 4 4-4"
+              />
+            </svg>
+          </button>
+          {isUserAgentDropdownOpen && (
+            <ul className="space-y-2 py-2">
+              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                Sets the User Agent the Crawler should use to crawl pages.
+              </p>
+              <UserAgentSettingsInput
+                value={userAgent}
+                onChange={handleUserAgentChange}
+              />
+            </ul>
+          )}
+        </div>{" "}
         <div>
           <button
             type="button"

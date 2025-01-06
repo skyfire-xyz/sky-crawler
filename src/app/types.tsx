@@ -34,3 +34,6 @@ export const AlertMessage = {
 } as const;
 
 export type AlertMessageType = keyof typeof AlertMessage;
+
+export const DEFAULT_USER_AGENT =
+  "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)";

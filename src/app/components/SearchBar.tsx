@@ -39,13 +39,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   ) => {
     event.preventDefault();
     setAlert(null);
-    if (!apiKey) {
-      setAlert({
-        type: AlertType.MISSING,
-        message: AlertMessage.MISSING_API,
-      });
-      return;
-    } else if (!inputUrl) {
+    if (!inputUrl) {
       setAlert({
         type: AlertType.MISSING,
         message: AlertMessage.MISSING_URL,

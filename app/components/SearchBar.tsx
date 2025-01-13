@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Alert from "./Alert";
 import { AlertType, AlertMessage } from "../types";
+import { useSkyfireAPIKey } from "@/lib/skyfire-sdk/context/context";
 
 const backendURL =
   process.env.NEXT_PUBLIC_BACKEND_URL || "https://api-qa.skyfire.xyz";
@@ -9,7 +10,6 @@ const backendURL =
 interface SearchBarProps {
   onSearch: () => void;
   channelId: string;
-  apiKey: string | null;
   inputDepth: string | null;
   inputPayment: string | null;
   ua: string | null;
@@ -18,11 +18,11 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
   channelId,
-  apiKey,
   inputDepth,
   inputPayment: inputCost,
   ua,
 }) => {
+  const { localAPIKey, isReady } = useSkyfireAPIKey()
   const [inputUrl, setInputUrl] = useState("https://skyfire.xyz/");
   const [alert, setAlert] = useState<{
     type: AlertType;
@@ -70,7 +70,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       console.log(requestBody);
       await axios.post(crawlerEndpoint, requestBody, {
         headers: {
-          "skyfire-api-key": apiKey,
+          "skyfire-api-key": localAPIKey,
           "content-type": "application/json",
         },
       });

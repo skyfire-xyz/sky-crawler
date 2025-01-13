@@ -18,7 +18,6 @@ const channelId = uuidv4();
 
 export default function App() {
   const [currentSite, setCurrentSite] = useState<MessageData>();
-  const [apiKey, setApiKey] = useState<string | null>(null);
   const [userAgent, setUserAgent] = useState(DEFAULT_USER_AGENT);
   const [depth, setDepth] = useState<string | null>(null);
   const [payment, setPayment] = useState<string | null>(null);
@@ -38,10 +37,6 @@ export default function App() {
 
   const handlePaymentChange = (newPayment: string) => {
     setPayment(newPayment);
-  };
-
-  const handleApiKeyChange = (newApiKey: string) => {
-    setApiKey(newApiKey);
   };
 
   const handleUAChange = (newUA: string) => {
@@ -110,12 +105,10 @@ export default function App() {
           <SearchBar
             onSearch={handleSearch}
             channelId={channelId}
-            apiKey={apiKey}
             inputDepth={depth}
             inputPayment={payment}
             ua={userAgent}
           />
-          <ApiInput onApiKeyChange={handleApiKeyChange} />
           <SettingsBar
             onDepthChange={handleDepthChange}
             onPaymentChange={handlePaymentChange}

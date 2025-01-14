@@ -14,6 +14,8 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import axios from "axios";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 interface SearchBarProps {
   onSearch: (url: string) => void;
@@ -46,6 +48,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const { localAPIKey } = useSkyfireAPIKey();
   const [isLoading, setIsLoading] = useState(false);
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(null);
+  const [useAPIKey, setUseAPIKey] = useState(true);
 
   const form = useForm<SearchFormValues>({
     resolver: zodResolver(searchFormSchema),
@@ -68,13 +71,15 @@ const SearchBar: React.FC<SearchBarProps> = ({
         ...(inputDepth !== "" && { inputDepth: Number(inputDepth) }),
       };
 
-      await axios.post(crawlerEndpoint, requestBody, {
-        headers: {
-          "skyfire-api-key": localAPIKey,
-          "content-type": "application/json",
-        },
-      });
+      const headers: Record<string, string> = {
+        "content-type": "application/json",
+      };
+      
+      if (useAPIKey) {
+        headers["skyfire-api-key"] = localAPIKey;
+      }
 
+      await axios.post(crawlerEndpoint, requestBody, { headers });
       await onSearch(data.url);
       
     } catch (err) {
@@ -106,7 +111,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     <Form {...form}>
       <form 
         onSubmit={form.handleSubmit(onSubmit)} 
-        className="flex w-5/12 items-center space-x-2"
+        className="flex w-5/12 items-end space-x-2"
       >
         <div className="relative w-full">
           <FormField
@@ -133,52 +138,67 @@ const SearchBar: React.FC<SearchBarProps> = ({
             )}
           />
         </div>
-        <button
-          type="submit"
-          className="mt-6 rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <svg
-              className="size-5 animate-spin"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
+        <div className="flex items-center space-x-4">
+          <button
+            type="submit"
+            className="rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <svg
+                className="size-5 animate-spin"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+              </svg>
+            ) : (
+              <svg
+                className="size-5"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                />
+              </svg>
+            )}
+            <span className="sr-only">Search</span>
+          </button>
+          <div className="flex items-center h-full">
+            <Checkbox
+              id="api-key-mode"
+              checked={useAPIKey}
+              onCheckedChange={setUseAPIKey}
+            />
+            <Label 
+              htmlFor="api-key-mode" 
+              className="text-nowrap text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v8H4z"
-              ></path>
-            </svg>
-          ) : (
-            <svg
-              className="size-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
-          )}
-          <span className="sr-only">Search</span>
-        </button>
+              With API Key
+            </Label>
+          </div>
+        </div>
       </form>
     </Form>
   );

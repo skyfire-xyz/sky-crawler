@@ -101,7 +101,7 @@ export default function App() {
       </div>
       <div className="h-6 w-full bg-blue-800"></div> <div className="h-5" />
       <div className="flex flex-col items-center space-y-4 p-5">
-        <div className="flex w-full justify-center space-x-4">
+        <div className="flex w-full justify-center items-end space-x-4">
           <SearchBar
             onSearch={handleSearch}
             channelId={channelId}

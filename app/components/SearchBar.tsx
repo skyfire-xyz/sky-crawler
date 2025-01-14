@@ -1,175 +1,186 @@
-import React, { useState } from "react";
-import axios from "axios";
-import Alert from "./Alert";
-import { AlertType, AlertMessage } from "../types";
-import { useSkyfireAPIKey } from "@/lib/skyfire-sdk/context/context";
-import { Input } from "@/components/ui/input"
+"use client";
 
-const backendURL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "https://api-qa.skyfire.xyz";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSkyfireAPIKey } from "@/lib/skyfire-sdk/context/context";
+import { z } from "zod";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import axios from "axios";
 
 interface SearchBarProps {
-  onSearch: () => void;
-  channelId: string;
-  inputDepth: string | null;
-  inputPayment: string | null;
-  ua: string | null;
+  onSearch: (url: string) => void;
+  channelId?: string;
+  inputDepth?: string;
+  inputPayment?: string;
+  ua?: string;
 }
+
+// Define the form schema with Zod
+const searchFormSchema = z.object({
+  url: z
+    .string()
+    .min(1, "URL is required")
+    .url("Invalid URL format")
+    .regex(/^https?:\/\//, "URL must start with http:// or https://"),
+});
+
+type SearchFormValues = z.infer<typeof searchFormSchema>;
+
+const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://api-qa.skyfire.xyz";
 
 const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
   channelId,
   inputDepth,
-  inputPayment: inputCost,
+  inputPayment,
   ua,
 }) => {
-  const { localAPIKey, isReady } = useSkyfireAPIKey()
-  const [inputUrl, setInputUrl] = useState("https://skyfire.xyz/");
-  const [alert, setAlert] = useState<{
-    type: AlertType;
-    message: string;
-  } | null>(null);
+  const { localAPIKey } = useSkyfireAPIKey();
   const [isLoading, setIsLoading] = useState(false);
+  const [alert, setAlert] = useState<{ type: string; message: string } | null>(null);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputUrl(event.target.value);
-  };
+  const form = useForm<SearchFormValues>({
+    resolver: zodResolver(searchFormSchema),
+    defaultValues: {
+      url: "https://skyfire.xyz",
+    },
+  });
 
-  const handleButtonClick = async (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ) => {
-    event.preventDefault();
-    setAlert(null);
-    if (!inputUrl) {
-      setAlert({
-        type: AlertType.MISSING,
-        message: AlertMessage.MISSING_URL,
-      });
-      return;
-    } else {
-      setAlert(null);
-    }
-    setIsLoading(true);
-    onSearch();
-    setAlert({
-      type: AlertType.INFO,
-      message: AlertMessage.START_CRAWL,
-    });
-    setTimeout(() => {
-      setAlert(null);
-    }, 2000);
-    console.log(`Input Value: ${inputUrl}`);
-    const crawlerEndpoint = backendURL + "/v1/crawler/start-crawl";
+  const onSubmit = async (data: SearchFormValues) => {
     try {
+      setIsLoading(true);
+      setAlert(null);
+      
+      const crawlerEndpoint = backendURL + "/v1/crawler/start-crawl";
       const requestBody = {
-        startUrl: inputUrl,
+        startUrl: data.url,
         ua: ua,
         channelId: channelId,
-        ...(inputCost !== "" && { inputCost: Number(inputCost) }),
+        ...(inputPayment !== "" && { inputCost: Number(inputPayment) }),
         ...(inputDepth !== "" && { inputDepth: Number(inputDepth) }),
       };
-      console.log(requestBody);
+
       await axios.post(crawlerEndpoint, requestBody, {
         headers: {
           "skyfire-api-key": localAPIKey,
           "content-type": "application/json",
         },
       });
-      setAlert(null);
+
+      await onSearch(data.url);
+      
     } catch (err) {
-      setAlert(null);
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 401) {
           setAlert({
-            type: AlertType.INVALID,
-            message: AlertMessage.INVALID_API,
+            type: 'INVALID',
+            message: 'Invalid API Key',
           });
-          return;
         } else if (err.message === "Network Error") {
           setAlert({
-            type: AlertType.NETWORK,
-            message: AlertMessage.BACKEND_DOWN,
+            type: 'NETWORK',
+            message: 'Backend is unreachable',
           });
-          return;
         } else {
           setAlert({
-            type: AlertType.INVALID,
+            type: 'INVALID',
             message: err.message,
           });
-          return;
         }
       }
-      console.error("Error processing payment:", err);
+      console.error("Search error:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form className="flex w-5/12 items-center space-x-2">
-      <div className="relative w-full">
-        <Input
-          type="text"
-          placeholder="Website to crawl"
-          value={inputUrl}
-          onChange={handleInputChange}
-        />
-      </div>
-      <button
-        type="submit"
-        className="rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        onClick={handleButtonClick}
-        disabled={isLoading}
+    <Form {...form}>
+      <form 
+        onSubmit={form.handleSubmit(onSubmit)} 
+        className="flex w-5/12 items-center space-x-2"
       >
-        {isLoading ? (
-          <svg
-            className="size-5 animate-spin"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            ></circle>
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v8H4z"
-            ></path>
-          </svg>
-        ) : (
-          <svg
-            className="size-5"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 20 20"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-            />
-          </svg>
-        )}
-        <span className="sr-only">Search</span>
-      </button>
-      {alert && (
-        <Alert
-          type={alert.type}
-          message={alert.message}
-          onClose={() => setAlert(null)}
-        />
-      )}
-    </form>
+        <div className="relative w-full">
+          <FormField
+            control={form.control}
+            name="url"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-sm font-medium text-gray-700 mb-0">
+                  Website to crawl
+                </FormLabel>
+                <FormControl className="!mt-0">
+                  <Input
+                    {...field}
+                    placeholder="Website to crawl"
+                    aria-label="Website URL"
+                  />
+                </FormControl>
+                {form.formState.errors.url && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {form.formState.errors.url.message}
+                  </p>
+                )}
+              </FormItem>
+            )}
+          />
+        </div>
+        <button
+          type="submit"
+          className="mt-6 rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <svg
+              className="size-5 animate-spin"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8H4z"
+              ></path>
+            </svg>
+          ) : (
+            <svg
+              className="size-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+          )}
+          <span className="sr-only">Search</span>
+        </button>
+      </form>
+    </Form>
   );
 };
 

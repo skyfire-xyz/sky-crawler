@@ -3,6 +3,7 @@ import axios from "axios";
 import Alert from "./Alert";
 import { AlertType, AlertMessage } from "../types";
 import { useSkyfireAPIKey } from "@/lib/skyfire-sdk/context/context";
+import { Input } from "@/components/ui/input"
 
 const backendURL =
   process.env.NEXT_PUBLIC_BACKEND_URL || "https://api-qa.skyfire.xyz";
@@ -106,24 +107,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <form className="flex w-5/12 items-center space-x-2">
-      {" "}
       <div className="relative w-full">
-        {" "}
-        <input
+        <Input
           type="text"
-          id="floating_outlined"
-          className="border-1 peer block w-full appearance-none rounded-lg border-gray-300 bg-transparent px-2.5 pb-2.5 pt-4 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
-          placeholder=" "
-          required
+          placeholder="Website to crawl"
           value={inputUrl}
           onChange={handleInputChange}
         />
-        <label
-          htmlFor="floating_outlined"
-          className="absolute start-1 top-2 z-10 origin-[0] -translate-y-4 scale-75 bg-white px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600 dark:bg-gray-900 dark:text-gray-400 peer-focus:dark:text-blue-500 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4"
-        >
-          Website to crawl
-        </label>
       </div>
       <button
         type="submit"

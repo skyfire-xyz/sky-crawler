@@ -36,7 +36,7 @@ const ShowTextButton: React.FC<ShowTextButtonProps> = ({ text, filePath }) => {
           
           <div className="rounded-md overflow-hidden">
             <Highlight
-              theme={themes.vsCodeDark}
+              theme={themes.github}
               code={decodeHtml(text)}
               language="typescript"
             >

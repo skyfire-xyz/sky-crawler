@@ -1,12 +1,12 @@
 import ShowTextButton from "./ShowTextButton";
-import { MessageData, PaymentStatus } from "../types";
+import { MessageData, Alert } from "../types";
 import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert as AlertUI, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
-type BadgeVariant = "default" | "success" | "destructive";
+type BadgeVariant = "default" | "success" | "destructive" | undefined;
 
-const getBadgeVariant = (status: PaymentStatus): BadgeVariant => {
+const getBadgeVariant = (status: string): BadgeVariant => {
   switch (status) {
     case "PAID": return "success";
     case "FREE": return "default";
@@ -30,7 +30,7 @@ const formatTime = (seconds: string) => {
 interface CrawlLogProps {
   log: MessageData[];
   summary?: MessageData;
-  errorMessages: MessageData[];
+  errorMessages: Alert[];
 }
 
 export default function CrawlLog({ log, summary, errorMessages }: CrawlLogProps) {
@@ -105,11 +105,11 @@ export default function CrawlLog({ log, summary, errorMessages }: CrawlLogProps)
 
         {/* Display error messages at the top */}
         {errorMessages.map((error, index) => (
-          <Alert variant="destructive" key={index} className="mt-4">
+          <AlertUI variant="destructive" key={index} className="mt-4">
             <ExclamationTriangleIcon className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{error.message}</AlertDescription>
-          </Alert>
+          </AlertUI>
         ))}
       </div>
     </div>

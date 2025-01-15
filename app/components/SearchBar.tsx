@@ -19,6 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Alert, AlertType } from "../types";
 
 interface SearchBarProps {
   onSearch: () => void;
@@ -26,7 +27,7 @@ interface SearchBarProps {
   inputDepth?: string;
   inputPayment?: string;
   ua?: string;
-  setAlerts: (alerts: { type: AlertType; message: string }[]) => void;
+  setAlerts: React.Dispatch<React.SetStateAction<Alert[]>>;
 }
 
 // Define the form schema with Zod
@@ -123,7 +124,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         "content-type": "application/json",
       };
       
-      if (withApiKey) {
+      if (withApiKey && localAPIKey) {
         headers["skyfire-api-key"] = localAPIKey;
       }
 
@@ -133,17 +134,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 401) {
           setAlerts([{
-            type: 'INVALID',
+            type: AlertType.INVALID,
             message: 'Invalid API Key',
           }]);
         } else if (err.message === "Network Error") {
           setAlerts([{
-            type: 'NETWORK',
+            type: AlertType.NETWORK,
             message: 'Backend is unreachable',
           }]);
         } else {
           setAlerts([{
-            type: 'INVALID',
+            type: AlertType.INVALID,
             message: err.message,
           }]);
         }

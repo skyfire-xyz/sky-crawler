@@ -4,7 +4,7 @@
 import Pusher from "pusher-js";
 import { useEffect, useState } from "react";
 // import "./App.css";
-import { MessageData, AlertType, DEFAULT_USER_AGENT } from "./types";
+import { MessageData, AlertType, DEFAULT_USER_AGENT, Alert } from "./types";
 import SearchBar from "./components/SearchBar";
 import CrawlLog from "./components/CrawlLog";
 import PaymentLog from "./components/PaymentLog";
@@ -17,17 +17,13 @@ export default function App() {
   const [currentSite, setCurrentSite] = useState<MessageData>();
   const [summary, setSummary] = useState<MessageData>();
   const [userAgent, setUserAgent] = useState(DEFAULT_USER_AGENT);
-  const [depth, setDepth] = useState<string | null>(null);
-  const [payment, setPayment] = useState<string | null>(null);
+  const [depth, setDepth] = useState<string | undefined>(undefined);
+  const [payment, setPayment] = useState<string | undefined>(undefined);
   const [log, setLog] = useState<MessageData[]>([]);
   const [payments, setPayments] = useState<MessageData[]>([]);
   const [receipts, setReceipts] = useState<MessageData[]>([]);
-  const [alerts, setAlerts] = useState<
-    {
-      type: AlertType;
-      message: string;
-    }[]
-  >([]);
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+
 
   const handleDepthChange = (newDepth: string) => {
     setDepth(newDepth);
@@ -51,8 +47,8 @@ export default function App() {
 
   const pusherApiKey = process.env.NEXT_PUBLIC_PUSHER_KEY || "";
   useEffect(() => {
-    setDepth("");
-    setPayment("");
+    setDepth(undefined);
+    setPayment(undefined);
     setUserAgent(DEFAULT_USER_AGENT);
     const pusher = new Pusher(pusherApiKey, {
       cluster: "us3",

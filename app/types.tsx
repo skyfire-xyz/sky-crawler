@@ -20,6 +20,7 @@ export interface MessageData {
   senderUsername: string;
   receiverUsername: string;
   path: string;
+  message?: string;
 }
 
 export enum AlertType {
@@ -27,6 +28,11 @@ export enum AlertType {
   INVALID = "invalid",
   INFO = "info",
   NETWORK = "network",
+}
+
+export type Alert = {
+  type: AlertType;
+  message: string;
 }
 
 export const AlertMessage = {

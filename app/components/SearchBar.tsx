@@ -57,7 +57,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   const { localAPIKey } = useSkyfireAPIKey();
   const [isLoading, setIsLoading] = useState(false);
-  const [useAPIKey, setUseAPIKey] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
@@ -104,8 +103,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }
   };
 
-  const onSubmit = async (data: SearchFormValues) => {
-    setIsFocused(false); // Remove focus when submitting
+  const onSubmit = async (data: SearchFormValues, withApiKey: boolean) => {
+    setIsFocused(false);
     await onSearch();
     try {
       setIsLoading(true);
@@ -124,7 +123,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         "content-type": "application/json",
       };
       
-      if (useAPIKey) {
+      if (withApiKey) {
         headers["skyfire-api-key"] = localAPIKey;
       }
 
@@ -160,7 +159,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <Form {...form}>
       <form 
-        onSubmit={form.handleSubmit(onSubmit)} 
+        onSubmit={form.handleSubmit((data) => onSubmit(data, true))} 
         className="flex w-full max-w-3xl items-end space-x-2"
       >
         <div className="relative w-full">
@@ -209,23 +208,23 @@ const SearchBar: React.FC<SearchBarProps> = ({
             )}
           />
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
           <Button
-            type="submit" 
+            type="button"
+            onClick={() => form.handleSubmit((data) => onSubmit(data, true))()}
             disabled={isLoading}
-            className="w-full"
             variant="secondary"
           >
-            {isLoading ? "Crawling..." : "Crawl"}
+            {isLoading ? "Crawling..." : "Crawl with API Key"}
           </Button>
-          <div className="flex items-center h-full">
-            <Checkbox
-              id="api-key-mode"
-              checked={useAPIKey}
-              onCheckedChange={setUseAPIKey}
-            />
-            <Label htmlFor="api-key-mode">With API Key</Label>
-          </div>
+          <Button
+            type="button"
+            onClick={() => form.handleSubmit((data) => onSubmit(data, false))()}
+            disabled={isLoading}
+            variant="outline"
+          >
+            {isLoading ? "Crawling..." : "Crawl without API Key"}
+          </Button>
         </div>
       </form>
     </Form>

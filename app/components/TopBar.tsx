@@ -1,6 +1,7 @@
-"use client";
-import { X } from "lucide-react";
-import Image from "next/image";
+"use client"
+
+import Image from "next/image"
+import { X } from "lucide-react"
 
 export default function TopBar() {
   return (
@@ -22,5 +23,5 @@ export default function TopBar() {
       />
       <div className="ml-auto flex items-center"></div>
     </div>
-  );
+  )
 }

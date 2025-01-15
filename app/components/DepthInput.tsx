@@ -1,31 +1,32 @@
-import React, { useState } from "react";
-import { DEFAULT_DEPTH } from "../types";
+import React, { useState } from "react"
+
+import { DEFAULT_DEPTH } from "../types"
 
 interface DepthInputProps {
-  value: string | null;
-  onChange: (newDepth: string) => void;
+  value: string | null
+  onChange: (newDepth: string) => void
 }
 
 const DepthInput: React.FC<DepthInputProps> = ({ onChange: onDepthChange }) => {
-  const [inputValue, setInputValue] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [inputValue, setInputValue] = useState("")
+  const [error, setError] = useState<string | null>(null)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value.trim();
-    setInputValue(value);
+    const value = event.target.value.trim()
+    setInputValue(value)
     if (!/^\d*$/.test(value)) {
-      setError("Please enter a valid whole number.");
+      setError("Please enter a valid whole number.")
     } else if (parseInt(value, 10) > 5) {
-      setError("Maximum allowed depth is 5.");
+      setError("Maximum allowed depth is 5.")
     } else {
-      setError(null);
-      onDepthChange(value === "" ? "" : value);
+      setError(null)
+      onDepthChange(value === "" ? "" : value)
     }
-  };
+  }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
 
   return (
     <form className="w-7/8" onSubmit={handleSubmit}>
@@ -47,7 +48,7 @@ const DepthInput: React.FC<DepthInputProps> = ({ onChange: onDepthChange }) => {
         <p className="mt-1 text-sm text-red-600 dark:text-red-500">{error}</p>
       )}
     </form>
-  );
-};
+  )
+}
 
-export default DepthInput;
+export default DepthInput

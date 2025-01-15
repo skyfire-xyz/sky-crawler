@@ -137,7 +137,8 @@ export default function AIChatUI({
               </Avatar>
               <div className="mx-2 p-3 rounded-lg bg-muted max-w-[calc(100%-50px)]">
                 <p className="mb-2">
-                  Welcome to Payment-Powered Website Crawling. What can I do for you
+                  Welcome to Payment-Powered Website Crawling. What can I do for
+                  you
                   {responses.length > 0 ? ` or select an option below` : ""}?
                 </p>
                 <div className="flex flex-wrap gap-2 mt-2">

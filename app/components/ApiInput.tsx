@@ -1,34 +1,34 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 
 interface ApiInputProps {
-  onApiKeyChange: (apiKey: string) => void;
+  onApiKeyChange: (apiKey: string) => void
 }
 
 const ApiInput: React.FC<ApiInputProps> = ({ onApiKeyChange }) => {
-  const [inputValue, setInputValue] = useState("");
-  const [isObsecured, setObsecured] = useState(false);
+  const [inputValue, setInputValue] = useState("")
+  const [isObsecured, setObsecured] = useState(false)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-    onApiKeyChange(event.target.value);
-  };
+    setInputValue(event.target.value)
+    onApiKeyChange(event.target.value)
+  }
 
   const handleBlur = () => {
     if (inputValue.length > 4) {
-      setObsecured(true);
+      setObsecured(true)
     }
-  };
+  }
 
   const handleFocus = () => {
-    setObsecured(false);
-  };
+    setObsecured(false)
+  }
 
   const getObsecuredValue = () => {
-    if (inputValue.length <= 4) return inputValue;
-    const lastFour = inputValue.slice(-4);
-    const hiddenPart = "⏺".repeat(inputValue.length - 4);
-    return `${hiddenPart}${lastFour}`;
-  };
+    if (inputValue.length <= 4) return inputValue
+    const lastFour = inputValue.slice(-4)
+    const hiddenPart = "⏺".repeat(inputValue.length - 4)
+    return `${hiddenPart}${lastFour}`
+  }
 
   return (
     <form className="w-1/4">
@@ -54,7 +54,7 @@ const ApiInput: React.FC<ApiInputProps> = ({ onApiKeyChange }) => {
         </label>
       </div>
     </form>
-  );
-};
+  )
+}
 
-export default ApiInput;
+export default ApiInput

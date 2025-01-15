@@ -1,14 +1,15 @@
-import React from "react";
-import { AlertType } from "../types";
+import React from "react"
+
+import { AlertType } from "../types"
 
 interface AlertProps {
-  type: AlertType;
-  message: string;
-  onClose: () => void;
+  type: AlertType
+  message: string
+  onClose: () => void
 }
 
 const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
-  let alertStyles;
+  let alertStyles
   switch (type) {
     case AlertType.INFO:
       alertStyles = {
@@ -18,8 +19,8 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
         darkBgColor: "dark:bg-gray-800",
         darkTextColor: "dark:text-blue-400",
         darkBorderColor: "dark:border-blue-800",
-      };
-      break;
+      }
+      break
     case AlertType.MISSING:
       alertStyles = {
         bgColor: "bg-yellow-50",
@@ -28,8 +29,8 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
         darkBgColor: "dark:bg-gray-800",
         darkTextColor: "dark:text-yellow-400",
         darkBorderColor: "dark:border-yellow-800",
-      };
-      break;
+      }
+      break
     case AlertType.INVALID:
     case AlertType.NETWORK:
       alertStyles = {
@@ -39,8 +40,8 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
         darkBgColor: "dark:bg-gray-800",
         darkTextColor: "dark:text-red-400",
         darkBorderColor: "dark:border-red-800",
-      };
-      break;
+      }
+      break
     default:
       alertStyles = {
         bgColor: "bg-gray-50",
@@ -49,8 +50,8 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
         darkBgColor: "dark:bg-gray-800",
         darkTextColor: "dark:text-gray-400",
         darkBorderColor: "dark:border-gray-800",
-      };
-      break;
+      }
+      break
   }
 
   return (
@@ -72,10 +73,14 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
       </div>
       <button
         type="button"
-        className={`-m-1.5 ml-auto inline-flex size-8 rounded-lg ${alertStyles.bgColor} p-1.5 ${alertStyles.textColor} hover:bg-${alertStyles.bgColor.replace(
+        className={`-m-1.5 ml-auto inline-flex size-8 rounded-lg ${
+          alertStyles.bgColor
+        } p-1.5 ${alertStyles.textColor} hover:bg-${alertStyles.bgColor.replace(
           "50",
-          "200",
-        )} focus:ring-2 focus:ring-${alertStyles.textColor} ${alertStyles.darkBgColor} ${alertStyles.darkTextColor} dark:hover:bg-gray-700`}
+          "200"
+        )} focus:ring-2 focus:ring-${alertStyles.textColor} ${
+          alertStyles.darkBgColor
+        } ${alertStyles.darkTextColor} dark:hover:bg-gray-700`}
         aria-label="Close"
         onClick={onClose}
       >
@@ -89,7 +94,7 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
         </svg>
       </button>
     </div>
-  );
-};
+  )
+}
 
-export default Alert;
+export default Alert

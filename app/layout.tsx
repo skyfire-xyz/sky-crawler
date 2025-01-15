@@ -45,7 +45,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
             fontSans.variable
           )}
         >
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem forcedTheme="light">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            forcedTheme="light"
+          >
             <SkyfireProvider>
               <TopBar />
               <div className="relative flex min-h-screen flex-col">

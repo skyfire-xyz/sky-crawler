@@ -1,32 +1,33 @@
-import React, { useState } from "react";
-import { DEFAULT_PAYMENT } from "../types";
+import React, { useState } from "react"
+
+import { DEFAULT_PAYMENT } from "../types"
 
 interface PaymentInputProps {
-  value: string | null;
-  onChange: (newPayment: string) => void;
+  value: string | null
+  onChange: (newPayment: string) => void
 }
 
 const PaymentInput: React.FC<PaymentInputProps> = ({
   onChange: onPaymentChange,
 }) => {
-  const [inputValue, setInputValue] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [inputValue, setInputValue] = useState("")
+  const [error, setError] = useState<string | null>(null)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value.trim();
-    const validNumberRegex = /^[0-9]*\.?[0-9]*$/;
+    const value = event.target.value.trim()
+    const validNumberRegex = /^[0-9]*\.?[0-9]*$/
     if (value === "" || value === null || !validNumberRegex.test(value)) {
-      setInputValue("");
-      onPaymentChange("");
+      setInputValue("")
+      onPaymentChange("")
     } else {
-      setInputValue(value);
-      onPaymentChange(value);
+      setInputValue(value)
+      onPaymentChange(value)
     }
-  };
+  }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
 
   return (
     <form className="w-7/8" onSubmit={handleSubmit}>
@@ -46,7 +47,7 @@ const PaymentInput: React.FC<PaymentInputProps> = ({
         <p className="mt-1 text-sm text-red-600 dark:text-red-500">{error}</p>
       )}
     </form>
-  );
-};
+  )
+}
 
-export default PaymentInput;
+export default PaymentInput

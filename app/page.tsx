@@ -1,85 +1,84 @@
-"use client";
+"use client"
 
 // import "@/src/globals.css";
-import Pusher from "pusher-js";
-import { useEffect, useState } from "react";
-// import "./App.css";
-import { MessageData, AlertType, DEFAULT_USER_AGENT, Alert } from "./types";
-import SearchBar from "./components/SearchBar";
-import CrawlLog from "./components/CrawlLog";
-import PaymentLog from "./components/PaymentLog";
-import { v4 as uuidv4 } from "uuid";
-import SettingsBar from "./components/SettingsBar";
+import { useEffect, useState } from "react"
+import Pusher from "pusher-js"
+import { v4 as uuidv4 } from "uuid"
 
-const channelId = uuidv4();
+import CrawlLog from "./components/CrawlLog"
+import PaymentLog from "./components/PaymentLog"
+import SearchBar from "./components/SearchBar"
+import SettingsBar from "./components/SettingsBar"
+// import "./App.css";
+import { Alert, AlertType, DEFAULT_USER_AGENT, MessageData } from "./types"
+
+const channelId = uuidv4()
 
 export default function App() {
-  const [currentSite, setCurrentSite] = useState<MessageData>();
-  const [summary, setSummary] = useState<MessageData>();
-  const [userAgent, setUserAgent] = useState(DEFAULT_USER_AGENT);
-  const [depth, setDepth] = useState<string | undefined>(undefined);
-  const [payment, setPayment] = useState<string | undefined>(undefined);
-  const [log, setLog] = useState<MessageData[]>([]);
-  const [payments, setPayments] = useState<MessageData[]>([]);
-  const [receipts, setReceipts] = useState<MessageData[]>([]);
-  const [alerts, setAlerts] = useState<Alert[]>([]);
-
+  const [currentSite, setCurrentSite] = useState<MessageData>()
+  const [summary, setSummary] = useState<MessageData>()
+  const [userAgent, setUserAgent] = useState(DEFAULT_USER_AGENT)
+  const [depth, setDepth] = useState<string | undefined>(undefined)
+  const [payment, setPayment] = useState<string | undefined>(undefined)
+  const [log, setLog] = useState<MessageData[]>([])
+  const [payments, setPayments] = useState<MessageData[]>([])
+  const [receipts, setReceipts] = useState<MessageData[]>([])
+  const [alerts, setAlerts] = useState<Alert[]>([])
 
   const handleDepthChange = (newDepth: string) => {
-    setDepth(newDepth);
-  };
+    setDepth(newDepth)
+  }
 
   const handlePaymentChange = (newPayment: string) => {
-    setPayment(newPayment);
-  };
+    setPayment(newPayment)
+  }
 
   const handleUAChange = (newUA: string) => {
-    setUserAgent(newUA);
-  };
+    setUserAgent(newUA)
+  }
 
   const handleSearch = () => {
-    setLog([]);
-    setPayments([]);
-    setReceipts([]);
-    setAlerts([]);
-    setSummary(undefined);
-  };
+    setLog([])
+    setPayments([])
+    setReceipts([])
+    setAlerts([])
+    setSummary(undefined)
+  }
 
-  const pusherApiKey = process.env.NEXT_PUBLIC_PUSHER_KEY || "";
+  const pusherApiKey = process.env.NEXT_PUBLIC_PUSHER_KEY || ""
   useEffect(() => {
-    setDepth(undefined);
-    setPayment(undefined);
-    setUserAgent(DEFAULT_USER_AGENT);
+    setDepth(undefined)
+    setPayment(undefined)
+    setUserAgent(DEFAULT_USER_AGENT)
     const pusher = new Pusher(pusherApiKey, {
       cluster: "us3",
-    });
-    const channel = pusher.subscribe(channelId);
+    })
+    const channel = pusher.subscribe(channelId)
     channel.bind("crawler-event", (data: { message: MessageData }) => {
-      console.log(data);
+      console.log(data)
       if (data.message !== undefined) {
-
         switch (data.message.type) {
           case "summary":
-            setSummary(data.message);
-            break;
+            setSummary(data.message)
+            break
           case "error":
           case "page":
-            setCurrentSite(data.message);
-            setLog((prevLog) => [data.message, ...prevLog]);
-            break;
+            setCurrentSite(data.message)
+            setLog((prevLog) => [data.message, ...prevLog])
+            break
           case "payment":
-            setPayments((prevPayments) => [data.message, ...prevPayments]);
-            break;
+            setPayments((prevPayments) => [data.message, ...prevPayments])
+            break
           case "receipt":
-            setReceipts((prevReceipts) => [data.message, ...prevReceipts]);
-            break;
+            setReceipts((prevReceipts) => [data.message, ...prevReceipts])
+            break
         }
       }
-    });
+    })
     return () => {
-      pusher.unsubscribe(channelId);
-    };
-  }, []);
+      pusher.unsubscribe(channelId)
+    }
+  }, [])
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -125,5 +124,5 @@ export default function App() {
         </div>
       </div>
     </div>
-  );
+  )
 }

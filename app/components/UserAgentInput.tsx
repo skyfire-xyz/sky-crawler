@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 
 interface UAInputProps {
-  onUAChange: (ua: string) => void;
+  onUAChange: (ua: string) => void
 }
 
 const UAInput: React.FC<UAInputProps> = ({ onUAChange: onUAChange }) => {
   const [inputValue, setInputValue] = useState(
-    "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)",
-  );
+    "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)"
+  )
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-    onUAChange(event.target.value);
-  };
+    setInputValue(event.target.value)
+    onUAChange(event.target.value)
+  }
 
   return (
     <form className="w-1/4">
@@ -36,7 +36,7 @@ const UAInput: React.FC<UAInputProps> = ({ onUAChange: onUAChange }) => {
         </label>
       </div>
     </form>
-  );
-};
+  )
+}
 
-export default UAInput;
+export default UAInput

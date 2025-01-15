@@ -1,11 +1,11 @@
-import { MessageData } from "../types";
+import { MessageData } from "../types"
 
 const PaymentLog = ({
   payments,
   receipts,
 }: {
-  payments: MessageData[];
-  receipts: MessageData[];
+  payments: MessageData[]
+  receipts: MessageData[]
 }) => (
   <div className="w-1/3 rounded-lg border border-blue-800 bg-gray-900 p-4 text-white dark:border-gray-300 dark:bg-white dark:text-gray-900">
     <h2 className="mb-2 text-xl font-bold">Payment Protocol Logs</h2>
@@ -52,6 +52,6 @@ const PaymentLog = ({
       ))}
     </ul>
   </div>
-);
+)
 
-export default PaymentLog;
+export default PaymentLog

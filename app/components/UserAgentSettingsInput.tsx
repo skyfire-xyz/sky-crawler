@@ -1,27 +1,28 @@
-import React, { useState } from "react";
-import { DEFAULT_USER_AGENT } from "../types";
+import React, { useState } from "react"
+
+import { DEFAULT_USER_AGENT } from "../types"
 
 interface UserAgentInputProps {
-  value: string | null;
-  onChange: (newUserAgent: string) => void;
+  value: string | null
+  onChange: (newUserAgent: string) => void
 }
 
 const UserAgentSettingsInput: React.FC<UserAgentInputProps> = ({
   onChange: onUaChange,
 }) => {
-  const [inputValue, setInputValue] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [inputValue, setInputValue] = useState("")
+  const [error, setError] = useState<string | null>(null)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value.trim();
-    setInputValue(value);
-    setError(null);
-    onUaChange(value);
-  };
+    const value = event.target.value.trim()
+    setInputValue(value)
+    setError(null)
+    onUaChange(value)
+  }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
 
   return (
     <form className="w-7/8" onSubmit={handleSubmit}>
@@ -43,7 +44,7 @@ const UserAgentSettingsInput: React.FC<UserAgentInputProps> = ({
         <p className="mt-1 text-sm text-red-600 dark:text-red-500">{error}</p>
       )}
     </form>
-  );
-};
+  )
+}
 
-export default UserAgentSettingsInput;
+export default UserAgentSettingsInput

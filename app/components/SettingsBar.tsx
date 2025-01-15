@@ -1,13 +1,14 @@
-import { useState } from "react";
-import DepthInput from "./DepthInput";
-import PaymentInput from "./PaymentInput";
-import UserAgentSettingsInput from "./UserAgentSettingsInput";
-import { FaCog, FaPlus } from "react-icons/fa";
+import { useState } from "react"
+import { FaCog, FaPlus } from "react-icons/fa"
+
+import DepthInput from "./DepthInput"
+import PaymentInput from "./PaymentInput"
+import UserAgentSettingsInput from "./UserAgentSettingsInput"
 
 interface SettingsBarProps {
-  onDepthChange: (newDepth: string) => void;
-  onPaymentChange: (newPayment: string) => void;
-  onUAChange: (newUA: string) => void;
+  onDepthChange: (newDepth: string) => void
+  onPaymentChange: (newPayment: string) => void
+  onUAChange: (newUA: string) => void
 }
 
 export default function SettingsBar({
@@ -15,44 +16,44 @@ export default function SettingsBar({
   onPaymentChange,
   onUAChange,
 }: SettingsBarProps) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [depth, setDepth] = useState<string | null>(null);
-  const [payment, setPayment] = useState("");
-  const [userAgent, setUserAgent] = useState("");
-  const [isDepthDropdownOpen, setIsDepthDropdownOpen] = useState(false);
-  const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
-  const [isUserAgentDropdownOpen, setIsUserAgentDropdownOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [depth, setDepth] = useState<string | null>(null)
+  const [payment, setPayment] = useState("")
+  const [userAgent, setUserAgent] = useState("")
+  const [isDepthDropdownOpen, setIsDepthDropdownOpen] = useState(false)
+  const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false)
+  const [isUserAgentDropdownOpen, setIsUserAgentDropdownOpen] = useState(false)
 
   const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
+    setIsDrawerOpen(!isDrawerOpen)
+  }
 
   const toggleDepthDropdown = () => {
-    setIsDepthDropdownOpen(!isDepthDropdownOpen);
-  };
+    setIsDepthDropdownOpen(!isDepthDropdownOpen)
+  }
 
   const togglePaymentDropdown = () => {
-    setIsPaymentDropdownOpen(!isPaymentDropdownOpen);
-  };
+    setIsPaymentDropdownOpen(!isPaymentDropdownOpen)
+  }
 
   const toggleUserAgentDropdown = () => {
-    setIsUserAgentDropdownOpen(!isUserAgentDropdownOpen);
-  };
+    setIsUserAgentDropdownOpen(!isUserAgentDropdownOpen)
+  }
 
   const handleDepthChange = (newDepth: string) => {
-    setDepth(newDepth);
-    onDepthChange(newDepth);
-  };
+    setDepth(newDepth)
+    onDepthChange(newDepth)
+  }
 
   const handlePaymentChange = (newPayment: string) => {
-    setPayment(newPayment);
-    onPaymentChange(newPayment);
-  };
+    setPayment(newPayment)
+    onPaymentChange(newPayment)
+  }
 
   const handleUserAgentChange = (newUA: string) => {
-    setUserAgent(newUA);
-    onUAChange(newUA);
-  };
+    setUserAgent(newUA)
+    onUAChange(newUA)
+  }
 
   return (
     <div className="relative">
@@ -136,7 +137,9 @@ export default function SettingsBar({
               Custom User Agent
             </span>
             <svg
-              className={`size-3 transition-transform ${isUserAgentDropdownOpen ? "rotate-180" : "rotate-0"}`} // Rotate icon based on dropdown state
+              className={`size-3 transition-transform ${
+                isUserAgentDropdownOpen ? "rotate-180" : "rotate-0"
+              }`} // Rotate icon based on dropdown state
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -173,7 +176,9 @@ export default function SettingsBar({
               Maximum Depth
             </span>
             <svg
-              className={`size-3 transition-transform ${isDepthDropdownOpen ? "rotate-180" : "rotate-0"}`} // Rotate icon based on dropdown state
+              className={`size-3 transition-transform ${
+                isDepthDropdownOpen ? "rotate-180" : "rotate-0"
+              }`} // Rotate icon based on dropdown state
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -209,7 +214,9 @@ export default function SettingsBar({
               Maximum Payment
             </span>
             <svg
-              className={`size-3 transition-transform ${isPaymentDropdownOpen ? "rotate-180" : "rotate-0"}`} // Rotate icon based on dropdown state
+              className={`size-3 transition-transform ${
+                isPaymentDropdownOpen ? "rotate-180" : "rotate-0"
+              }`} // Rotate icon based on dropdown state
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -239,5 +246,5 @@ export default function SettingsBar({
         <div className="grid grid-cols-2 gap-4"></div>
       </div>
     </div>
-  );
+  )
 }

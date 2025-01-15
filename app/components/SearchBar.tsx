@@ -128,8 +128,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
         startUrl: data.url,
         ua: ua,
         channelId: channelId,
-        ...(inputPayment && inputPayment !== "" && { inputCost: Number(inputPayment) }),
-        ...(inputDepth && inputDepth !== "" && { inputDepth: Number(inputDepth) }),
+        ...(inputPayment &&
+          inputPayment !== "" && { inputCost: Number(inputPayment) }),
+        ...(inputDepth &&
+          inputDepth !== "" && { inputDepth: Number(inputDepth) }),
       }
 
       const headers: Record<string, string> = {

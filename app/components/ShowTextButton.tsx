@@ -1,5 +1,12 @@
-import React from "react";
-import { Button } from "flowbite-react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useState } from "react";
+import { Highlight, themes } from "prism-react-renderer";
 
 interface ShowTextButtonProps {
   text: string;
@@ -7,36 +14,48 @@ interface ShowTextButtonProps {
 }
 
 const ShowTextButton: React.FC<ShowTextButtonProps> = ({ text, filePath }) => {
-  const handleClick = () => {
-    const newWindow = window.open();
-    if (newWindow) {
-      newWindow.document.write(`
-        <html>
-          <head>
-            <title>${filePath}</title>
-            <style>
-              pre {
-                white-space: pre-wrap;       /* CSS3 */
-                white-space: -moz-pre-wrap;  /* Firefox */
-                white-space: -pre-wrap;      /* Opera <7 */
-                white-space: -o-pre-wrap;    /* Opera 7 */
-                word-wrap: break-word;       /* IE */
-              }
-            </style>
-          </head>
-          <body>
-            <pre>${text}</pre>
-          </body>
-        </html>
-      `);
-      newWindow.document.close();
-    }
+  const [open, setOpen] = useState(false);
+
+  const decodeHtml = (html: string) => {
+    const txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
   };
 
   return (
-    <Button onClick={handleClick} size="xs">
-      Show Data
-    </Button>
+    <>
+      <Button onClick={() => setOpen(true)}>
+        Show Data
+      </Button>
+      
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-[80vw] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{filePath}</DialogTitle>
+          </DialogHeader>
+          
+          <div className="rounded-md overflow-hidden">
+            <Highlight
+              theme={themes.vsCodeDark}
+              code={decodeHtml(text)}
+              language="typescript"
+            >
+              {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                <pre className={`${className} text-xs p-4 overflow-y-auto`} style={{ ...style, fontSize: '0.875rem', lineHeight: '1.25rem' }}>
+                  {tokens.map((line, i) => (
+                    <div key={i} {...getLineProps({ line })}>
+                      {line.map((token, key) => (
+                        <span key={key} {...getTokenProps({ token })} />
+                      ))}
+                    </div>
+                  ))}
+                </pre>
+              )}
+            </Highlight>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

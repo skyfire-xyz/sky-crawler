@@ -12,17 +12,21 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import axios from "axios";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface SearchBarProps {
-  onSearch: (url: string) => void;
+  onSearch: () => void;
   channelId?: string;
   inputDepth?: string;
   inputPayment?: string;
   ua?: string;
+  setAlerts: (alerts: { type: AlertType; message: string }[]) => void;
 }
 
 // Define the form schema with Zod
@@ -38,29 +42,74 @@ type SearchFormValues = z.infer<typeof searchFormSchema>;
 
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://api-qa.skyfire.xyz";
 
+interface Suggestion {
+  url: string;
+  type: string;
+}
+
 const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
   channelId,
   inputDepth,
   inputPayment,
   ua,
+  setAlerts,
 }) => {
   const { localAPIKey } = useSkyfireAPIKey();
   const [isLoading, setIsLoading] = useState(false);
-  const [alert, setAlert] = useState<{ type: string; message: string } | null>(null);
   const [useAPIKey, setUseAPIKey] = useState(true);
+  const [isFocused, setIsFocused] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+
+  const suggestions: Suggestion[] = [
+    { url: 'https://skyfire.xyz', type: 'Free' },
+    { url: 'https://www.tinmoth.tech', type: 'Free' },
+    { url: 'http://www.botscan.net', type: 'Paid' },
+    { url: 'https://api-qa.skyfire.xyz/v1/receivers/crawler-page?numLinks=10', type: 'Test' },
+  ];
 
   const form = useForm<SearchFormValues>({
     resolver: zodResolver(searchFormSchema),
     defaultValues: {
-      url: "https://skyfire.xyz",
+      url: "",
     },
   });
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isFocused || suggestions.length === 0) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedIndex(prev => 
+          prev < suggestions.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedIndex(prev => prev > 0 ? prev - 1 : -1);
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (selectedIndex >= 0) {
+          form.setValue('url', suggestions[selectedIndex].url);
+          setIsFocused(false);
+          setSelectedIndex(-1);
+        }
+        break;
+      case 'Escape':
+        setIsFocused(false);
+        setSelectedIndex(-1);
+        break;
+    }
+  };
+
   const onSubmit = async (data: SearchFormValues) => {
+    setIsFocused(false); // Remove focus when submitting
+    await onSearch();
     try {
       setIsLoading(true);
-      setAlert(null);
+      setAlerts([]);
       
       const crawlerEndpoint = backendURL + "/v1/crawler/start-crawl";
       const requestBody = {
@@ -80,25 +129,24 @@ const SearchBar: React.FC<SearchBarProps> = ({
       }
 
       await axios.post(crawlerEndpoint, requestBody, { headers });
-      await onSearch(data.url);
-      
+  
     } catch (err) {
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 401) {
-          setAlert({
+          setAlerts([{
             type: 'INVALID',
             message: 'Invalid API Key',
-          });
+          }]);
         } else if (err.message === "Network Error") {
-          setAlert({
+          setAlerts([{
             type: 'NETWORK',
             message: 'Backend is unreachable',
-          });
+          }]);
         } else {
-          setAlert({
+          setAlerts([{
             type: 'INVALID',
             message: err.message,
-          });
+          }]);
         }
       }
       console.error("Search error:", err);
@@ -107,11 +155,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }
   };
 
+  console.log(suggestions,'suggestions');
+
   return (
     <Form {...form}>
       <form 
         onSubmit={form.handleSubmit(onSubmit)} 
-        className="flex w-5/12 items-end space-x-2"
+        className="flex w-full max-w-3xl items-end space-x-2"
       >
         <div className="relative w-full">
           <FormField
@@ -119,84 +169,62 @@ const SearchBar: React.FC<SearchBarProps> = ({
             name="url"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700 mb-0">
-                  Website to crawl
-                </FormLabel>
-                <FormControl className="!mt-0">
-                  <Input
-                    {...field}
-                    placeholder="Website to crawl"
-                    aria-label="Website URL"
-                  />
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Enter website URL"
+                    />
+                    {isFocused && (
+                      <div className="absolute w-full mt-1 bg-white border rounded-md shadow-lg z-10">
+                        {suggestions.map((suggestion, index) => (
+                          <div
+                            key={suggestion.url}
+                            className={`px-3 py-2 cursor-pointer ${
+                              index === selectedIndex ? 'bg-gray-100' : 'hover:bg-gray-100'
+                            }`}
+                            onClick={() => {
+                              field.onChange(suggestion.url);
+                              setIsFocused(false);
+                              setSelectedIndex(-1);
+                            }}
+                          >
+                            <div className="flex items-center justify-between">
+                            <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">
+                                {suggestion.type}
+                              </span>
+                              <div className="text-sm">{suggestion.url}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </FormControl>
-                {form.formState.errors.url && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {form.formState.errors.url.message}
-                  </p>
-                )}
+                <FormMessage />
               </FormItem>
             )}
           />
         </div>
         <div className="flex items-center space-x-4">
-          <button
-            type="submit"
-            className="rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          <Button
+            type="submit" 
             disabled={isLoading}
+            className="w-full"
+            variant="secondary"
           >
-            {isLoading ? (
-              <svg
-                className="size-5 animate-spin"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8H4z"
-                ></path>
-              </svg>
-            ) : (
-              <svg
-                className="size-5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />
-              </svg>
-            )}
-            <span className="sr-only">Search</span>
-          </button>
+            {isLoading ? "Crawling..." : "Crawl"}
+          </Button>
           <div className="flex items-center h-full">
             <Checkbox
               id="api-key-mode"
               checked={useAPIKey}
               onCheckedChange={setUseAPIKey}
             />
-            <Label 
-              htmlFor="api-key-mode" 
-              className="text-nowrap text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              With API Key
-            </Label>
+            <Label htmlFor="api-key-mode">With API Key</Label>
           </div>
         </div>
       </form>

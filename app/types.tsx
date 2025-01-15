@@ -10,6 +10,12 @@ export interface MessageData {
   char: string;
   time: string;
 
+  // Summary specific fields
+  totalPagesCrawled?: string;
+  totalTimeSeconds?: string;
+  totalTraversalSizeBytes?: string;
+
+  // Payment specific fields
   amount: string;
   senderUsername: string;
   receiverUsername: string;

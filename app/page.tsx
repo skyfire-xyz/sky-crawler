@@ -8,16 +8,14 @@ import { MessageData, AlertType, DEFAULT_USER_AGENT } from "./types";
 import SearchBar from "./components/SearchBar";
 import CrawlLog from "./components/CrawlLog";
 import PaymentLog from "./components/PaymentLog";
-import ApiInput from "./components/ApiInput";
-import Alert from "./components/Alert";
 import { v4 as uuidv4 } from "uuid";
 import SettingsBar from "./components/SettingsBar";
-import UAInput from "./components/UserAgentInput";
 
 const channelId = uuidv4();
 
 export default function App() {
   const [currentSite, setCurrentSite] = useState<MessageData>();
+  const [summary, setSummary] = useState<MessageData>();
   const [userAgent, setUserAgent] = useState(DEFAULT_USER_AGENT);
   const [depth, setDepth] = useState<string | null>(null);
   const [payment, setPayment] = useState<string | null>(null);
@@ -48,6 +46,7 @@ export default function App() {
     setPayments([]);
     setReceipts([]);
     setAlerts([]);
+    setSummary(undefined);
   };
 
   const pusherApiKey = process.env.NEXT_PUBLIC_PUSHER_KEY || "";
@@ -62,7 +61,11 @@ export default function App() {
     channel.bind("crawler-event", (data: { message: MessageData }) => {
       console.log(data);
       if (data.message !== undefined) {
+
         switch (data.message.type) {
+          case "summary":
+            setSummary(data.message);
+            break;
           case "error":
           case "page":
             setCurrentSite(data.message);
@@ -108,6 +111,7 @@ export default function App() {
             inputDepth={depth}
             inputPayment={payment}
             ua={userAgent}
+            setAlerts={setAlerts}
           />
           <SettingsBar
             onDepthChange={handleDepthChange}
@@ -117,24 +121,12 @@ export default function App() {
         </div>
       </div>
       <div className="grow p-5">
-        <div className="flex space-x-4">
-          <CrawlLog log={log} />
-          <PaymentLog payments={payments} receipts={receipts} />
+        <div className="flex flex-col space-y-4">
+          <div className="flex space-x-4">
+            <CrawlLog log={log} summary={summary} errorMessages={alerts} />
+            <PaymentLog payments={payments} receipts={receipts} />
+          </div>
         </div>
-      </div>
-      <div>
-        {alerts.map((alert, index) => (
-          <Alert
-            key={index}
-            type={alert.type}
-            message={alert.message}
-            onClose={() =>
-              setAlerts((prevAlerts) =>
-                prevAlerts.filter((_, i) => i !== index),
-              )
-            }
-          />
-        ))}
       </div>
     </div>
   );

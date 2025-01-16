@@ -7,7 +7,7 @@ const PaymentLog = ({
   payments: MessageData[]
   receipts: MessageData[]
 }) => (
-  <div className="h-[calc(100vh-480px)]">
+  <div className="h-[calc(100vh-550px)]">
     <div className="h-full rounded-lg border border-blue-800 bg-gray-900 p-4 text-white dark:border-gray-300 dark:bg-white dark:text-gray-900 flex flex-col">
       <h2 className="mb-2 text-xl font-bold">Payment Protocol Logs</h2>
 

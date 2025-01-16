@@ -67,10 +67,10 @@ interface Suggestion {
 const suggestions: Suggestion[] = [
   { url: "https://skyfire.xyz", type: "Free" },
   { url: "https://www.tinmoth.tech", type: "Free" },
-  { url: "http://www.botscan.net", type: "Paid" }
+  { url: "http://www.botscan.net", type: "Paid" },
 ]
 
-if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') {
+if (process.env.NEXT_PUBLIC_APP_ENV !== "production") {
   suggestions.push({
     url: "https://api-qa.skyfire.xyz/v1/receivers/crawler-page?numLinks=10",
     type: "Test",

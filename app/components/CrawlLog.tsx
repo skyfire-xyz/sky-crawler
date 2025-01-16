@@ -56,30 +56,35 @@ export default function CrawlLog({
 
         <ul className="overflow-y-auto flex-1">
           {log.map((entry, index) => {
-
             if (!entry.url) {
               return (
-                <li key={index} className="mb-1.5 flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex flex-col">
-                    <span className="text-gray-800 dark:text-gray-400">
-                      {entry.text}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <Badge
-                        variant={getBadgeVariant('FAILED')}
-                        className="text-xs px-2 py-0.5"
-                      >
-                        FAILED
-                      </Badge>
+                <li
+                  key={index}
+                  className="mb-1.5 flex items-start justify-between"
+                >
+                  <div className="flex-1">
+                    <div className="flex flex-col">
+                      <span className="text-gray-800 dark:text-gray-400">
+                        {entry.text}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant={getBadgeVariant("FAILED")}
+                          className="text-xs px-2 py-0.5"
+                        >
+                          FAILED
+                        </Badge>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </li>
+                </li>
               )
             }
             return (
-              <li key={index} className="mb-1.5 flex items-start justify-between">
+              <li
+                key={index}
+                className="mb-1.5 flex items-start justify-between"
+              >
                 <div className="flex-1">
                   <div className="flex flex-col">
                     <span className="text-gray-800 dark:text-gray-400">
@@ -105,12 +110,14 @@ export default function CrawlLog({
                     </div>
                   </div>
                 </div>
-                {entry.url && <ShowTextButton
-                  text={entry.text}
-                  filePath={entry.url.replace(/^https?:\/\//, "")}
-                />}
+                {entry.url && (
+                  <ShowTextButton
+                    text={entry.text}
+                    filePath={entry.url.replace(/^https?:\/\//, "")}
+                  />
+                )}
               </li>
-            );
+            )
           })}
         </ul>
 

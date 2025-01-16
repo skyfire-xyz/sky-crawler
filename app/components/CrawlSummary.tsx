@@ -5,7 +5,6 @@ interface CrawlSummaryProps {
 }
 
 const CrawlSummary = ({ summary }: CrawlSummaryProps) => {
-
   const formatBytes = (bytes: string) => {
     const size = parseInt(bytes)
     if (size < 1024) return size + " B"
@@ -34,7 +33,7 @@ const CrawlSummary = ({ summary }: CrawlSummaryProps) => {
         <div>
           <p className="text-xs text-gray-500 dark:text-gray-400">Total Size</p>
           <p className="font-bold text-gray-900 dark:text-white">
-            {summary?.totalTraversalSizeBytes 
+            {summary?.totalTraversalSizeBytes
               ? formatBytes(summary.totalTraversalSizeBytes)
               : "---"}
           </p>
@@ -42,7 +41,7 @@ const CrawlSummary = ({ summary }: CrawlSummaryProps) => {
         <div>
           <p className="text-xs text-gray-500 dark:text-gray-400">Total Time</p>
           <p className="font-bold text-gray-900 dark:text-white">
-            {summary?.totalTimeSeconds 
+            {summary?.totalTimeSeconds
               ? formatTime(summary.totalTimeSeconds)
               : "---"}
           </p>

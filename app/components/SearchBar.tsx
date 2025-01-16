@@ -3,10 +3,12 @@
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import axios from "axios"
+import { Pencil } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { useSkyfireAPIKey } from "@/lib/skyfire-sdk/context/context"
+import { updateSkyfireAPIKey } from "@/lib/skyfire-sdk/context/action"
+import { useSkyfire, useSkyfireAPIKey } from "@/lib/skyfire-sdk/context/context"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -19,6 +21,11 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import {
   Select,
   SelectContent,
@@ -65,10 +72,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
   ua,
   setAlerts,
 }) => {
-  const { localAPIKey } = useSkyfireAPIKey()
+  const { localAPIKey, isReady } = useSkyfireAPIKey()
   const [isLoading, setIsLoading] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false)
+  const [apiKeyInput, setApiKeyInput] = useState("")
+  const { dispatch } = useSkyfire()
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
   const suggestions: Suggestion[] = [
     { url: "https://skyfire.xyz", type: "Free" },
@@ -116,7 +127,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }
   }
 
-  const onSubmit = async (data: SearchFormValues, withApiKey: boolean) => {
+  const onSubmit = async (data: SearchFormValues) => {
     setIsFocused(false)
     await onSearch()
     try {
@@ -138,7 +149,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         "content-type": "application/json",
       }
 
-      if (withApiKey && localAPIKey) {
+      if (localAPIKey) {
         headers["skyfire-api-key"] = localAPIKey
       }
 
@@ -174,79 +185,162 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }
   }
 
+  const handleApiKeySave = () => {
+    localStorage.setItem("skyfire-api-key", apiKeyInput)
+    dispatch(updateSkyfireAPIKey(apiKeyInput))
+    setIsPopoverOpen(false)
+  }
+
+  const handleApiKeyCancel = () => {
+    setApiKeyInput("")
+    setIsPopoverOpen(false)
+  }
+
+  const maskApiKey = (key: string) => {
+    if (!key) return ""
+    return `${key.slice(0, 4)}...${key.slice(-4)}`
+  }
+
   console.log(suggestions, "suggestions")
+
+  const handlePopoverOpenChange = (open: boolean) => {
+    setIsPopoverOpen(open)
+    if (open) {
+      setApiKeyInput("") // Clear input when popover opens
+    }
+  }
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((data) => onSubmit(data, true))}
-        className="flex w-full max-w-3xl items-end space-x-2"
-      >
-        <div className="relative w-full">
-          <FormField
-            control={form.control}
-            name="url"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      {...field}
-                      onFocus={() => setIsFocused(true)}
-                      onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-                      onKeyDown={handleKeyDown}
-                      placeholder="Enter website URL"
-                    />
-                    {isFocused && (
-                      <div className="absolute w-full mt-1 bg-white border rounded-md shadow-lg z-10">
-                        {suggestions.map((suggestion, index) => (
-                          <div
-                            key={suggestion.url}
-                            className={`px-3 py-2 cursor-pointer ${
-                              index === selectedIndex
-                                ? "bg-gray-100"
-                                : "hover:bg-gray-100"
-                            }`}
-                            onClick={() => {
-                              field.onChange(suggestion.url)
-                              setIsFocused(false)
-                              setSelectedIndex(-1)
-                            }}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">
-                                {suggestion.type}
-                              </span>
-                              <div className="text-sm">{suggestion.url}</div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+      <form className="flex w-full max-w-3xl flex-col space-y-4">
         <div className="flex items-center space-x-2">
+          <div className="relative flex-1">
+            <FormField
+              control={form.control}
+              name="url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() =>
+                          setTimeout(() => setIsFocused(false), 200)
+                        }
+                        onKeyDown={handleKeyDown}
+                        placeholder="Enter website URL"
+                        autoComplete="off"
+                      />
+                      {isFocused && (
+                        <div className="absolute w-full mt-1 bg-white border rounded-md shadow-lg z-10">
+                          {suggestions.map((suggestion, index) => (
+                            <div
+                              key={suggestion.url}
+                              className={`px-3 py-2 cursor-pointer ${
+                                index === selectedIndex
+                                  ? "bg-gray-100"
+                                  : "hover:bg-gray-100"
+                              }`}
+                              onClick={() => {
+                                field.onChange(suggestion.url)
+                                setIsFocused(false)
+                                setSelectedIndex(-1)
+                              }}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">
+                                  {suggestion.type}
+                                </span>
+                                <div className="text-sm">{suggestion.url}</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </FormControl>
+                  <div className="absolute top-8 text-sm">
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
           <Button
             type="button"
-            onClick={() => form.handleSubmit((data) => onSubmit(data, true))()}
+            onClick={() => form.handleSubmit(onSubmit)()}
             disabled={isLoading}
             variant="secondary"
           >
-            {isLoading ? "Crawling..." : "Crawl with API Key"}
+            {isLoading ? "Crawling..." : "Crawl"}
           </Button>
-          <Button
-            type="button"
-            onClick={() => form.handleSubmit((data) => onSubmit(data, false))()}
-            disabled={isLoading}
-            variant="outline"
-          >
-            {isLoading ? "Crawling..." : "Crawl without API Key"}
-          </Button>
+
+          <div className="flex items-center space-x-2">
+            <Popover
+              open={isPopoverOpen}
+              onOpenChange={handlePopoverOpenChange}
+            >
+              <PopoverTrigger asChild>
+                <div className="flex items-center space-x-2 cursor-pointer">
+                  {localAPIKey ? (
+                    <>
+                      <span className="text-sm text-gray-600">
+                        {maskApiKey(localAPIKey)}
+                      </span>
+                      <Pencil className="h-4 w-4 text-gray-400" />
+                    </>
+                  ) : (
+                    <span className="text-sm text-blue-600">Set API Key</span>
+                  )}
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 bg-white border">
+                <div className="flex flex-col space-y-4 p-2">
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="api-key"
+                      className="text-gray-900 font-medium"
+                    >
+                      API Key
+                    </Label>
+                    {localAPIKey && (
+                      <div className="text-sm text-gray-500 mb-2">
+                        Current: {maskApiKey(localAPIKey)}
+                      </div>
+                    )}
+                    <Input
+                      id="api-key"
+                      type="password"
+                      value={apiKeyInput}
+                      onChange={(e) => setApiKeyInput(e.target.value)}
+                      placeholder="Enter new API Key"
+                      autoComplete="off"
+                    />
+                  </div>
+                  <div className="flex justify-end space-x-2">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={handleApiKeySave}
+                      size="sm"
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={handleApiKeyCancel}
+                      size="sm"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
       </form>
     </Form>

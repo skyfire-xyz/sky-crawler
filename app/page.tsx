@@ -13,6 +13,7 @@ import SettingsBar from "./components/SettingsBar"
 import { Alert, AlertType, DEFAULT_USER_AGENT, MessageData } from "./types"
 
 const channelId = uuidv4()
+import CrawlSummary from "./components/CrawlSummary";
 
 export default function App() {
   const [currentSite, setCurrentSite] = useState<MessageData>()
@@ -81,8 +82,8 @@ export default function App() {
   }, [])
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <div className="relative h-[280px] w-full">
+    <div className="flex h-full flex-col">
+      <div className="relative h-[220px] w-full">
         <img
           src="/crawler-image-banner.svg"
           alt="Crawler Banner"
@@ -116,11 +117,13 @@ export default function App() {
             />
           </div>
         </div>
+        
         <div className="grid grid-cols-3 gap-8">
           <div className="col-span-2">
-            <CrawlLog log={log} summary={summary} errorMessages={alerts} />
+            <CrawlLog log={log} errorMessages={alerts} />
           </div>
           <div>
+            <CrawlSummary summary={summary} />
             <PaymentLog payments={payments} receipts={receipts} />
           </div>
         </div>

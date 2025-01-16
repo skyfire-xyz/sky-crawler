@@ -48,46 +48,70 @@ export default function CrawlLog({
   errorMessages,
 }: CrawlLogProps) {
   return (
-    <div className="h-[calc(100vh-480px)]">
+    <div className="h-[calc(100vh-420px)]">
       <div className="h-full rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700 flex flex-col">
         <h2 className="mb-2 text-xl font-bold dark:text-white">
           Crawled Data Logs
         </h2>
 
         <ul className="overflow-y-auto flex-1">
-          {log.map((entry, index) => (
-            <li key={index} className="mb-1.5 flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex flex-col">
-                  <span className="text-gray-800 dark:text-gray-400">
-                    {entry.url}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <Badge
-                      variant={getBadgeVariant(entry.paid)}
-                      className="text-xs px-2 py-0.5"
-                    >
-                      {entry.paid}
-                    </Badge>
-                    {entry.paid !== "FAILED" && (
-                      <>
-                        <span className="mr-3 text-xs text-gray-500 dark:text-gray-300">
-                          Characters: {entry.char}
-                        </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-300">
-                          ({entry.time}ms)
-                        </span>
-                      </>
-                    )}
+          {log.map((entry, index) => {
+
+            if (!entry.url) {
+              return (
+                <li key={index} className="mb-1.5 flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex flex-col">
+                    <span className="text-gray-800 dark:text-gray-400">
+                      {entry.text}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant={getBadgeVariant('FAILED')}
+                        className="text-xs px-2 py-0.5"
+                      >
+                        FAILED
+                      </Badge>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <ShowTextButton
-                text={entry.text}
-                filePath={entry.url.replace(/^https?:\/\//, "")}
-              />
-            </li>
-          ))}
+              </li>
+              )
+            }
+            return (
+              <li key={index} className="mb-1.5 flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex flex-col">
+                    <span className="text-gray-800 dark:text-gray-400">
+                      {entry.url}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant={getBadgeVariant(entry.paid)}
+                        className="text-xs px-2 py-0.5"
+                      >
+                        {entry.paid}
+                      </Badge>
+                      {entry.paid !== "FAILED" && (
+                        <>
+                          <span className="mr-3 text-xs text-gray-500 dark:text-gray-300">
+                            Characters: {entry.char}
+                          </span>
+                          <span className="text-xs text-gray-500 dark:text-gray-300">
+                            ({entry.time}ms)
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                {entry.url && <ShowTextButton
+                  text={entry.text}
+                  filePath={entry.url.replace(/^https?:\/\//, "")}
+                />}
+              </li>
+            );
+          })}
         </ul>
 
         {summary && summary.type === "summary" && (

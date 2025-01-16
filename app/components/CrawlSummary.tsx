@@ -5,7 +5,6 @@ interface CrawlSummaryProps {
 }
 
 const CrawlSummary = ({ summary }: CrawlSummaryProps) => {
-  if (!summary || summary.type !== "summary") return null
 
   const formatBytes = (bytes: string) => {
     const size = parseInt(bytes)
@@ -22,26 +21,30 @@ const CrawlSummary = ({ summary }: CrawlSummaryProps) => {
 
   return (
     <div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
-      <h2 className="mb-3 text-xl font-bold dark:text-white">Crawl Summary</h2>
+      <h2 className="mb-3 text-lg font-bold dark:text-white">Crawl Summary</h2>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         <div>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             Pages Crawled
           </p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {summary.totalPagesCrawled}
+          <p className="font-bold text-gray-900 dark:text-white">
+            {summary?.totalPagesCrawled || "---"}
           </p>
         </div>
         <div>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Total Size</p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {formatBytes(summary.totalTraversalSizeBytes || "0")}
+          <p className="text-xs text-gray-500 dark:text-gray-400">Total Size</p>
+          <p className="font-bold text-gray-900 dark:text-white">
+            {summary?.totalTraversalSizeBytes 
+              ? formatBytes(summary.totalTraversalSizeBytes)
+              : "---"}
           </p>
         </div>
         <div>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Total Time</p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {formatTime(summary.totalTimeSeconds || "0")}
+          <p className="text-xs text-gray-500 dark:text-gray-400">Total Time</p>
+          <p className="font-bold text-gray-900 dark:text-white">
+            {summary?.totalTimeSeconds 
+              ? formatTime(summary.totalTimeSeconds)
+              : "---"}
           </p>
         </div>
       </div>

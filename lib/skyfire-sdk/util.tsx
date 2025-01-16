@@ -6,7 +6,7 @@
 import { Message } from "ai"
 import { AxiosResponse } from "axios"
 
-const API_KEY_LOCAL_STORAGE_KEY = "skyfire_local_api_key"
+const API_KEY_LOCAL_STORAGE_KEY = "do_not_use_local_storage_key"
 export const isLocalStorageSupported = () => {
   try {
     const key = "__storage__test"

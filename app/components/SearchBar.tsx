@@ -186,7 +186,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
   }
 
   const handleApiKeySave = () => {
-    localStorage.setItem("skyfire-api-key", apiKeyInput)
     dispatch(updateSkyfireAPIKey(apiKeyInput))
     setIsPopoverOpen(false)
   }

@@ -57,12 +57,13 @@ export default function SettingsBar({
 
   return (
     <div className="relative">
-      <div className="text-center">
-        <FaCog
-          size={40}
-          className="text-gray-600 hover:text-gray-800"
+      <div className="text-right">
+        <button
+          className="text-gray-600 hover:text-gray-800 text-sm font-medium inline-flex items-center gap-2"
           onClick={toggleDrawer}
-        />
+        >
+          <FaCog size={24} />
+        </button>
       </div>
 
       {/* Backdrop */}

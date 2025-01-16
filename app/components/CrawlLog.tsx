@@ -48,13 +48,13 @@ export default function CrawlLog({
   errorMessages,
 }: CrawlLogProps) {
   return (
-    <div className="w-1/2 space-y-4">
-      <div className="grow rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
+    <div className="h-[calc(100vh-480px)]">
+      <div className="h-full rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700 flex flex-col">
         <h2 className="mb-2 text-xl font-bold dark:text-white">
           Crawled Data Logs
         </h2>
 
-        <ul>
+        <ul className="overflow-y-auto flex-1">
           {log.map((entry, index) => (
             <li key={index} className="mb-1.5 flex items-start justify-between">
               <div className="flex-1">
@@ -121,7 +121,6 @@ export default function CrawlLog({
           </div>
         )}
 
-        {/* Display error messages at the top */}
         {errorMessages.map((error, index) => (
           <AlertUI variant="destructive" key={index} className="mt-4">
             <ExclamationTriangleIcon className="h-4 w-4" />

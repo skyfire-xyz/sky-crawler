@@ -98,8 +98,8 @@ export default function App() {
         </div>
       </div>
       <div className="h-6 w-full bg-blue-800"></div> <div className="h-5" />
-      <div className="flex flex-col items-center space-y-4 p-5">
-        <div className="flex w-full justify-center items-end space-x-4">
+      <div className="container mx-auto px-4">
+        <div className="relative flex items-center justify-center mb-8">
           <SearchBar
             onSearch={handleSearch}
             channelId={channelId}
@@ -108,17 +108,19 @@ export default function App() {
             ua={userAgent}
             setAlerts={setAlerts}
           />
-          <SettingsBar
-            onDepthChange={handleDepthChange}
-            onPaymentChange={handlePaymentChange}
-            onUAChange={handleUAChange}
-          />
+          <div className="absolute right-0">
+            <SettingsBar
+              onDepthChange={handleDepthChange}
+              onPaymentChange={handlePaymentChange}
+              onUAChange={handleUAChange}
+            />
+          </div>
         </div>
-      </div>
-      <div className="grow p-5">
-        <div className="flex flex-col space-y-4">
-          <div className="flex space-x-4">
+        <div className="grid grid-cols-3 gap-8">
+          <div className="col-span-2">
             <CrawlLog log={log} summary={summary} errorMessages={alerts} />
+          </div>
+          <div>
             <PaymentLog payments={payments} receipts={receipts} />
           </div>
         </div>

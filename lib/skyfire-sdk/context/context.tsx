@@ -84,7 +84,7 @@ export const SkyfireProvider: React.FC<{ children: ReactNode }> = ({
     instance.interceptors.request.use(
       (config) => {
         config.headers["skyfire-api-key"] = state.localAPIKey
-        if (config.url?.includes("proxy")) {
+        if (config.url?.includes("start-crawler")) {
           dispatch(loading(true))
         }
         return config
@@ -115,20 +115,13 @@ export const SkyfireProvider: React.FC<{ children: ReactNode }> = ({
           }
         }
 
+        console.log("response", response)
+
         // Can Process Payment Here
         setTimeout(() => {
           dispatch(loading(false))
-          if (response.headers["skyfire-payment-reference-id"]) {
-            fetchUserBalance()
-            fetchUserClaims()
-            if (response.headers["skyfire-payment-amount"]) {
-              toast({
-                title: `Spent ${usdAmount(
-                  response.headers["skyfire-payment-amount"]
-                )}`,
-                duration: 3000,
-              })
-            }
+          if (response.config.url?.includes("start-crawl")) {
+            fetchAndCompareClaims()
           }
         }, 500)
         return response
@@ -138,6 +131,9 @@ export const SkyfireProvider: React.FC<{ children: ReactNode }> = ({
         if (error.response && error.response.status === 401) {
           // Handle unauthorized access
           logout()
+        }
+        if (error.response.config.url?.includes("start-crawl")) {
+          fetchAndCompareClaims()
         }
         return Promise.reject(error)
       }
@@ -167,7 +163,6 @@ export const SkyfireProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const response = await apiClient.get("/v1/wallet/claims")
       const newClaims = response.data.claims
-
       const previousClaims = previousClaimsRef.current || []
 
       if (Array.isArray(newClaims)) {

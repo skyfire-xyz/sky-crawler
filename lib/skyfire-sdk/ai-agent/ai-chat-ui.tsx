@@ -52,7 +52,7 @@ export default function AIChatUI({
         (arr: string[], res: AxiosResponse) => {
           return [...arr, ...(res.config.metadataForAgent?.customPrompts || [])]
         },
-        ["show me my purchased history"]
+        []
       )
     )
   }, [responses])

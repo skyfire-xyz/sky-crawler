@@ -86,11 +86,11 @@ export default function App() {
     const checkScreenSize = () => {
       setIsMediumScreen(window.innerWidth >= 768)
     }
-    
+
     checkScreenSize()
-    window.addEventListener('resize', checkScreenSize)
-    
-    return () => window.removeEventListener('resize', checkScreenSize)
+    window.addEventListener("resize", checkScreenSize)
+
+    return () => window.removeEventListener("resize", checkScreenSize)
   }, [])
 
   return (

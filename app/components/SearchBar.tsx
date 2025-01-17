@@ -8,7 +8,11 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { updateSkyfireAPIKey } from "@/lib/skyfire-sdk/context/action"
-import { useSkyfire, useSkyfireAPIClient, useSkyfireAPIKey } from "@/lib/skyfire-sdk/context/context"
+import {
+  useSkyfire,
+  useSkyfireAPIClient,
+  useSkyfireAPIKey,
+} from "@/lib/skyfire-sdk/context/context"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -86,7 +90,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   setAlerts,
 }) => {
   const { localAPIKey, isReady } = useSkyfireAPIKey()
-  const { apiClient } = useSkyfire();
+  const { apiClient } = useSkyfire()
   const [isLoading, setIsLoading] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)

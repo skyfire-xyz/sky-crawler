@@ -37,7 +37,10 @@ interface SkyfireWidgetProps {
   requireAPIKey?: boolean
 }
 
-export default function SkyfireWidget({ tos, requireAPIKey = true }: SkyfireWidgetProps) {
+export default function SkyfireWidget({
+  tos,
+  requireAPIKey = true,
+}: SkyfireWidgetProps) {
   const { localAPIKey, isReady } = useSkyfireAPIKey()
   const { tosAgreed } = useSkyfireTOSAgreement()
   const { getClaimByReferenceID } = useSkyfire()
@@ -122,16 +125,18 @@ export default function SkyfireWidget({ tos, requireAPIKey = true }: SkyfireWidg
 
   return (
     <div className="skyfire-theme">
-      {requireAPIKey && <Dialog open={isDialogOpen || !!error}>
-        <DialogOverlay />
-        <DialogContent className="skyfire-theme sm:max-w-[425px]">
-          {tos ? (
-            <APIKeyConfigWithTOS error={error} tos={tos} />
-          ) : (
-            <ApiKeyConfig error={error} />
-          )}
-        </DialogContent>
-      </Dialog>}
+      {requireAPIKey && (
+        <Dialog open={isDialogOpen || !!error}>
+          <DialogOverlay />
+          <DialogContent className="skyfire-theme sm:max-w-[425px]">
+            {tos ? (
+              <APIKeyConfigWithTOS error={error} tos={tos} />
+            ) : (
+              <ApiKeyConfig error={error} />
+            )}
+          </DialogContent>
+        </Dialog>
+      )}
       {showWidget && (
         <Popover>
           <PopoverTrigger asChild>

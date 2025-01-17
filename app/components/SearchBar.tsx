@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { updateSkyfireAPIKey } from "@/lib/skyfire-sdk/context/action"
-import { useSkyfire, useSkyfireAPIKey } from "@/lib/skyfire-sdk/context/context"
+import { useSkyfire, useSkyfireAPIClient, useSkyfireAPIKey } from "@/lib/skyfire-sdk/context/context"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -86,6 +86,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   setAlerts,
 }) => {
   const { localAPIKey, isReady } = useSkyfireAPIKey()
+  const { apiClient } = useSkyfire();
   const [isLoading, setIsLoading] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
@@ -156,7 +157,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
         headers["skyfire-api-key"] = localAPIKey
       }
 
-      await axios.post(crawlerEndpoint, requestBody, { headers })
+      if (localAPIKey && apiClient) {
+        await apiClient.post(crawlerEndpoint, requestBody, { headers })
+      } else {
+        await axios.post(crawlerEndpoint, requestBody, { headers })
+      }
     } catch (err) {
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 401) {

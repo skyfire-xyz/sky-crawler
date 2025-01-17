@@ -11,6 +11,12 @@ interface SettingsBarProps {
   onUAChange: (newUA: string) => void
 }
 
+interface UserAgentOption {
+  label: string;
+  value: string;
+  disabled?: boolean;
+}
+
 export default function SettingsBar({
   onDepthChange,
   onPaymentChange,
@@ -54,6 +60,23 @@ export default function SettingsBar({
     setUserAgent(newUA)
     onUAChange(newUA)
   }
+
+  const userAgentOptions: UserAgentOption[] = [
+    {
+      label: "Browser UA (Mozilla/5.0 AppleWebKit...)",
+      value: "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)",
+    },
+    {
+      label: "Crawler UA",
+      value: "",
+      disabled: true
+    },
+    {
+      label: "Blocked UA",
+      value: "",
+      disabled: true
+    }
+  ];
 
   return (
     <div className="relative">
@@ -160,10 +183,21 @@ export default function SettingsBar({
               <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
                 Sets the User Agent the Crawler should use to crawl pages.
               </p>
-              <UserAgentSettingsInput
-                value={userAgent}
-                onChange={handleUserAgentChange}
-              />
+              <select
+                value={userAgent || userAgentOptions[0].value}
+                onChange={(e) => handleUserAgentChange(e.target.value)}
+                className="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              >
+                {userAgentOptions.map((option) => (
+                  <option 
+                    key={option.label} 
+                    value={option.value}
+                    disabled={option.disabled}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </ul>
           )}
         </div>{" "}

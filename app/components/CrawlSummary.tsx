@@ -23,7 +23,7 @@ const CrawlSummary = ({ summary }: CrawlSummaryProps) => {
       <h2 className="mb-3 text-lg font-bold dark:text-white">Crawl Summary</h2>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         <div>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
             Pages Crawled
           </p>
           <p className="font-bold text-gray-900 dark:text-white">

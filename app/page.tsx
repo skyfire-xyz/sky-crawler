@@ -115,7 +115,7 @@ export default function App() {
       <div className="h-2 md:h-6 w-full bg-blue-800"></div>
       <div className="h-5" />
       <div className="container mx-auto px-4">
-        <div className="relative flex items-center justify-center mb-8">
+        <div className="md:relative flex items-center justify-center mb-8">
           <SearchBar
             onSearch={handleSearch}
             channelId={channelId}
@@ -124,7 +124,7 @@ export default function App() {
             ua={userAgent}
             setAlerts={setAlerts}
           />
-          <div className="fixed top-4 right-4 z-50 md:absolute md:top-2 md:right-0">
+          <div className="absolute top-4 right-4 z-50 md:absolute md:top-2 md:right-0">
             <SettingsBar
               onDepthChange={handleDepthChange}
               onPaymentChange={handlePaymentChange}

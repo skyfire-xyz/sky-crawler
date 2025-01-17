@@ -25,6 +25,7 @@ export default function App() {
   const [payments, setPayments] = useState<MessageData[]>([])
   const [receipts, setReceipts] = useState<MessageData[]>([])
   const [alerts, setAlerts] = useState<Alert[]>([])
+  const [isMediumScreen, setIsMediumScreen] = useState(true)
 
   const handleDepthChange = (newDepth: string) => {
     setDepth(newDepth)
@@ -56,7 +57,7 @@ export default function App() {
     })
     const channel = pusher.subscribe(channelId)
     channel.bind("crawler-event", (data: { message: MessageData }) => {
-      console.log(data)
+      // console.log(data)
       if (data.message !== undefined) {
         switch (data.message.type) {
           case "summary":
@@ -81,26 +82,40 @@ export default function App() {
     }
   }, [])
 
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMediumScreen(window.innerWidth >= 768)
+    }
+
+    checkScreenSize()
+    window.addEventListener("resize", checkScreenSize)
+
+    return () => window.removeEventListener("resize", checkScreenSize)
+  }, [])
+
   return (
     <div className="flex h-full flex-col">
-      <div className="relative h-[220px] w-full">
+      <div className="relative h-[60px] md:h-[220px] w-full">
         <img
           src="/crawler-image-banner.svg"
           alt="Crawler Banner"
           className="absolute inset-0 size-full object-cover"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center p-5 text-center">
-          <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-white dark:text-white md:text-5xl lg:text-6xl">
+          <h1 className="text-xl md:text-4xl font-extrabold leading-none tracking-tight text-white dark:text-white lg:text-6xl">
             Payment-Powered Website Crawling
           </h1>
-          <h4 className="text-2xl font-normal text-white dark:text-white">
-            Pay a crawling AI agent to access payment-restricted web pages.
-          </h4>
+          {isMediumScreen && (
+            <h4 className="text-lg md:text-2xl font-normal text-white dark:text-white">
+              Pay a crawling AI agent to access payment-restricted web pages.
+            </h4>
+          )}
         </div>
       </div>
-      <div className="h-6 w-full bg-blue-800"></div> <div className="h-5" />
+      <div className="h-2 md:h-6 w-full bg-blue-800"></div>
+      <div className="h-5" />
       <div className="container mx-auto px-4">
-        <div className="relative flex items-center justify-center mb-8">
+        <div className="md:relative flex items-center justify-center mb-8">
           <SearchBar
             onSearch={handleSearch}
             channelId={channelId}
@@ -109,7 +124,7 @@ export default function App() {
             ua={userAgent}
             setAlerts={setAlerts}
           />
-          <div className="absolute right-0">
+          <div className="absolute top-4 right-4 z-50 md:absolute md:top-2 md:right-0">
             <SettingsBar
               onDepthChange={handleDepthChange}
               onPaymentChange={handlePaymentChange}
@@ -118,8 +133,8 @@ export default function App() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-8">
-          <div className="col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-2">
             <CrawlLog log={log} errorMessages={alerts} />
           </div>
           <div>

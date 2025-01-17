@@ -48,12 +48,9 @@ export default function AIChatUI({
 
   const quickPrompts = useMemo(() => {
     return new Set<string>(
-      responses.reduce(
-        (arr: string[], res: AxiosResponse) => {
-          return [...arr, ...(res.config.metadataForAgent?.customPrompts || [])]
-        },
-        ["show me my purchased history"]
-      )
+      responses.reduce((arr: string[], res: AxiosResponse) => {
+        return [...arr, ...(res.config.metadataForAgent?.customPrompts || [])]
+      }, [])
     )
   }, [responses])
 

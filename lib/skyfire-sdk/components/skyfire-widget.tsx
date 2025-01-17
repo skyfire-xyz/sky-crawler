@@ -34,9 +34,13 @@ interface TOSObject {
 
 interface SkyfireWidgetProps {
   tos?: TOSObject
+  requireAPIKey?: boolean
 }
 
-export default function SkyfireWidget({ tos }: SkyfireWidgetProps) {
+export default function SkyfireWidget({
+  tos,
+  requireAPIKey = true,
+}: SkyfireWidgetProps) {
   const { localAPIKey, isReady } = useSkyfireAPIKey()
   const { tosAgreed } = useSkyfireTOSAgreement()
   const { getClaimByReferenceID } = useSkyfire()
@@ -121,32 +125,34 @@ export default function SkyfireWidget({ tos }: SkyfireWidgetProps) {
 
   return (
     <div className="skyfire-theme">
-      <Dialog open={isDialogOpen || !!error}>
-        <DialogOverlay />
-        <DialogContent className="skyfire-theme sm:max-w-[425px]">
-          {tos ? (
-            <APIKeyConfigWithTOS error={error} tos={tos} />
-          ) : (
-            <ApiKeyConfig error={error} />
-          )}
-        </DialogContent>
-      </Dialog>
+      {requireAPIKey && (
+        <Dialog open={isDialogOpen || !!error}>
+          <DialogOverlay />
+          <DialogContent className="skyfire-theme sm:max-w-[425px]">
+            {tos ? (
+              <APIKeyConfigWithTOS error={error} tos={tos} />
+            ) : (
+              <ApiKeyConfig error={error} />
+            )}
+          </DialogContent>
+        </Dialog>
+      )}
       {showWidget && (
         <Popover>
           <PopoverTrigger asChild>
             <div
               className={`${
                 localAPIKey && (!tos || tosAgreed) ? "visible" : "hidden"
-              } rounded-full p-0 md:p-2 flex items-center fixed bg-[hsl(var(--primary))] z-[40] overflow-hidden cursor-pointer right-[10px] bottom-[10px] md:right-[20px] md:bottom-[20px]`}
+              } rounded-full p-0 md:p-1 flex items-center fixed bg-[hsl(var(--primary))] z-[40] overflow-hidden cursor-pointer right-[10px] bottom-[10px] md:right-[20px] md:bottom-[20px]`}
             >
-              <div className="flex items-center space-x-2 md:p-2 p-0">
+              <div className="flex items-center md:p-1 p-0">
                 <LoadingImageWidget
                   src="https://imagedelivery.net/WemO4_3zZlyNq-8IGpxrAQ/9b7b7f1c-a4b7-4777-c7ff-c92b50865600/public"
                   alt="Company Logo"
                   size={50}
                   loading={!!loading}
                 />
-                <span className="hidden md:inline text-primary-foreground text-xl font-semibold">
+                <span className="hidden md:inline text-primary-foreground text-lg font-semibold">
                   {usdAmount(balance?.escrow.available || "0")}
                 </span>
               </div>

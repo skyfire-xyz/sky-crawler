@@ -7,6 +7,7 @@ export function middleware(request: NextRequest) {
   const hostname = request.headers.get("host") || ""
   const config = getClientConfig(hostname)
 
+  console.log(config, "config")
   // Check if auth is required for this client config
   if (config.requiresAuth) {
     const domain = hostname.split(".")[0]
@@ -64,14 +65,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - api routes
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public files
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico|public).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|public|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 }

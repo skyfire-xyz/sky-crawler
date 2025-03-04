@@ -1,15 +1,16 @@
 import { NextResponse, type NextRequest } from "next/server"
 
-import { clientConfigs } from "@/lib/client-config"
+import { getClientConfig } from "@/lib/client-config"
 
 export function middleware(request: NextRequest) {
   // Get domain
   const hostname = request.headers.get("host") || ""
-  const domain = hostname.split(".")[0]
+  const config = getClientConfig(hostname)
 
-  // Check if it's a valid client domain
-  if (domain && clientConfigs[domain]) {
-    // Apply client-specific auth if needed
+  // Check if auth is required for this client config
+  if (config.requiresAuth) {
+    const domain = hostname.split(".")[0]
+    // Apply client-specific auth
     const [AUTH_USER, AUTH_PASS] = (
       process.env[
         `BASIC_AUTH_CREDENTIALS_${domain.toUpperCase().replace("-", "_")}`

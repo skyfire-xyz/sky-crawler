@@ -1,8 +1,10 @@
 import "@/styles/globals.css"
 import { Metadata } from "next"
+import { headers } from "next/headers"
 import { ToastContainer } from "react-toastify"
 
 import { siteConfig } from "@/config/site"
+import { ClientProvider } from "@/lib/client-context"
 import { fontSans } from "@/lib/fonts"
 import SkyfireWidget from "@/lib/skyfire-sdk/components/skyfire-widget"
 import { SkyfireProvider } from "@/lib/skyfire-sdk/context/context"
@@ -11,6 +13,8 @@ import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
 
 import "react-toastify/dist/ReactToastify.css"
+import { getClientConfig } from "@/lib/client-config"
+
 import TopBar from "./components/TopBar"
 
 export const metadata: Metadata = {
@@ -35,21 +39,28 @@ interface RootLayoutProps {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const headersList = headers()
+  const hostname = headersList.get("host") || "default"
+  const subdomain = hostname.split(".")[0]
+
+  const clientConfig = getClientConfig(subdomain)
+
+  console.log(clientConfig, "????")
   return (
-    <>
-      <html lang="en" suppressHydrationWarning>
-        <head />
-        <body
-          className={cn(
-            "min-h-screen bg-white font-sans antialiased",
-            fontSans.variable
-          )}
-        >
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body
+        className={cn(
+          "min-h-screen bg-white font-sans antialiased",
+          fontSans.variable
+        )}
+      >
+        <ClientProvider hostname={subdomain}>
           <ThemeProvider
             attribute="class"
-            defaultTheme="light"
-            enableSystem
-            forcedTheme="light"
+            defaultTheme="default"
+            forcedTheme={clientConfig?.mode || "default"}
+            enableSystem={false}
           >
             <SkyfireProvider>
               <div className="relative flex min-h-screen flex-col">
@@ -61,8 +72,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
               <ToastContainer />
             </SkyfireProvider>
           </ThemeProvider>
-        </body>
-      </html>
-    </>
+        </ClientProvider>
+      </body>
+    </html>
   )
 }

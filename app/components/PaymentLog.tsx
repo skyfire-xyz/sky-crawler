@@ -8,7 +8,7 @@ const PaymentLog = ({
   receipts: MessageData[]
 }) => (
   <div className="h-[calc(100vh-625px)]">
-    <div className="h-full rounded-lg border border-blue-800 bg-gray-900 p-4 text-white dark:border-gray-300 dark:bg-white dark:text-gray-900 flex flex-col">
+    <div className="h-full rounded-lg border border-[hsl(var(--payment-border))] bg-[hsl(var(--payment-bg))] text-[hsl(var(--payment-text))] p-4 flex flex-col">
       <h2 className="mb-2 text-xl font-bold">Payment Protocol Logs</h2>
 
       <ul className="overflow-y-auto flex-1">

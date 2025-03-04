@@ -45,7 +45,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
   const clientConfig = getClientConfig(subdomain)
 
-  console.log(clientConfig, "????")
   return (
     <html lang="en" suppressHydrationWarning>
       <head />

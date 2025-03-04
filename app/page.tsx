@@ -57,7 +57,6 @@ export default function App() {
     })
     const channel = pusher.subscribe(channelId)
     channel.bind("crawler-event", (data: { message: MessageData }) => {
-      // console.log(data)
       if (data.message !== undefined) {
         switch (data.message.type) {
           case "summary":
@@ -112,7 +111,7 @@ export default function App() {
           )}
         </div>
       </div>
-      <div className="h-2 md:h-6 w-full bg-blue-800"></div>
+      <div className="h-2 md:h-6 w-full bg-[hsl(var(--divider))]"></div>
       <div className="h-5" />
       <div className="container mx-auto px-4">
         <div className="md:relative flex items-center justify-center mb-8">

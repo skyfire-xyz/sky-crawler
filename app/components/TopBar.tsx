@@ -3,24 +3,34 @@
 import Image from "next/image"
 import { X } from "lucide-react"
 
+import { useClientConfig } from "@/lib/client-context"
+
 export default function TopBar() {
+  const clientConfig = useClientConfig()
+
+  console.log(clientConfig, "????")
+
   return (
-    <div className="flex w-full items-center justify-between bg-black p-2 text-white dark:bg-gray-200 dark:text-black">
+    <div className="flex w-full items-center justify-between p-2 bg-[hsl(var(--topbar-bg))] text-[hsl(var(--topbar-text))]">
       <Image
-        src="/skyfire-logo.svg"
+        src={clientConfig.skyfireLogo}
         alt="logo"
         width={103}
         height={24}
         className="mt-2 flex items-center"
       />
-      <X className="mx-2 mt-2 size-6 text-white" />
-      <Image
-        src="/akamai-logo.png"
-        alt="Akamai Logo"
-        width={90}
-        height={36}
-        className="mt-0 flex items-center"
-      />
+      {clientConfig.logo && (
+        <>
+          <X className="mx-2 mt-2 size-6 text-[hsl(var(--topbar-text))]" />
+          <Image
+            src={clientConfig.logo}
+            alt={`${clientConfig.name} Logo`}
+            width={clientConfig.logoSize?.width || 90}
+            height={clientConfig.logoSize?.height || 36}
+            className={`mt-[var(--topbar-logo)] flex items-center`}
+          />
+        </>
+      )}
       <div className="ml-auto flex items-center"></div>
     </div>
   )

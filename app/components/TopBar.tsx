@@ -8,8 +8,6 @@ import { useClientConfig } from "@/lib/client-context"
 export default function TopBar() {
   const clientConfig = useClientConfig()
 
-  console.log(clientConfig, "????")
-
   return (
     <div className="flex w-full items-center justify-between p-2 bg-[hsl(var(--topbar-bg))] text-[hsl(var(--topbar-text))]">
       <Image

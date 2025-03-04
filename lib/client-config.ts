@@ -4,6 +4,7 @@ interface ClientConfig {
   logoSize?: { width: number; height: number }
   skyfireLogo: string
   mode: "akamai" | "cequence" | "default" // Custom theme modes
+  requiresAuth?: boolean
 }
 
 interface ClientConfigs {
@@ -17,6 +18,7 @@ export const clientConfigs: ClientConfigs = {
     logoSize: { width: 90, height: 36 },
     skyfireLogo: "/skyfire-logo.svg",
     mode: "akamai",
+    requiresAuth: true,
   },
   "cequence-crawler": {
     name: "Cequence Bot Defense",
@@ -24,15 +26,23 @@ export const clientConfigs: ClientConfigs = {
     logoSize: { width: 120, height: 52 },
     skyfireLogo: "/skyfire-logo-black.svg",
     mode: "cequence",
+    requiresAuth: true,
   },
   default: {
     name: "Skyfire Crawler (Combined)",
     skyfireLogo: "/skyfire-logo.svg",
     mode: "default",
+    requiresAuth: true,
   },
 }
 
 export function getClientConfig(hostname: string): ClientConfig {
-  const domain = hostname.split(".")[0]
-  return clientConfigs[domain] || clientConfigs.default
+  const parts = hostname.split(".")
+  const subdomain = parts[0]
+
+  if (subdomain === "crawler") {
+    return clientConfigs.default
+  }
+
+  return clientConfigs[subdomain] || clientConfigs.default
 }

@@ -3,15 +3,17 @@ import { NextResponse, type NextRequest } from "next/server"
 import { clientConfigs } from "@/lib/client-config"
 
 export function middleware(request: NextRequest) {
-  // Get subdomain
+  // Get domain
   const hostname = request.headers.get("host") || ""
-  const subdomain = hostname.split(".")[0]
+  const domain = hostname.split(".")[0]
 
-  // Check if it's a valid client subdomain
-  if (subdomain && clientConfigs[subdomain]) {
+  // Check if it's a valid client domain
+  if (domain && clientConfigs[domain]) {
     // Apply client-specific auth if needed
     const [AUTH_USER, AUTH_PASS] = (
-      process.env[`BASIC_AUTH_CREDENTIALS_${subdomain.toUpperCase()}`] ||
+      process.env[
+        `BASIC_AUTH_CREDENTIALS_${domain.toUpperCase().replace("-", "_")}`
+      ] ||
       process.env.BASIC_AUTH_CREDENTIALS ||
       ":"
     ).split(":")

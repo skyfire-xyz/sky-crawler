@@ -41,9 +41,9 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   const headersList = headers()
   const hostname = headersList.get("host") || "default"
-  const subdomain = hostname.split(".")[0]
+  const domain = hostname.split(".")[0]
 
-  const clientConfig = getClientConfig(subdomain)
+  const clientConfig = getClientConfig(hostname)
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -54,7 +54,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontSans.variable
         )}
       >
-        <ClientProvider hostname={subdomain}>
+        <ClientProvider hostname={domain}>
           <ThemeProvider
             attribute="class"
             defaultTheme="default"

@@ -7,18 +7,18 @@ interface ClientConfig {
 }
 
 interface ClientConfigs {
-  [subdomain: string]: ClientConfig
+  [domain: string]: ClientConfig
 }
 
 export const clientConfigs: ClientConfigs = {
-  akamai: {
+  "akamai-crawler": {
     name: "Akamai Bot Manager",
     logo: "/akamai-logo.png",
     logoSize: { width: 90, height: 36 },
     skyfireLogo: "/skyfire-logo.svg",
     mode: "akamai",
   },
-  cequence: {
+  "cequence-crawler": {
     name: "Cequence Bot Defense",
     logo: "/cequence-logo.svg",
     logoSize: { width: 120, height: 52 },
@@ -33,6 +33,6 @@ export const clientConfigs: ClientConfigs = {
 }
 
 export function getClientConfig(hostname: string): ClientConfig {
-  const subdomain = hostname.split(".")[0]
-  return clientConfigs[subdomain] || clientConfigs.default
+  const domain = hostname.split(".")[0]
+  return clientConfigs[domain] || clientConfigs.default
 }
